@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useEffect } from "react";
 import { useStore } from "zustand";
 import { useQuery } from "@tanstack/react-query";
 import { execute } from "~/graphql/execute";
@@ -49,7 +49,9 @@ const content = {
   ] as BudgetOption[],
 };
 
-export const DropdownIndicator = (props: DropdownIndicatorProps<OptionType>) => {
+export const DropdownIndicator = (
+  props: DropdownIndicatorProps<OptionType>
+) => {
   return (
     <components.DropdownIndicator {...props}>
       <Image
@@ -81,6 +83,9 @@ const ByDepartmentSelector = ({ value }: { value: string }) => {
     queryKey: governmentQueryKeys.lists(),
     queryFn: () => execute(GET_GOVERNMENTS_QUERY),
     enabled: value === "by-department", // 只在選中時 fetch
+  });
+  useEffect(() => {
+    console.log("governmentsData", governmentsData);
   });
 
   // 計算 unique categories
@@ -117,6 +122,14 @@ const ByDepartmentSelector = ({ value }: { value: string }) => {
 
     return filtered;
   }, [governmentsData?.governments, departmentFilter.category]);
+
+  useEffect(() => {
+    console.log("Department filter state:", {
+      departmentFilter,
+      categoryOptions,
+      departmentOptions,
+    });
+  }, [departmentFilter, categoryOptions, departmentOptions]);
 
   // 當前選擇的值（用於 react-select）
   const selectedCategoryValue = departmentFilter.category
@@ -173,10 +186,12 @@ const ByDepartmentSelector = ({ value }: { value: string }) => {
           !departmentFilter.category
             ? "請先選擇類別"
             : departmentOptions.length === 0
-            ? "此類別無機關"
-            : "選擇機關名稱"
+              ? "此類別無機關"
+              : "選擇機關名稱"
         }
-        isDisabled={!departmentFilter.category || departmentOptions.length === 0}
+        isDisabled={
+          !departmentFilter.category || departmentOptions.length === 0
+        }
         isClearable
         aria-label="選擇機關名稱"
       />
@@ -217,6 +232,13 @@ const ByPeopleSelector = ({ value }: { value: string }) => {
       }))
       .sort((a, b) => a.label.localeCompare(b.label));
   }, [peopleData?.peopleList]);
+
+  useEffect(() => {
+    console.log("People filter state:", {
+      personId,
+      peopleOptions,
+    });
+  }, [personId, peopleOptions]);
 
   // 當前選擇的值（用於 react-select）
   const selectedPersonValue = useMemo(() => {
@@ -286,6 +308,13 @@ const BudgetsSelector: React.FC<BudgetsSelectorProps> = ({
     useBudgetSelectStore,
     (state) => state.clearPeopleFilter
   );
+
+  useEffect(() => {
+    console.log("BudgetsSelector state:", {
+      selectedValue,
+      searchedValue,
+    });
+  }, [selectedValue, searchedValue]);
 
   const handleSelectionChange = (value: string) => {
     setSelectedValue(value);

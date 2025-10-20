@@ -5,6 +5,7 @@ const config: CodegenConfig = {
   schema: GQL_ENDPOINTS,
   documents: ["app/**/*.{ts,tsx}"],
   ignoreNoDocuments: true,
+  concurrency: 1,
   generates: {
     "./app/graphql/": {
       preset: "client",

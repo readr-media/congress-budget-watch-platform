@@ -1,4 +1,4 @@
-import { graphql } from '~/graphql'
+import { graphql } from "~/graphql";
 
 /**
  * GraphQL query to get all proposals ordered by ID descending
@@ -78,7 +78,7 @@ export const GET_PROPOSALS_QUERY = graphql(`
     }
     proposalsCount
   }
-`)
+`);
 
 /**
  * GraphQL query to get a single proposal by ID
@@ -176,15 +176,15 @@ export const GET_PROPOSAL_BY_ID_QUERY = graphql(`
       }
     }
   }
-`)
+`);
 
 /**
  * React Query keys for proposal-related queries
  * Following the recommended hierarchical pattern
  */
 export const proposalQueryKeys = {
-  all: ['proposals'] as const,
-  lists: () => [...proposalQueryKeys.all, 'list'] as const,
+  all: ["proposals"] as const,
+  lists: () => [...proposalQueryKeys.all, "list"] as const,
   list: (filters?: Record<string, unknown>) => [
     ...proposalQueryKeys.lists(),
     { filters },
@@ -203,7 +203,7 @@ export const proposalQueryKeys = {
     ] as const,
   details: () => [...proposalQueryKeys.all, "detail"] as const,
   detail: (id: string) => [...proposalQueryKeys.details(), id] as const,
-} as const
+} as const;
 
 /**
  * GraphQL query to get paginated proposals with total count
@@ -241,6 +241,10 @@ export const GET_PAGINATED_PROPOSALS_QUERY = graphql(`
       proposalTypes
       recognitionAnswer
       unfreezeStatus
+      react_angry
+      react_disappoint
+      react_good
+      react_whatever
       government {
         id
         name
@@ -263,6 +267,7 @@ export const GET_PAGINATED_PROPOSALS_QUERY = graphql(`
         type
         description
         party {
+          id
           name
         }
       }
@@ -274,4 +279,4 @@ export const GET_PAGINATED_PROPOSALS_QUERY = graphql(`
     }
     proposalsCount(where: $where)
   }
-`)
+`);

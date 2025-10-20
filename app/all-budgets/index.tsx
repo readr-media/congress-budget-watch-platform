@@ -16,6 +16,7 @@ import { useMediaQuery } from "usehooks-ts";
 import type {
   ProposalOrderByInput,
   ProposalWhereInput,
+  GetPaginatedProposalsQuery,
 } from "~/graphql/graphql";
 import { OrderDirection } from "~/graphql/graphql";
 import AllBudgetsSkeleton from "~/components/skeleton/all-budgets-skeleton";
@@ -73,6 +74,9 @@ const AllBudgets = () => {
   const whereFilter = useMemo((): ProposalWhereInput => {
     const filters: ProposalWhereInput = {};
 
+    console.log("departmentId", departmentId);
+    console.log("personId", personId);
+    console.log("debouncedSearchedValue", debouncedSearchedValue);
     // Department 過濾
     if (departmentId) {
       filters.government = {
@@ -139,7 +143,7 @@ const AllBudgets = () => {
     seenProposalIds.current.clear();
 
     // 檢測重複
-    data.proposals.forEach((proposal) => {
+    data.proposals.forEach((proposal: NonNullable<GetPaginatedProposalsQuery['proposals']>[number]) => {
       if (seenProposalIds.current.has(proposal.id)) {
         if (import.meta.env.DEV) {
           console.warn(
@@ -163,7 +167,7 @@ const AllBudgets = () => {
 
     // 直接轉換為 BudgetTableData（排序已由 GraphQL orderBy 處理）
     return data.proposals.map(proposalToBudgetTableData);
-  }, [data?.proposals?.length]);
+  }, [data?.proposals]);
 
   if (isLoading) return <AllBudgetsSkeleton isDesktop={isDesktop} />;
   if (isError) return redirect(ERROR_REDIRECT_ROUTE);

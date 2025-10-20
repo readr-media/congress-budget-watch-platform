@@ -21,6 +21,7 @@ export type BudgetTableData = {
   tags?: string | null;
   status: string; // Assuming 'committeed' is a valid status
   committeedDate?: string | null; // This can be optional or string
+  totalReacts: number;
 };
 
 type BudgetTableProps = {
@@ -153,7 +154,7 @@ const BudgetTableRow = ({ item }: { item: BudgetTableData }) => {
       <TableRow label="提案內容">
         <ProposalContent content={item.proposalContent} itemId={item.id} />
       </TableRow>
-      <TableRow label="關心數">999999</TableRow>
+      <TableRow label="關心數">{item.totalReacts}</TableRow>
       <TableRow label="我要關心這個">
         <div className="mb-9 flex w-full flex-col items-center justify-center gap-y-4">
           <button
@@ -250,7 +251,7 @@ const DesktopTableRow = ({ item }: { item: BudgetTableData }) => {
         {item.originalAmount}
       </div>
       <div className="flex items-start justify-center pt-3 md:text-xs lg:text-sm">
-        999999
+        {item.totalReacts}
       </div>
       <div className="flex items-start justify-center pt-3">
         {/* <VoteButtons proposalId={item.id} /> */}

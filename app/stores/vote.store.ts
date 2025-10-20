@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { immer } from "zustand/middleware/immer";
 
 type VoteState = {
   votes: Record<string, string>;
@@ -7,18 +8,17 @@ type VoteState = {
   };
 };
 
-export const useVoteStore = create<VoteState>((set) => ({
-  votes: {},
-  actions: {
-    setVote: (proposalId, vote) =>
-      set((state) => ({
-        votes: {
-          ...state.votes,
-          [proposalId]: vote,
-        },
-      })),
-  },
-}));
+export const useVoteStore = create<VoteState>()(
+  immer((set) => ({
+    votes: {},
+    actions: {
+      setVote: (proposalId, vote) =>
+        set((state) => {
+          state.votes[proposalId] = vote;
+        }),
+    },
+  }))
+);
 
 export const useVotes = () => useVoteStore((state) => state.votes);
 export const useVoteActions = () => useVoteStore((state) => state.actions);

@@ -10,6 +10,12 @@ import { formatLegislator } from "~/utils/format";
 export function proposalToBudgetTableData(
   proposal: Proposal,
 ): BudgetTableData {
+  const totalReacts =
+    (proposal.react_angry ?? 0) +
+    (proposal.react_disappoint ?? 0) +
+    (proposal.react_good ?? 0) +
+    (proposal.react_whatever ?? 0);
+
   const result: BudgetTableData = {
     id: proposal.id,
     sequence: 0, // FIXME: 'sequence' is not available in the paginated query
@@ -38,6 +44,7 @@ export function proposalToBudgetTableData(
     status: "committeed",
     // FIXME: 'committeedDate' relies on meetingDate which is not available.
     committeedDate: undefined,
+    totalReacts,
   };
 
   return result;

@@ -161,17 +161,6 @@ input CommitteeRelateToManyForUpdateInput {
   set: [CommitteeWhereUniqueInput!]
 }
 
-input CommitteeRelateToOneForCreateInput {
-  connect: CommitteeWhereUniqueInput
-  create: CommitteeCreateInput
-}
-
-input CommitteeRelateToOneForUpdateInput {
-  connect: CommitteeWhereUniqueInput
-  create: CommitteeCreateInput
-  disconnect: Boolean
-}
-
 input CommitteeUpdateArgs {
   data: CommitteeUpdateInput!
   where: CommitteeWhereUniqueInput!
@@ -271,11 +260,29 @@ input GovernmentCreateInput {
   name: String
 }
 
+input GovernmentManyRelationFilter {
+  every: GovernmentWhereInput
+  none: GovernmentWhereInput
+  some: GovernmentWhereInput
+}
+
 input GovernmentOrderByInput {
   category: OrderDirection
   description: OrderDirection
   id: OrderDirection
   name: OrderDirection
+}
+
+input GovernmentRelateToManyForCreateInput {
+  connect: [GovernmentWhereUniqueInput!]
+  create: [GovernmentCreateInput!]
+}
+
+input GovernmentRelateToManyForUpdateInput {
+  connect: [GovernmentWhereUniqueInput!]
+  create: [GovernmentCreateInput!]
+  disconnect: [GovernmentWhereUniqueInput!]
+  set: [GovernmentWhereUniqueInput!]
 }
 
 input GovernmentRelateToOneForCreateInput {
@@ -455,10 +462,12 @@ type KeystoneMeta {
 }
 
 type Meeting {
-  committee: Committee
+  committee(cursor: CommitteeWhereUniqueInput, orderBy: [CommitteeOrderByInput!]! = [], skip: Int! = 0, take: Int, where: CommitteeWhereInput! = {}): [Committee!]
+  committeeCount(where: CommitteeWhereInput! = {}): Int
   description: String
   displayName: String
-  government: Government
+  government(cursor: GovernmentWhereUniqueInput, orderBy: [GovernmentOrderByInput!]! = [], skip: Int! = 0, take: Int, where: GovernmentWhereInput! = {}): [Government!]
+  governmentCount(where: GovernmentWhereInput! = {}): Int
   id: ID!
   location: String
   meetingDate: DateTime
@@ -467,9 +476,9 @@ type Meeting {
 }
 
 input MeetingCreateInput {
-  committee: CommitteeRelateToOneForCreateInput
+  committee: CommitteeRelateToManyForCreateInput
   description: String
-  government: GovernmentRelateToOneForCreateInput
+  government: GovernmentRelateToManyForCreateInput
   location: String
   meetingDate: DateTime
   meetingRecordUrl: String
@@ -520,9 +529,9 @@ input MeetingUpdateArgs {
 }
 
 input MeetingUpdateInput {
-  committee: CommitteeRelateToOneForUpdateInput
+  committee: CommitteeRelateToManyForUpdateInput
   description: String
-  government: GovernmentRelateToOneForUpdateInput
+  government: GovernmentRelateToManyForUpdateInput
   location: String
   meetingDate: DateTime
   meetingRecordUrl: String
@@ -533,9 +542,9 @@ input MeetingWhereInput {
   AND: [MeetingWhereInput!]
   NOT: [MeetingWhereInput!]
   OR: [MeetingWhereInput!]
-  committee: CommitteeWhereInput
+  committee: CommitteeManyRelationFilter
   description: StringFilter
-  government: GovernmentWhereInput
+  government: GovernmentManyRelationFilter
   id: IDFilter
   location: StringNullableFilter
   meetingDate: DateTimeNullableFilter
