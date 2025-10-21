@@ -2157,6 +2157,13 @@ export type GetPeopleListQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetPeopleListQuery = { __typename?: 'Query', peopleList?: Array<{ __typename?: 'People', id: string, name?: string | null, type?: string | null, description?: string | null, party?: { __typename?: 'Party', id: string, name?: string | null } | null }> | null };
 
+export type PeopleQueryVariables = Exact<{
+  where: PeopleWhereUniqueInput;
+}>;
+
+
+export type PeopleQuery = { __typename?: 'Query', people?: { __typename?: 'People', id: string, name?: string | null, termCount?: number | null, party?: { __typename?: 'Party', id: string, color?: string | null, name?: string | null } | null, term?: Array<{ __typename?: 'Term', termNumber?: number | null, id: string }> | null, committees?: Array<{ __typename?: 'Committee', id: string, name?: string | null, session?: string | null, term?: { __typename?: 'Term', id: string, startDate?: any | null, termNumber?: number | null } | null }> | null } | null };
+
 export type GetProposalsOrderedByIdDescQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -2244,6 +2251,34 @@ export const GetPeopleListDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<GetPeopleListQuery, GetPeopleListQueryVariables>;
+export const PeopleDocument = new TypedDocumentString(`
+    query People($where: PeopleWhereUniqueInput!) {
+  people(where: $where) {
+    id
+    name
+    party {
+      id
+      color
+      name
+    }
+    term {
+      termNumber
+      id
+    }
+    termCount
+    committees {
+      id
+      name
+      session
+      term {
+        id
+        startDate
+        termNumber
+      }
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<PeopleQuery, PeopleQueryVariables>;
 export const GetProposalsOrderedByIdDescDocument = new TypedDocumentString(`
     query GetProposalsOrderedByIdDesc {
   proposals(orderBy: [{id: desc}]) {

@@ -7,7 +7,6 @@ export type NodeDatum = {
   color?: string;
   id: string;
   isFrozen?: boolean;
-  committeeName?: string;
   children?: NodeDatum[];
 };
 
@@ -153,14 +152,10 @@ export const transformToGroupedSessionData = (
       return;
     }
 
-    const firstProposalOfYear = categoryNodes[0]?.children?.[0];
-    const committeeName = firstProposalOfYear?.proposers?.[0]?.committees?.[0]?.name;
-
     // 建立年度節點（第一層）
     result.push({
       id: `session-${year}`,
       name: `${year}年度`,
-      committeeName: committeeName ?? "委員會",
       children: categoryNodes,
     });
   });

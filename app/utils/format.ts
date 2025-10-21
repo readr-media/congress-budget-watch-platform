@@ -17,3 +17,16 @@ export const formatParty = (party?: { name?: string | null }): string => {
 export const toCurrentYear = (date: string): string => {
   return new Date(date).getFullYear().toString();
 };
+
+export const formatTermRange = (termRange: {
+  first: number | null;
+  last: number | null;
+}): string => {
+  if (!termRange.first || !termRange.last) {
+    return "";
+  }
+  if (termRange.first === termRange.last) {
+    return String(termRange.first);
+  }
+  return `${termRange.first} ~ ${termRange.last}`;
+};

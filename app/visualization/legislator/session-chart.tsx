@@ -3,9 +3,10 @@ import type { NodeDatum } from "../helpers";
 
 type SessionChartProps = {
   data: NodeDatum[]; // 每個元素代表一個年度 session
+  yearToCommitteeMap: Map<string, string>;
 };
 
-const SessionChart = ({ data }: SessionChartProps) => {
+const SessionChart = ({ data, yearToCommitteeMap }: SessionChartProps) => {
   // 如果沒有資料，顯示提示訊息
   if (!data || data.length === 0) {
     return (
@@ -24,7 +25,7 @@ const SessionChart = ({ data }: SessionChartProps) => {
         >
           <div className="flex flex-col items-start justify-center">
             <p>{session.name}</p>
-            <p>{session.committeeName}</p>
+            <p>{yearToCommitteeMap.get(session.name) ?? "委員會"}</p>
           </div>
           <div className="md:mx-auto">
             <CirclePackChart
