@@ -7,7 +7,7 @@ import { GET_PAGINATED_PROPOSALS_QUERY, proposalQueryKeys } from "~/queries";
 import content from "./page-content";
 import ProgressBar from "~/components/progress-bar";
 import BudgetsSelector from "~/components/budgets-selector";
-import SortToolbar, { sortOptions } from "~/components/sort-toolbar";
+import SortToolbar from "~/components/sort-toolbar";
 import BudgetTable from "~/components/budget-table";
 import {
   useSelectedSort,
@@ -24,11 +24,15 @@ import type {
   GetPaginatedProposalsQuery,
 } from "~/graphql/graphql";
 import { OrderDirection } from "~/graphql/graphql";
+import { SortDirection } from "~/constants/enums";
 import AllBudgetsSkeleton from "~/components/skeleton/all-budgets-skeleton";
 import Pagination from "~/components/pagination";
 import { usePagination, usePaginationActions } from "~/stores/paginationStore";
 import { proposalToBudgetTableData } from "./helpers";
 import useDebounce from "~/hooks/useDebounce";
+import { SEARCH_DEBOUNCE_DELAY } from "~/constants/config";
+import { sortOptions } from "~/constants/options";
+import { find } from "lodash";
 
 export const AllBudgets = () => {
   // 分頁狀態
@@ -41,7 +45,10 @@ export const AllBudgets = () => {
   const departmentId = useDepartmentId();
   const personId = usePersonId();
   const searchedValue = useSearchedValue();
-  const debouncedSearchedValue = useDebounce(searchedValue, 500);
+  const debouncedSearchedValue = useDebounce(
+    searchedValue,
+    SEARCH_DEBOUNCE_DELAY
+  );
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
   // 重複資料檢測 Map
@@ -51,11 +58,13 @@ export const AllBudgets = () => {
   const skip = (currentPage - 1) * pageSize;
   const orderBy = useMemo((): ProposalOrderByInput[] => {
     // 將 sortOptions 的 value 轉換為 GraphQL orderBy 格式
-    const sortOption = sortOptions.find((o) => o.value === selectedSort);
+    const sortOption = find(sortOptions, (o) => o.value === selectedSort);
     if (!sortOption) return [{ id: OrderDirection.Desc }];
 
     const direction =
-      sortOption.direction === "asc" ? OrderDirection.Asc : OrderDirection.Desc;
+      sortOption.direction === SortDirection.ASC
+        ? OrderDirection.Asc
+        : OrderDirection.Desc;
 
     return [
       {

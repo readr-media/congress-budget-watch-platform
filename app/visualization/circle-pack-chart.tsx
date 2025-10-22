@@ -9,6 +9,7 @@ type CirclePackChartProps = {
   width?: number;
   height?: number;
   padding?: number;
+  onNodeClick?: (node: NodeDatum) => void;
 };
 
 const CirclePackChart = ({
@@ -128,7 +129,9 @@ const CirclePackChart = ({
       .attr("pointer-events", "none")
       .attr("text-anchor", "middle")
       .selectAll<SVGTextElement, d3.HierarchyCircularNode<NodeDatum>>("text")
-      .data(root.descendants().slice(1) as d3.HierarchyCircularNode<NodeDatum>[])
+      .data(
+        root.descendants().slice(1) as d3.HierarchyCircularNode<NodeDatum>[]
+      )
       .join("text")
       .style("fill-opacity", (d) => (d.parent === root ? "1" : "0"))
       .style("display", (d) => (d.parent === root ? "inline" : "none"))

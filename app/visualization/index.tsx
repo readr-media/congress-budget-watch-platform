@@ -14,13 +14,16 @@ import {
   type ProposalOrderByInput,
   type ProposalWhereInput,
 } from "~/graphql/graphql";
-import { sortOptions } from "~/components/sort-toolbar";
+import { sortOptions } from "~/constants/options";
 import {
   transformToCirclePackData,
   transformToGroupedByLegislatorData,
   type NodeDatum,
 } from "./helpers";
 import CirclePackChart from "./circle-pack-chart";
+import { find, sumBy, filter } from "lodash";
+import BudgetDetailSkeleton from "~/components/skeleton/budget-detail-skeleton";
+import { useMediaQuery } from "usehooks-ts";
 
 const useChartDimensions = () => {
   const [width, setWidth] = useState(300); // Start with a non-zero default
@@ -77,6 +80,7 @@ const Visualization = () => {
   const [activeTab, setActiveTab] = useState("legislator");
   const [mode, setMode] = useState<"amount" | "count">("amount");
   const [selectedYear, setSelectedYear] = useState<OptionType>(yearOptions[0]);
+  const isDesktop = useMediaQuery("(min-width: 768px)");
   const selectedSort = "id-asc";
   const currentPage = 1;
   const pageSize = 1000;
@@ -89,7 +93,7 @@ const Visualization = () => {
   };
   const orderBy = useMemo((): ProposalOrderByInput[] => {
     // 將 sortOptions 的 value 轉換為 GraphQL orderBy 格式
-    const sortOption = sortOptions.find((o) => o.value === selectedSort);
+    const sortOption = find(sortOptions, (o) => o.value === selectedSort);
     if (!sortOption) return [{ id: OrderDirection.Desc }];
 
     const direction =
@@ -107,7 +111,7 @@ const Visualization = () => {
       pageSize,
       selectedSort,
       whereFilter(),
-      selectedYear.value
+      parseInt(selectedYear.value)
     ),
     queryFn: () =>
       execute(GET_PAGINATED_PROPOSALS_QUERY, {
@@ -118,7 +122,6 @@ const Visualization = () => {
       }),
     placeholderData: keepPreviousData, // 避免切頁時閃爍
   });
-  console.log("data", data);
 
   const handleNodeClick = useCallback(
     (node: NodeDatum) => {
@@ -130,41 +133,31 @@ const Visualization = () => {
   );
 
   const summaryStats = useMemo(() => {
-    if (!data?.proposals) {
-      return {
-        totalReductionAmount: 0,
-        reductionCount: 0,
-        totalFreezeAmount: 0,
-        freezeCount: 0,
-        mainResolutionCount: 0,
-      };
-    }
+    const proposals = data?.proposals ?? [];
 
-    return data.proposals.reduce(
-      (acc, proposal) => {
-        if (proposal.reductionAmount && proposal.reductionAmount > 0) {
-          acc.totalReductionAmount += proposal.reductionAmount;
-          acc.reductionCount += 1;
-        }
-        if (proposal.freezeAmount && proposal.freezeAmount > 0) {
-          acc.totalFreezeAmount += proposal.freezeAmount;
-          acc.freezeCount += 1;
-        }
-        if (proposal.proposalTypes?.includes(ProposalProposalTypeType.Other)) {
-          acc.mainResolutionCount += 1;
-        }
-        return acc;
-      },
-      {
-        totalReductionAmount: 0,
-        reductionCount: 0,
-        totalFreezeAmount: 0,
-        freezeCount: 0,
-        mainResolutionCount: 0,
-      }
+    const reductionProposals = filter(
+      proposals,
+      (p) => p.reductionAmount && p.reductionAmount > 0
     );
+
+    const freezeProposals = filter(
+      proposals,
+      (p) => p.freezeAmount && p.freezeAmount > 0
+    );
+
+    const mainResolutionProposals = filter(proposals, (p) =>
+      p.proposalTypes?.includes(ProposalProposalTypeType.Other)
+    );
+
+    return {
+      totalReductionAmount: sumBy(reductionProposals, "reductionAmount"),
+      reductionCount: reductionProposals.length,
+      totalFreezeAmount: sumBy(freezeProposals, "freezeAmount"),
+      freezeCount: freezeProposals.length,
+      mainResolutionCount: mainResolutionProposals.length,
+    };
   }, [data]);
-  console.log("summaryStats", summaryStats);
+
   const legislatorCirclePackData = useMemo(() => {
     if (!data) return null;
     if (mode === "count") {
@@ -172,7 +165,7 @@ const Visualization = () => {
     }
     return transformToCirclePackData(data);
   }, [data, mode]);
-  console.log("circlePackData", legislatorCirclePackData);
+
   if (isLoading) {
     return (
       <div className="flex h-96 items-center justify-center">
@@ -265,7 +258,7 @@ const Visualization = () => {
               個提案）
             </p>
             <p>
-              凍結{" "}
+              凍結
               <span className="text-[#E9808E]">
                 {summaryStats.totalFreezeAmount.toLocaleString()}
               </span>
@@ -283,30 +276,25 @@ const Visualization = () => {
           </div>
         </div>
         <BudgetTypeLegend items={BUDGET_TYPE_LEGEND_ITEMS} />
-        {activeTab === "legislator" && legislatorCirclePackData && (
-          <div
-            ref={chartContainerRef}
-            className="mx-auto w-full lg:max-w-[1000px] xl:max-w-[1200px]"
-          >
-            <CirclePackChart
-              data={legislatorCirclePackData}
-              onNodeClick={handleNodeClick}
-              width={chartWidth}
-              height={chartWidth}
-            />
-          </div>
-        )}
-        {activeTab === "department" && data && (
-          <div
-            ref={chartContainerRef}
-            className="mx-auto w-full lg:max-w-[1000px] xl:max-w-[1200px]"
-          >
-            <DepartmentVisualization
-              data={data}
-              onNodeClick={handleNodeClick}
-              width={chartWidth}
-              mode={mode}
-            />
+        {isLoading && <BudgetDetailSkeleton isDesktop={isDesktop} />}
+        {!isLoading && (
+          <div ref={chartContainerRef} className="chart-container">
+            {activeTab === "legislator" && legislatorCirclePackData && (
+              <CirclePackChart
+                data={legislatorCirclePackData}
+                onNodeClick={handleNodeClick}
+                width={chartWidth}
+                height={chartWidth}
+              />
+            )}
+            {activeTab === "department" && data && (
+              <DepartmentVisualization
+                data={data}
+                onNodeClick={handleNodeClick}
+                width={chartWidth}
+                mode={mode}
+              />
+            )}
           </div>
         )}
       </div>

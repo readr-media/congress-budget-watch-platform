@@ -1,23 +1,7 @@
 import Select, { type SingleValue } from "react-select";
 import { useMemo } from "react";
 import { DropdownIndicator } from "~/components/budgets-selector";
-
-export const sortOptions = [
-  {
-    value: "id-asc",
-    label: "編號 (升序)",
-    field: "id",
-    direction: "asc",
-  },
-  {
-    value: "id-desc",
-    label: "編號 (降序)",
-    field: "id",
-    direction: "desc",
-  },
-] as const;
-
-export type SortOption = (typeof sortOptions)[number];
+import { sortOptions } from "~/constants/options";
 
 type SortToolbarProps = {
   selectedValue: string;

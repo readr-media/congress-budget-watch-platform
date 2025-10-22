@@ -194,12 +194,13 @@ export const proposalQueryKeys = {
     page: number,
     pageSize: number,
     sortBy: string,
-    where?: Record<string, unknown>
+    where?: Record<string, unknown>,
+    year?: number | string // 新增 year 參數
   ) =>
     [
       ...proposalQueryKeys.lists(),
       "paginated",
-      { page, pageSize, sortBy, where },
+      { page, pageSize, sortBy, where, year }, // 將 year 加入 key
     ] as const,
   details: () => [...proposalQueryKeys.all, "detail"] as const,
   detail: (id: string) => [...proposalQueryKeys.details(), id] as const,
