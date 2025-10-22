@@ -59,8 +59,8 @@ type OptionType = {
 };
 
 const yearOptions: OptionType[] = [
-  { value: "2025", label: "114年度 (2025)" },
-  { value: "2024", label: "113年度 (2024)" },
+  { value: "114", label: "114年度 (2025)" },
+  { value: "113", label: "113年度 (2024)" },
 ];
 
 // data layer
@@ -69,12 +69,14 @@ const Visualization = () => {
   // "department" || "legislator"
   const [activeTab, setActiveTab] = useState("legislator");
   const [mode, setMode] = useState<"amount" | "count">("amount");
-  const [selectOptions, setSelectOptions] = useState<OptionType[]>(yearOptions);
+  const [selectedYear, setSelectedYear] = useState<OptionType>(yearOptions[0]);
   const selectedSort = "id-asc";
   const currentPage = 1;
   const pageSize = 1000;
   const whereFilter = () => {
-    const filters: ProposalWhereInput = {};
+    const filters: ProposalWhereInput = {
+      year: { equals: parseInt(selectedYear.value) },
+    };
 
     return filters;
   };
@@ -97,7 +99,8 @@ const Visualization = () => {
       currentPage,
       pageSize,
       selectedSort,
-      whereFilter()
+      whereFilter(),
+      selectedYear.value,
     ),
     queryFn: () =>
       execute(GET_PAGINATED_PROPOSALS_QUERY, {
@@ -195,9 +198,9 @@ const Visualization = () => {
           <div className="flex items-center justify-center">
             <VisualizationSelector
               options={yearOptions}
-              value={selectOptions[0]}
+              value={selectedYear}
               onChange={(option) => {
-                if (option) setSelectOptions([option]);
+                if (option) setSelectedYear(option);
               }}
             />
           </div>

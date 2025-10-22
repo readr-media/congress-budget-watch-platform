@@ -30,7 +30,7 @@ const VisualizationLegislator = () => {
       AND: [
         {
           proposers: {
-            every: {
+            some: {
               id: {
                 equals: proposerId,
               },
@@ -55,7 +55,7 @@ const VisualizationLegislator = () => {
         where: whereFilter,
       }),
   });
-
+  console.log("proposalsData", proposalsData);
   // 轉換資料供 SessionChart 使用
   const sessionData = useMemo(() => {
     if (!proposalsData) return [];
