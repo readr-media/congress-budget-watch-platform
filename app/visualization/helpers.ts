@@ -91,61 +91,89 @@ export const transformToGroupedSessionData = (
     const categoryNodes: NodeDatum[] = [];
 
     Object.entries(categoryGroups).forEach(([category, categoryProposals]) => {
-      const proposalsToProcess =
-        mode === "amount"
-          ? categoryProposals.filter(
-              (p) => (p.freezeAmount ?? 0) > 0 || (p.reductionAmount ?? 0) > 0
-            )
-          : categoryProposals;
+      if (mode === "amount") {
+        const proposalsToProcess = categoryProposals.filter(
+          (p) => (p.freezeAmount ?? 0) > 0 || (p.reductionAmount ?? 0) > 0,
+        );
 
-      if (proposalsToProcess.length === 0) {
-        return;
-      }
-
-      // 建立提案節點（第三層）
-      const proposalNodes: NodeDatum[] = proposalsToProcess.map((proposal) => {
-        const { id, government, freezeAmount, reductionAmount } = proposal;
-        const party = proposal.proposers?.[0]?.party?.name ?? "無黨籍";
-
-        let originalValue: number;
-        let scaledValue: number;
-
-        if (mode === "amount") {
-          originalValue = (freezeAmount ?? 0) + (reductionAmount ?? 0);
-          scaledValue = Math.pow(originalValue, 0.45);
-        } else {
-          originalValue = 1;
-          scaledValue = 1;
+        if (proposalsToProcess.length === 0) {
+          return;
         }
 
-        const displayValue =
-          mode === "amount" ? `${originalValue.toLocaleString()}元` : "1案";
-        const name = `${id}\n${
-          government?.name ?? "未知部會"
-        }\n${displayValue}`;
+        const proposalNodes: NodeDatum[] = proposalsToProcess.map(
+          (proposal) => {
+            const { id, government, freezeAmount, reductionAmount } = proposal;
+            const party = proposal.proposers?.[0]?.party?.name ?? "無黨籍";
+            const originalValue = (freezeAmount ?? 0) + (reductionAmount ?? 0);
+            const scaledValue = Math.pow(originalValue, 0.45);
+            const displayValue = `${originalValue.toLocaleString()}元`;
+            const name = `${id}\n${
+              government?.name ?? "未知部會"
+            }\n${displayValue}`;
+            const color = PARTY_COLORS.get(party) || DEFAULT_COLOR;
 
-        const color = PARTY_COLORS.get(party) || DEFAULT_COLOR;
+            return {
+              id,
+              name,
+              value: scaledValue,
+              color,
+              isFrozen: !!freezeAmount,
+              children: [],
+            };
+          },
+        );
 
-        return {
-          id: id,
-          name,
-          value: scaledValue,
-          color,
-          isFrozen: !!freezeAmount,
-          children: [],
-        };
-      });
+        const categoryValue = sumBy(proposalNodes, (n) => n.value || 0);
+        categoryNodes.push({
+          id: `category-${year}-${category}`,
+          name: category,
+          value: categoryValue,
+          color: "#6B7FFF",
+          children: proposalNodes,
+        });
+      } else {
+        // mode === 'count'
+        const groupedByGov = groupBy(
+          categoryProposals,
+          (p) => p.government?.name ?? "未知部會",
+        );
 
-      const categoryValue = sumBy(proposalNodes, (n) => n.value || 0);
+        const governmentNodes: NodeDatum[] = Object.entries(groupedByGov).map(
+          ([govName, govProposals]) => {
+            const proposalNodes: NodeDatum[] = govProposals.map((proposal) => {
+              const { id, government } = proposal;
+              const party = proposal.proposers?.[0]?.party?.name ?? "無黨籍";
+              const name = `${id}\n${
+                government?.name ?? "未知部會"
+              }\n1案`;
+              const color = PARTY_COLORS.get(party) || DEFAULT_COLOR;
 
-      // 建立類別節點（第二層）
-      categoryNodes.push({
-        id: `category-${year}-${category}`,
-        name: category,
-        value: categoryValue,
-        color: "#6B7FFF",
-        children: proposalNodes,
-      });
+              return { id, name, value: 1, color, children: [] };
+            });
+
+            return {
+              id: `gov-${year}-${category}-${govName}`,
+              name: govName,
+              value: govProposals.length,
+              children: proposalNodes,
+              color: "#8884d8", // Placeholder color for government nodes
+            };
+          },
+        );
+
+        if (governmentNodes.length === 0) {
+          return;
+        }
+
+        const categoryValue = sumBy(governmentNodes, (n) => n.value || 0);
+        categoryNodes.push({
+          id: `category-${year}-${category}`,
+          name: category,
+          value: categoryValue,
+          color: "#6B7FFF",
+          children: governmentNodes,
+        });
+      }
     });
 
     if (categoryNodes.length === 0) {

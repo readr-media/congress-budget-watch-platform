@@ -1,6 +1,10 @@
 import CirclePackChart from "../circle-pack-chart";
 import type { NodeDatum } from "../helpers";
 
+const getBorderBottomClass = (index: number, totalItems: number) => {
+  return totalItems > 1 && index < totalItems - 1 ? "border-b-1" : "";
+};
+
 type SessionChartProps = {
   data: NodeDatum[]; // 每個元素代表一個年度 session
   yearToCommitteeMap: Map<string, string>;
@@ -8,6 +12,7 @@ type SessionChartProps = {
 
 const SessionChart = ({ data, yearToCommitteeMap }: SessionChartProps) => {
   // 如果沒有資料，顯示提示訊息
+  const CIRCLE_PACK_CHART_PADDING = 50;
   if (!data || data.length === 0) {
     return (
       <div className="flex w-full items-center justify-center py-8">
@@ -18,10 +23,13 @@ const SessionChart = ({ data, yearToCommitteeMap }: SessionChartProps) => {
 
   return (
     <>
-      {data.map((session) => (
+      {data.map((session, index) => (
         <div
           key={session.id}
-          className="mb-2 flex w-full flex-col items-start justify-center border-b-1"
+          className={`mb-2 flex w-full flex-col items-start justify-center ${getBorderBottomClass(
+            index,
+            data.length
+          )}`}
         >
           <div className="flex flex-col items-start justify-center">
             <p>{session.name}</p>
@@ -34,8 +42,7 @@ const SessionChart = ({ data, yearToCommitteeMap }: SessionChartProps) => {
                 name: "root",
                 children: session.children,
               }}
-              //TODO: set 50 for padding now
-              padding={50}
+              padding={CIRCLE_PACK_CHART_PADDING}
             />
           </div>
         </div>

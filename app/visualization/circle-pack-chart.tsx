@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 import { useEffect, useMemo, useRef } from "react";
-import { useNavigate } from "react-router";
+import { useMatch, useNavigate } from "react-router";
 import { FROZEN_PATH_D } from "~/constants/svg-paths";
 import type { NodeDatum } from "./helpers";
 
@@ -19,6 +19,7 @@ const CirclePackChart = ({
 }: CirclePackChartProps) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const navigate = useNavigate();
+  const isVisualizationRoute = useMatch("/visualization");
 
   const { root, width, height, color } = useMemo(() => {
     const width = customWidth;
@@ -373,7 +374,7 @@ const CirclePackChart = ({
       if (event.defaultPrevented) return;
 
       // 如果節點有 id，則導航到詳情頁
-      if (d.data.id) {
+      if (d.data.id && isVisualizationRoute && !d.children) {
         navigate(`/visualization/legislator/${d.data.id}`);
         event.stopPropagation();
         return;
@@ -393,7 +394,7 @@ const CirclePackChart = ({
     return () => {
       svg.remove();
     };
-  }, [root, width, height, color, navigate]);
+  }, [root, width, height, color, navigate, isVisualizationRoute]);
 
   return (
     <div className="flex w-full items-center justify-center">
