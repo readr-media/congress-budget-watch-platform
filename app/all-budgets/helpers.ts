@@ -1,51 +1,75 @@
-import type { BudgetTableData } from "~/components/budget-table";
-import type { Proposal } from "~/graphql/graphql";
+import {
+  ProposalProposalTypeType,
+  type People,
+  type Proposal,
+} from "~/graphql/graphql";
+
+import { flow, pick, values, sum, defaultTo, prop, get } from "lodash/fp";
 import {
   formatNumber,
   formatReducedAndFrozenAmount,
-  getProposalTypeDisplay,
 } from "~/budget-detail/helpers";
-import { formatLegislator } from "~/utils/format";
+import type { BudgetTableData } from "~/components/budget-table";
 
-export function proposalToBudgetTableData(
-  proposal: Proposal,
-): BudgetTableData {
-  const totalReacts =
-    (proposal.react_angry ?? 0) +
-    (proposal.react_disappoint ?? 0) +
-    (proposal.react_good ?? 0) +
-    (proposal.react_whatever ?? 0);
+function getProposalTypeDisplay(
+  proposalTypes?: (ProposalProposalTypeType | null)[] | null
+): string {
+  if (!proposalTypes || proposalTypes.length === 0) {
+    return "無";
+  }
+  return proposalTypes
+    .filter((proposalType) => proposalType !== null)
+    .map((proposalType) => proposalType![0] ?? "")
+    .join("、");
+}
 
-  const result: BudgetTableData = {
-    id: proposal.id,
-    sequence: 0, // FIXME: 'sequence' is not available in the paginated query
-    department: proposal.government?.name || "N/A", // Correctly access department name
-    // FIXME: 'meetingDate' is not directly available on Proposal in paginated query.
-    // It's inside the `meetings` array which is not fetched here.
-    date: "無審議日期",
-    stage: "階段", // This is hardcoded for now
-    proposer:
-      proposal.proposers?.map(formatLegislator).join(" ") || "未知提案人",
-    proposalType: getProposalTypeDisplay(proposal.proposalTypes), // Use 'proposalTypes'
-    proposalResult:
-      proposal.result === "passed"
-        ? "通過"
-        : proposal.result === "rejected"
-          ? "不通過"
-          : "待審議",
-    proposalContent: proposal.description || "無提案內容",
-    originalAmount: formatNumber(proposal.budget?.budgetAmount),
-    reducedAmount: formatReducedAndFrozenAmount(
-      proposal.reductionAmount,
-      proposal.freezeAmount,
-    ),
-    // FIXME: 'tags' are not available in the Proposal type from the GraphQL query.
-    tags: undefined,
-    status: "committeed",
-    // FIXME: 'committeedDate' relies on meetingDate which is not available.
-    committeedDate: undefined,
-    totalReacts,
+function formatLegislator(legislator: People | null): string {
+  return legislator?.name || "";
+}
+
+const calculateTotalReacts = flow(
+  pick(["react_angry", "react_disappoint", "react_good", "react_whatever"]),
+  values,
+  (nums) => nums.map((n) => n || 0),
+  sum
+);
+
+const formatProposers = (proposers?: (People | null)[] | null): string =>
+  proposers && proposers.length > 0
+    ? proposers.map(formatLegislator).join(" ")
+    : "未知提案人";
+
+const transformProposalResult = (result?: string | null): string => {
+  const resultMap: Record<string, string> = {
+    passed: "通過",
+    rejected: "不通過",
+  };
+  return (result && resultMap[result]) || "待審議";
+};
+
+export function proposalToBudgetTableData(proposal: Proposal): BudgetTableData {
+  const spec = {
+    id: prop("id"),
+    sequence: () => 0,
+    department: flow(get("government.name"), defaultTo("部會")),
+    date: () => "無審議日期",
+    stage: () => "階段",
+    proposer: flow(prop("proposers"), formatProposers),
+    proposalType: flow(prop("proposalTypes"), getProposalTypeDisplay),
+    proposalResult: flow(prop("result"), transformProposalResult),
+    proposalContent: flow(prop("reason"), defaultTo("無提案內容")),
+    originalAmount: flow(get("budget.budgetAmount"), formatNumber),
+    reducedAmount: (p: Proposal) =>
+      formatReducedAndFrozenAmount(p.reductionAmount, p.freezeAmount),
+    tags: () => undefined,
+    status: () => "committeed",
+    committeedDate: () => undefined,
+    totalReacts: calculateTotalReacts,
   };
 
-  return result;
+  return Object.keys(spec).reduce((acc, key) => {
+    acc[key as keyof BudgetTableData] =
+      spec[key as keyof typeof spec](proposal);
+    return acc;
+  }, {} as Partial<BudgetTableData>) as BudgetTableData;
 }
