@@ -120,6 +120,11 @@ export const GET_PROPOSAL_BY_ID_QUERY = graphql(`
       proposalTypes
       recognitionAnswer
       unfreezeStatus
+      react_angry
+      react_disappoint
+      react_good
+      react_whatever
+      budgetImageUrl
       government {
         id
         name

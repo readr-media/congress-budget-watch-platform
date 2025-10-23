@@ -862,7 +862,7 @@ const BudgetDetail = () => {
     <p className="w-fit rounded-t-lg border-2 border-black bg-[#E9808E] px-2.5 py-1 text-white">
       分類
     </p>
-    <p className="flex w-fit border-t-1 pt-4 md:pr-8 lg:pr-12">
+    <p className="flex w-fit border-t pt-4 md:pr-8 lg:pr-12">
       經濟部
     </p>
   </div>
@@ -870,7 +870,7 @@ const BudgetDetail = () => {
     <p className="w-fit rounded-t-lg border-2 border-black bg-[#E9808E] px-2.5 py-1 text-white">
       部會
     </p>
-    <p className="flex w-fit border-t-1 pt-4 md:pr-8 lg:pr-12">
+    <p className="flex w-fit border-t pt-4 md:pr-8 lg:pr-12">
       台灣自來水股份有限公司
     </p>
   </div>
@@ -885,7 +885,7 @@ const BudgetDetail = () => {
     <p className="w-fit rounded-t-lg border-2 border-black bg-[#E9808E] px-2.5 py-1 text-white">
       分類
     </p>
-    <p className="flex w-fit border-t-1 pt-4 md:pr-8 lg:pr-12">
+    <p className="flex w-fit border-t pt-4 md:pr-8 lg:pr-12">
       {proposal.government?.category || "N/A"}
     </p>
   </div>
@@ -893,7 +893,7 @@ const BudgetDetail = () => {
     <p className="w-fit rounded-t-lg border-2 border-black bg-[#E9808E] px-2.5 py-1 text-white">
       部會
     </p>
-    <p className="flex w-fit border-t-1 pt-4 md:pr-8 lg:pr-12">
+    <p className="flex w-fit border-t pt-4 md:pr-8 lg:pr-12">
       {proposal.government?.name || "N/A"}
     </p>
   </div>
@@ -901,7 +901,7 @@ const BudgetDetail = () => {
     <p className="w-fit rounded-t-lg border-2 border-black bg-[#E9808E] px-2.5 py-1 text-white">
       提案人（連署）
     </p>
-    <p className="flex w-fit border-t-1 pt-4 md:pr-8 lg:pr-12">
+    <p className="flex w-fit border-t pt-4 md:pr-8 lg:pr-12">
       {proposerName}
       <br />
       （{cosignersText}）
@@ -911,13 +911,13 @@ const BudgetDetail = () => {
     <p className="w-fit rounded-t-lg border-2 border-black bg-[#E9808E] px-2.5 py-1 text-white">
       提案
     </p>
-    <p className="flex w-fit border-t-1 pt-4 md:pr-12">{proposalType}</p>
+    <p className="flex w-fit border-t pt-4 md:pr-12">{proposalType}</p>
   </div>
   <div className="grow">
     <p className="w-fit rounded-t-lg border-2 border-black bg-[#E9808E] px-2.5 py-1 text-white">
       審議結果
     </p>
-    <p className="flex border-t-1 pt-4 pr-12">{resultText}</p>
+    <p className="flex border-t pt-4 pr-12">{resultText}</p>
   </div>
 </section>
 ```
@@ -931,7 +931,7 @@ const BudgetDetail = () => {
     <p className="w-fit rounded-t-lg border-2 border-black bg-[#E9808E] px-2.5 py-1 text-white">
       審議階段
     </p>
-    <div className="flex w-fit border-t-1 pt-4 pr-13 md:pr-24">
+    <div className="flex w-fit border-t pt-4 pr-13 md:pr-24">
       <Timeline items={MOCK_DATA} />
     </div>
   </div>
@@ -939,7 +939,7 @@ const BudgetDetail = () => {
     <p className="w-fit rounded-t-lg border-2 border-black bg-[#E9808E] px-2.5 py-1 text-white">
       是否併案
     </p>
-    <div className="flex flex-col gap-y-4 border-t-1 pt-4">
+    <div className="flex flex-col gap-y-4 border-t pt-4">
       <p>是</p>
       {/* ... hardcoded merged proposals */}
     </div>
@@ -954,7 +954,7 @@ const BudgetDetail = () => {
     <p className="w-fit rounded-t-lg border-2 border-black bg-[#E9808E] px-2.5 py-1 text-white">
       審議階段
     </p>
-    <div className="flex w-fit border-t-1 pt-4 pr-13 md:pr-24">
+    <div className="flex w-fit border-t pt-4 pr-13 md:pr-24">
       {timelineData.length > 0 ? (
         <Timeline items={timelineData} />
       ) : (
@@ -966,7 +966,7 @@ const BudgetDetail = () => {
     <p className="w-fit rounded-t-lg border-2 border-black bg-[#E9808E] px-2.5 py-1 text-white">
       是否併案
     </p>
-    <div className="flex flex-col gap-y-4 border-t-1 pt-4">
+    <div className="flex flex-col gap-y-4 border-t pt-4">
       <p>{hasMerged ? "是" : "否"}</p>
       {hasMerged && mergedProposalsData.length > 0 && (
         <div className="grid-rows-auto grid grid-cols-3 gap-4.5">
@@ -995,7 +995,7 @@ const BudgetDetail = () => {
     <p className="w-fit rounded-t-lg border-2 border-black bg-[#E9808E] px-2.5 py-1 text-white">
       提案內容
     </p>
-    <div className="flex flex-col gap-y-4 border-t-1 pt-4">
+    <div className="flex flex-col gap-y-4 border-t pt-4">
       <p className="text-sm">
         原住民族委員會為深化民族教育內涵...【208】
       </p>
@@ -1011,7 +1011,7 @@ const BudgetDetail = () => {
     <p className="w-fit rounded-t-lg border-2 border-black bg-[#E9808E] px-2.5 py-1 text-white">
       提案內容
     </p>
-    <div className="flex flex-col gap-y-4 border-t-1 pt-4">
+    <div className="flex flex-col gap-y-4 border-t pt-4">
       <p className="text-sm whitespace-pre-wrap">
         {proposal.reason || proposal.description || "無提案內容"}
       </p>
@@ -1030,7 +1030,7 @@ const BudgetDetail = () => {
       <p className="w-fit rounded-t-lg border-2 border-black bg-[#E9808E] px-2.5 py-1 text-white">
         預算金額
       </p>
-      <p className="flex w-fit border-t-1 border-black pt-4 pr-32 font-bold text-[#E9808E]">
+      <p className="flex w-fit border-t border-black pt-4 pr-32 font-bold text-[#E9808E]">
         21,200,000
       </p>
     </div>
@@ -1047,7 +1047,7 @@ const BudgetDetail = () => {
       <p className="w-fit rounded-t-lg border-2 border-black bg-[#E9808E] px-2.5 py-1 text-white">
         預算金額
       </p>
-      <p className="flex w-fit border-t-1 border-black pt-4 pr-32 font-bold text-[#E9808E]">
+      <p className="flex w-fit border-t border-black pt-4 pr-32 font-bold text-[#E9808E]">
         {formatNumber(proposal.budget?.budgetAmount)}
       </p>
     </div>
@@ -1055,7 +1055,7 @@ const BudgetDetail = () => {
       <p className="w-fit rounded-t-lg border-2 border-black bg-[#E9808E] px-2.5 py-1 text-white">
         減列金額
       </p>
-      <p className="flex w-fit border-t-1 border-black pt-4 pr-[136px] font-bold text-[#E9808E]">
+      <p className="flex w-fit border-t border-black pt-4 pr-[136px] font-bold text-[#E9808E]">
         {formatNumber(proposal.reductionAmount)}
       </p>
     </div>
@@ -1063,7 +1063,7 @@ const BudgetDetail = () => {
       <p className="w-fit rounded-t-lg border-2 border-black bg-[#E9808E] px-2.5 py-1 text-white">
         凍結金額
       </p>
-      <p className="flex border-t-1 border-black pt-4 font-bold text-[#E9808E]">
+      <p className="flex border-t border-black pt-4 font-bold text-[#E9808E]">
         {formatNumber(proposal.freezeAmount)}
       </p>
     </div>
@@ -1084,7 +1084,7 @@ const BudgetDetail = () => {
           <p className="w-fit rounded-t-lg border-2 border-black bg-[#E9808E] px-2.5 py-1 text-white">
             預算金額
           </p>
-          <p className="flex w-fit border-t-1 border-black pt-4 font-bold text-[#E9808E] md:pr-8 lg:pr-16 xl:pr-32">
+          <p className="flex w-fit border-t border-black pt-4 font-bold text-[#E9808E] md:pr-8 lg:pr-16 xl:pr-32">
             {formatNumber(proposal.budget?.budgetAmount)}
           </p>
         </div>
@@ -1095,7 +1095,7 @@ const BudgetDetail = () => {
           <p className="w-fit rounded-t-lg border-2 border-black bg-[#E9808E] px-2.5 py-1 text-white">
             科目/計畫
           </p>
-          <p className="flex border-t-1 border-black pt-4 pr-9">
+          <p className="flex border-t border-black pt-4 pr-9">
             {budgetCategory}
           </p>
         </div>
@@ -1103,7 +1103,7 @@ const BudgetDetail = () => {
           <p className="w-fit rounded-t-lg border-2 border-black bg-[#E9808E] px-2.5 py-1 text-white">
             計畫說明
           </p>
-          <p className="flex border-t-1 border-black pt-4 whitespace-pre-wrap">
+          <p className="flex border-t border-black pt-4 whitespace-pre-wrap">
             {proposal.budget?.projectDescription || "N/A"}
           </p>
         </div>
@@ -1113,7 +1113,7 @@ const BudgetDetail = () => {
       <p className="w-fit rounded-t-lg border-2 border-black bg-[#E9808E] px-2.5 py-1 text-white">
         提案單圖檔
       </p>
-      <div className="flex border-t-1 border-black pt-4 font-bold">
+      <div className="flex border-t border-black pt-4 font-bold">
         <Image
           src={proposal.budgetImageUrl || "/icon/default-image.svg"}
           alt="proposal-image"
@@ -1135,7 +1135,7 @@ const BudgetDetail = () => {
       <p className="w-fit rounded-t-lg border-2 border-black bg-[#E9808E] px-2.5 py-1 text-white">
         科目/計畫
       </p>
-      <p className="flex border-t-1 border-black pt-4 pr-9">
+      <p className="flex border-t border-black pt-4 pr-9">
         3703610100 一般行政 {">"} 02 基本行政工作維持費 {">"}{" "}
         計畫 1090000
       </p>
@@ -1153,7 +1153,7 @@ const BudgetDetail = () => {
       <p className="w-fit rounded-t-lg border-2 border-black bg-[#E9808E] px-2.5 py-1 text-white">
         科目/計畫
       </p>
-      <p className="flex border-t-1 border-black pt-4 pr-9">
+      <p className="flex border-t border-black pt-4 pr-9">
         {budgetCategory}
       </p>
     </div>
@@ -1162,7 +1162,7 @@ const BudgetDetail = () => {
       <p className="w-fit rounded-t-lg border-2 border-black bg-[#E9808E] px-2.5 py-1 text-white">
         計畫說明
       </p>
-      <p className="flex border-t-1 border-black pt-4 whitespace-pre-wrap">
+      <p className="flex border-t border-black pt-4 whitespace-pre-wrap">
         {proposal.budget?.projectDescription || "N/A"}
       </p>
     </div>
@@ -1179,7 +1179,7 @@ const BudgetDetail = () => {
     <p className="w-fit rounded-t-lg border-2 border-black bg-[#E9808E] px-2.5 py-1 text-white">
       上年度決算
     </p>
-    <p className="flex w-fit border-t-1 border-black pt-4 pr-[136px] font-bold">
+    <p className="flex w-fit border-t border-black pt-4 pr-[136px] font-bold">
       21,200,000
     </p>
   </div>
@@ -1194,7 +1194,7 @@ const BudgetDetail = () => {
     <p className="w-fit rounded-t-lg border-2 border-black bg-[#E9808E] px-2.5 py-1 text-white">
       上年度決算
     </p>
-    <p className="flex w-fit border-t-1 border-black pt-4 pr-[136px] font-bold">
+    <p className="flex w-fit border-t border-black pt-4 pr-[136px] font-bold">
       {formatNumber(proposal.budget?.lastYearSettlement)}
     </p>
   </div>
@@ -1202,7 +1202,7 @@ const BudgetDetail = () => {
     <p className="w-fit rounded-t-lg border-2 border-black bg-[#E9808E] px-2.5 py-1 text-white">
       上年度法定預算
     </p>
-    <p className="flex w-fit border-t-1 border-black pt-4 pr-[136px] font-bold">
+    <p className="flex w-fit border-t border-black pt-4 pr-[136px] font-bold">
       N/A
     </p>
   </div>
@@ -1210,7 +1210,7 @@ const BudgetDetail = () => {
     <p className="w-fit rounded-t-lg border-2 border-black bg-[#E9808E] px-2.5 py-1 text-white">
       與上年度比較
     </p>
-    <p className="flex border-t-1 border-black pt-4 font-bold text-[#3E51FF]">
+    <p className="flex border-t border-black pt-4 font-bold text-[#3E51FF]">
       N/A
     </p>
   </div>

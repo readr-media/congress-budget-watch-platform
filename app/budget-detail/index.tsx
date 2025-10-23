@@ -20,6 +20,7 @@ import {
 import type { Proposal } from "~/graphql/graphql";
 
 const BudgetDetail = () => {
+  const ShowLastYearData = false;
   const { id } = useParams();
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
@@ -80,7 +81,7 @@ const BudgetDetail = () => {
                     <p className="w-fit rounded-t-lg border-2 border-black bg-[#E9808E] px-2.5 py-1 text-white">
                       分類
                     </p>
-                    <p className="flex w-fit border-t-1 pt-4 md:pr-8 lg:pr-12">
+                    <p className="flex w-fit border-t pt-4 md:pr-8 lg:pr-12">
                       {proposal.government?.category || "N/A"}
                     </p>
                   </div>
@@ -88,7 +89,7 @@ const BudgetDetail = () => {
                     <p className="w-fit rounded-t-lg border-2 border-black bg-[#E9808E] px-2.5 py-1 text-white">
                       部會
                     </p>
-                    <p className="flex w-fit border-t-1 pt-4 md:pr-8 lg:pr-12">
+                    <p className="flex w-fit border-t pt-4 md:pr-8 lg:pr-12">
                       {proposal.government?.name || "N/A"}
                     </p>
                   </div>
@@ -96,7 +97,7 @@ const BudgetDetail = () => {
                     <p className="w-fit rounded-t-lg border-2 border-black bg-[#E9808E] px-2.5 py-1 text-white">
                       提案人（連署）
                     </p>
-                    <p className="flex w-fit border-t-1 pt-4 md:pr-18 lg:pr-32">
+                    <p className="flex w-fit border-t pt-4 md:pr-18 lg:pr-32">
                       {proposerName}
                       <br />（{cosignersText}）
                     </p>
@@ -105,7 +106,7 @@ const BudgetDetail = () => {
                     <p className="w-fit rounded-t-lg border-2 border-black bg-[#E9808E] px-2.5 py-1 text-white">
                       提案
                     </p>
-                    <p className="flex w-fit border-t-1 pt-4 md:pr-12">
+                    <p className="flex w-fit border-t pt-4 md:pr-12">
                       {proposalType}
                     </p>
                   </div>
@@ -113,7 +114,7 @@ const BudgetDetail = () => {
                     <p className="w-fit rounded-t-lg border-2 border-black bg-[#E9808E] px-2.5 py-1 text-white">
                       審議結果
                     </p>
-                    <p className="flex border-t-1 pt-4 pr-12">{resultText}</p>
+                    <p className="flex border-t pt-4 pr-12">{resultText}</p>
                   </div>
                 </section>
                 {/* row 2 */}
@@ -122,7 +123,7 @@ const BudgetDetail = () => {
                     <p className="w-fit rounded-t-lg border-2 border-black bg-[#E9808E] px-2.5 py-1 text-white">
                       審議階段
                     </p>
-                    <div className="flex w-fit border-t-1 pt-4 pr-13 md:pr-24">
+                    <div className="flex w-fit border-t pt-4 pr-13 md:pr-24">
                       {timelineData.length > 0 ? (
                         <Timeline items={timelineData} />
                       ) : (
@@ -134,7 +135,7 @@ const BudgetDetail = () => {
                     <p className="w-fit rounded-t-lg border-2 border-black bg-[#E9808E] px-2.5 py-1 text-white">
                       是否併案
                     </p>
-                    <div className="flex flex-col gap-y-4 border-t-1 pt-4">
+                    <div className="flex flex-col gap-y-4 border-t pt-4">
                       <p>{hasMerged ? "是" : "否"}</p>
                       {hasMerged && mergedProposalsData.length > 0 && (
                         <div className="grid-rows-auto grid grid-cols-3 gap-4.5">
@@ -158,7 +159,7 @@ const BudgetDetail = () => {
                     <p className="w-fit rounded-t-lg border-2 border-black bg-[#E9808E] px-2.5 py-1 text-white">
                       提案內容
                     </p>
-                    <div className="flex flex-col gap-y-4 border-t-1 pt-4">
+                    <div className="flex flex-col gap-y-4 border-t pt-4">
                       <p className="text-sm whitespace-pre-wrap">
                         {proposal.reason ||
                           proposal.description ||
@@ -174,7 +175,7 @@ const BudgetDetail = () => {
                       <p className="w-fit rounded-t-lg border-2 border-black bg-[#E9808E] px-2.5 py-1 text-white">
                         預算金額
                       </p>
-                      <p className="flex w-fit border-t-1 border-black pt-4 pr-32 font-bold text-[#E9808E]">
+                      <p className="flex w-fit border-t border-black pt-4 pr-32 font-bold text-[#E9808E]">
                         {formatNumber(proposal.budget?.budgetAmount)}
                       </p>
                     </div>
@@ -182,7 +183,7 @@ const BudgetDetail = () => {
                       <p className="w-fit rounded-t-lg border-2 border-black bg-[#E9808E] px-2.5 py-1 text-white">
                         減列金額
                       </p>
-                      <p className="flex w-fit border-t-1 border-black pt-4 pr-[136px] font-bold text-[#E9808E]">
+                      <p className="flex w-fit border-t border-black pt-4 pr-[136px] font-bold text-[#E9808E]">
                         {formatNumber(proposal.reductionAmount)}
                       </p>
                     </div>
@@ -190,7 +191,7 @@ const BudgetDetail = () => {
                       <p className="w-fit rounded-t-lg border-2 border-black bg-[#E9808E] px-2.5 py-1 text-white">
                         凍結金額
                       </p>
-                      <p className="flex border-t-1 border-black pt-4 font-bold text-[#E9808E]">
+                      <p className="flex border-t border-black pt-4 font-bold text-[#E9808E]">
                         {formatNumber(proposal.freezeAmount)}
                       </p>
                     </div>
@@ -205,7 +206,7 @@ const BudgetDetail = () => {
                           <p className="w-fit rounded-t-lg border-2 border-black bg-[#E9808E] px-2.5 py-1 text-white">
                             預算金額
                           </p>
-                          <p className="flex w-fit border-t-1 border-black pt-4 font-bold text-[#E9808E] md:pr-8 lg:pr-16 xl:pr-32">
+                          <p className="flex w-fit border-t border-black pt-4 font-bold text-[#E9808E] md:pr-8 lg:pr-16 xl:pr-32">
                             {formatNumber(proposal.budget?.budgetAmount)}
                           </p>
                         </div>
@@ -213,7 +214,7 @@ const BudgetDetail = () => {
                           <p className="w-fit rounded-t-lg border-2 border-black bg-[#E9808E] px-2.5 py-1 text-white">
                             減列金額
                           </p>
-                          <p className="flex w-fit border-t-1 border-black pt-4 font-bold text-[#E9808E] md:pr-8 lg:pr-16 xl:pr-32">
+                          <p className="flex w-fit border-t border-black pt-4 font-bold text-[#E9808E] md:pr-8 lg:pr-16 xl:pr-32">
                             {formatNumber(proposal.reductionAmount)}
                           </p>
                         </div>
@@ -221,7 +222,7 @@ const BudgetDetail = () => {
                           <p className="w-fit rounded-t-lg border-2 border-black bg-[#E9808E] px-2.5 py-1 text-white">
                             凍結金額
                           </p>
-                          <p className="flex border-t-1 border-black pt-4 pr-[93px] font-bold text-[#E9808E]">
+                          <p className="flex border-t border-black pt-4 pr-[93px] font-bold text-[#E9808E]">
                             {formatNumber(proposal.freezeAmount)}
                           </p>
                         </div>
@@ -231,7 +232,7 @@ const BudgetDetail = () => {
                           <p className="w-fit rounded-t-lg border-2 border-black bg-[#E9808E] px-2.5 py-1 text-white">
                             科目/計畫
                           </p>
-                          <p className="flex border-t-1 border-black pt-4 pr-9">
+                          <p className="flex border-t border-black pt-4 pr-9">
                             {budgetCategory}
                           </p>
                         </div>
@@ -239,7 +240,7 @@ const BudgetDetail = () => {
                           <p className="w-fit rounded-t-lg border-2 border-black bg-[#E9808E] px-2.5 py-1 text-white">
                             計畫說明
                           </p>
-                          <p className="flex border-t-1 border-black pt-4 whitespace-pre-wrap">
+                          <p className="flex border-t border-black pt-4 whitespace-pre-wrap">
                             {proposal.budget?.projectDescription || "N/A"}
                           </p>
                         </div>
@@ -249,7 +250,7 @@ const BudgetDetail = () => {
                       <p className="w-fit rounded-t-lg border-2 border-black bg-[#E9808E] px-2.5 py-1 text-white">
                         提案單圖檔
                       </p>
-                      <div className="flex border-t-1 border-black pt-4 font-bold">
+                      <div className="flex border-t border-black pt-4 font-bold">
                         <Image
                           src={
                             proposal.budgetImageUrl || "/icon/default-image.svg"
@@ -268,7 +269,7 @@ const BudgetDetail = () => {
                       <p className="w-fit rounded-t-lg border-2 border-black bg-[#E9808E] px-2.5 py-1 text-white">
                         科目/計畫
                       </p>
-                      <p className="flex border-t-1 border-black pt-4 pr-9">
+                      <p className="flex border-t border-black pt-4 pr-9">
                         {budgetCategory}
                       </p>
                     </div>
@@ -277,44 +278,46 @@ const BudgetDetail = () => {
                       <p className="w-fit rounded-t-lg border-2 border-black bg-[#E9808E] px-2.5 py-1 text-white">
                         計畫說明
                       </p>
-                      <p className="flex border-t-1 border-black pt-4 whitespace-pre-wrap">
+                      <p className="flex border-t border-black pt-4 whitespace-pre-wrap">
                         {proposal.budget?.projectDescription || "N/A"}
                       </p>
                     </div>
                   </section>
                 )}
                 {/* row 6 */}
-                <section className="flex">
-                  <div>
-                    <p className="w-fit rounded-t-lg border-2 border-black bg-[#E9808E] px-2.5 py-1 text-white">
-                      上年度決算
-                    </p>
-                    <p className="flex w-fit border-t-1 border-black pt-4 pr-[136px] font-bold">
-                      {formatNumber(proposal.budget?.lastYearSettlement)}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="w-fit rounded-t-lg border-2 border-black bg-[#E9808E] px-2.5 py-1 text-white">
-                      上年度法定預算
-                    </p>
-                    <p className="flex w-fit border-t-1 border-black pt-4 pr-[136px] font-bold">
-                      N/A
-                    </p>
-                  </div>
-                  <div className="grow">
-                    <p className="w-fit rounded-t-lg border-2 border-black bg-[#E9808E] px-2.5 py-1 text-white">
-                      與上年度比較
-                    </p>
-                    <p className="flex border-t-1 border-black pt-4 font-bold text-[#3E51FF]">
-                      N/A
-                    </p>
-                  </div>
-                </section>
+                {ShowLastYearData && (
+                  <section className="flex">
+                    <div>
+                      <p className="w-fit rounded-t-lg border-2 border-black bg-[#E9808E] px-2.5 py-1 text-white">
+                        上年度決算
+                      </p>
+                      <p className="flex w-fit border-t border-black pt-4 pr-[136px] font-bold">
+                        {formatNumber(proposal.budget?.lastYearSettlement)}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="w-fit rounded-t-lg border-2 border-black bg-[#E9808E] px-2.5 py-1 text-white">
+                        上年度法定預算
+                      </p>
+                      <p className="flex w-fit border-t border-black pt-4 pr-[136px] font-bold">
+                        N/A
+                      </p>
+                    </div>
+                    <div className="grow">
+                      <p className="w-fit rounded-t-lg border-2 border-black bg-[#E9808E] px-2.5 py-1 text-white">
+                        與上年度比較
+                      </p>
+                      <p className="flex border-t border-black pt-4 font-bold text-[#3E51FF]">
+                        N/A
+                      </p>
+                    </div>
+                  </section>
+                )}
                 {/* row 7 */}
                 <section className="mt-25 flex justify-center gap-x-10">
                   <div className="flex flex-col items-center">
                     <p className="mb-2">我覺得很讚</p>
-                    <p className="mb-5">999999</p>
+                    <p className="mb-5">{formatNumber(proposal.react_good)}</p>
                     <Image
                       src="/image/vote-good.svg"
                       alt="vote-good"
@@ -323,7 +326,7 @@ const BudgetDetail = () => {
                   </div>
                   <div className="flex flex-col items-center">
                     <p className="mb-2">我感到生氣</p>
-                    <p className="mb-5">999999</p>
+                    <p className="mb-5">{formatNumber(proposal.react_angry)}</p>
                     <Image
                       src="/image/vote-angry.svg"
                       alt="vote-angry"
@@ -332,7 +335,9 @@ const BudgetDetail = () => {
                   </div>
                   <div className="flex flex-col items-center">
                     <p className="mb-2">我有點失望</p>
-                    <p className="mb-5">999999</p>
+                    <p className="mb-5">
+                      {formatNumber(proposal.react_disappoint)}
+                    </p>
                     <Image
                       src="/image/vote-sad.svg"
                       alt="vote-sad"
@@ -341,7 +346,9 @@ const BudgetDetail = () => {
                   </div>
                   <div className="flex flex-col items-center">
                     <p className="mb-2">我不在意</p>
-                    <p className="mb-5">999999</p>
+                    <p className="mb-5">
+                      {formatNumber(proposal.react_whatever)}
+                    </p>
                     <Image
                       src="/image/vote-neutral.svg"
                       alt="vote-neutral"
@@ -522,7 +529,7 @@ const BudgetDetail = () => {
           <section className="grid grid-cols-2 items-center justify-items-center gap-10">
             <div className="flex flex-col items-center justify-center">
               <p className="mb-2 font-bold">我覺得很讚</p>
-              <p className="mb-6">999999</p>
+              <p className="mb-6">{formatNumber(proposal.react_good)}</p>
               <Image
                 src="/image/vote-good.svg"
                 alt="vote-good"
@@ -531,7 +538,7 @@ const BudgetDetail = () => {
             </div>
             <div className="flex flex-col items-center justify-center">
               <p className="mb-2 font-bold">我感到生氣</p>
-              <p className="mb-6">999999</p>
+              <p className="mb-6">{formatNumber(proposal.react_angry)}</p>
               <Image
                 src="/image/vote-angry.svg"
                 alt="vote-angry"
@@ -540,7 +547,7 @@ const BudgetDetail = () => {
             </div>
             <div className="flex flex-col items-center justify-center">
               <p className="mb-2 font-bold">我有點失望</p>
-              <p className="mb-6">999999</p>
+              <p className="mb-6">{formatNumber(proposal.react_disappoint)}</p>
               <Image
                 src="/image/vote-sad.svg"
                 alt="vote-sad"
@@ -549,7 +556,7 @@ const BudgetDetail = () => {
             </div>
             <div className="flex flex-col items-center justify-center">
               <p className="mb-2 font-bold">我不在意</p>
-              <p className="mb-6">999999</p>
+              <p className="mb-6">{formatNumber(proposal.react_whatever)}</p>
               <Image
                 src="/image/vote-neutral.svg"
                 alt="vote-neutral"
