@@ -8,6 +8,7 @@ import { GET_PROPOSAL_BY_ID_QUERY, proposalQueryKeys } from "~/queries";
 import { ERROR_REDIRECT_ROUTE } from "~/constants/endpoints";
 import { redirect } from "react-router";
 import BudgetDetailSkeleton from "~/components/skeleton/budget-detail-skeleton";
+import { VoteButtons } from "~/components/VoteButtons";
 import {
   formatBudgetCategory,
   formatMergedProposals,
@@ -59,6 +60,7 @@ const BudgetDetail = () => {
     proposal.budget?.mediumCategory,
     proposal.budget?.minorCategory
   );
+  const proposalKey = `${proposal.id}-${proposal.react_good}-${proposal.react_angry}-${proposal.react_disappoint}-${proposal.react_whatever}`;
 
   if (isDesktop)
     return (
@@ -315,46 +317,7 @@ const BudgetDetail = () => {
                 )}
                 {/* row 7 */}
                 <section className="mt-25 flex justify-center gap-x-10">
-                  <div className="flex flex-col items-center">
-                    <p className="mb-2">我覺得很讚</p>
-                    <p className="mb-5">{formatNumber(proposal.react_good)}</p>
-                    <Image
-                      src="/image/vote-good.svg"
-                      alt="vote-good"
-                      className="w-30"
-                    />
-                  </div>
-                  <div className="flex flex-col items-center">
-                    <p className="mb-2">我感到生氣</p>
-                    <p className="mb-5">{formatNumber(proposal.react_angry)}</p>
-                    <Image
-                      src="/image/vote-angry.svg"
-                      alt="vote-angry"
-                      className="w-30"
-                    />
-                  </div>
-                  <div className="flex flex-col items-center">
-                    <p className="mb-2">我有點失望</p>
-                    <p className="mb-5">
-                      {formatNumber(proposal.react_disappoint)}
-                    </p>
-                    <Image
-                      src="/image/vote-sad.svg"
-                      alt="vote-sad"
-                      className="w-30"
-                    />
-                  </div>
-                  <div className="flex flex-col items-center">
-                    <p className="mb-2">我不在意</p>
-                    <p className="mb-5">
-                      {formatNumber(proposal.react_whatever)}
-                    </p>
-                    <Image
-                      src="/image/vote-neutral.svg"
-                      alt="vote-neutral"
-                      className="w-30"
-                    />
-                  </div>
+                  <VoteButtons key={proposalKey} proposal={proposal} />
                 </section>
               </div>
             </div>
@@ -411,7 +374,7 @@ const BudgetDetail = () => {
             ))}
           </ul>
           {/* divider */}
-          <div className="my-4 h-[1px] w-full bg-gray-300" />
+          <div className="my-4 h-px w-full bg-gray-300" />
           <div className="flex flex-col gap-y-3">
             <p className="font-bold">提案人（連署）</p>
             <section>
@@ -420,7 +383,7 @@ const BudgetDetail = () => {
             </section>
           </div>
           {/* divider */}
-          <div className="my-4 h-[1px] w-full bg-gray-300" />
+          <div className="my-4 h-px w-full bg-gray-300" />
           <div className="flex justify-between">
             <section className="flex gap-x-12">
               <section className="flex-col">
@@ -438,7 +401,7 @@ const BudgetDetail = () => {
             </a>
           </div>
           {/* divider */}
-          <div className="my-4 h-[1px] w-full bg-gray-300" />
+          <div className="my-4 h-px w-full bg-gray-300" />
           <div>
             <p className="mb-4 font-bold">提案內容</p>
             <p className="whitespace-pre-wrap">
@@ -446,7 +409,7 @@ const BudgetDetail = () => {
             </p>
           </div>
           {/* divider */}
-          <div className="my-4 h-[1px] w-full bg-gray-300" />
+          <div className="my-4 h-px w-full bg-gray-300" />
           <div className="flex gap-x-10">
             <section className="flex flex-col gap-y-4">
               <p className="font-bold">預算金額</p>
@@ -461,7 +424,7 @@ const BudgetDetail = () => {
               </p>
             </section>
           </div>
-          <div className="my-4 h-[1px] w-full bg-gray-300" />
+          <div className="my-4 h-px w-full bg-gray-300" />
           <div className="flex gap-x-10">
             <section className="flex flex-col gap-y-4">
               <p className="font-bold">凍結金額</p>
@@ -478,7 +441,7 @@ const BudgetDetail = () => {
               />
             </section>
           </div>
-          <div className="my-4 h-[1px] w-full bg-gray-300" />
+          <div className="my-4 h-px w-full bg-gray-300" />
           <div className="flex flex-col gap-y-4">
             <div className="flex justify-between">
               <div className="flex items-center gap-x-2">
@@ -511,7 +474,7 @@ const BudgetDetail = () => {
             </p>
           </div>
           {/* divider */}
-          <div className="my-4 h-[1px] w-full bg-gray-300" />
+          <div className="my-4 h-px w-full bg-gray-300" />
           <div className="flex">
             <div className="flex flex-col gap-y-4">
               <p className="font-bold">上年度決算</p>
@@ -527,42 +490,7 @@ const BudgetDetail = () => {
             </div>
           </div>
           <section className="grid grid-cols-2 items-center justify-items-center gap-10">
-            <div className="flex flex-col items-center justify-center">
-              <p className="mb-2 font-bold">我覺得很讚</p>
-              <p className="mb-6">{formatNumber(proposal.react_good)}</p>
-              <Image
-                src="/image/vote-good.svg"
-                alt="vote-good"
-                className="w-32"
-              />
-            </div>
-            <div className="flex flex-col items-center justify-center">
-              <p className="mb-2 font-bold">我感到生氣</p>
-              <p className="mb-6">{formatNumber(proposal.react_angry)}</p>
-              <Image
-                src="/image/vote-angry.svg"
-                alt="vote-angry"
-                className="w-32"
-              />
-            </div>
-            <div className="flex flex-col items-center justify-center">
-              <p className="mb-2 font-bold">我有點失望</p>
-              <p className="mb-6">{formatNumber(proposal.react_disappoint)}</p>
-              <Image
-                src="/image/vote-sad.svg"
-                alt="vote-sad"
-                className="w-32"
-              />
-            </div>
-            <div className="flex flex-col items-center justify-center">
-              <p className="mb-2 font-bold">我不在意</p>
-              <p className="mb-6">{formatNumber(proposal.react_whatever)}</p>
-              <Image
-                src="/image/vote-neutral.svg"
-                alt="vote-neutral"
-                className="w-32"
-              />
-            </div>
+            <VoteButtons key={proposalKey} proposal={proposal} />
           </section>
         </div>
       </div>

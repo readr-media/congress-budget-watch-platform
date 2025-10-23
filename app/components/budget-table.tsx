@@ -1,10 +1,13 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import { NavLink } from "react-router";
-import Image from "./image";
 import { useRef, type RefObject } from "react";
 import { useOnClickOutside, useToggle } from "usehooks-ts";
 import React from "react";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
+import { VoteButtons } from "~/components/VoteButtons";
+
+const DESKTOP_GRID_COLS =
+  "grid-cols-[1.2fr_1fr_1.5fr_1fr_1fr_1fr_2.5fr_1.5fr_1.5fr_1.3fr_1.2fr]";
 
 export type BudgetTableData = {
   id: string;
@@ -33,6 +36,35 @@ type BudgetTableProps = {
   data: BudgetTableData[];
   className?: string;
   isDesktop?: boolean;
+};
+
+const DesktopTableHeader = () => {
+  const headerCellClasses =
+    "flex items-center justify-center border-y-2 text-sm text-center md:px-2 md:py-3.5 lg:px-4 lg:py-7";
+
+  return (
+    <div
+      className={`grid-rows-auto grid ${DESKTOP_GRID_COLS} bg-gray-100 font-bold`}
+    >
+      <div className={headerCellClasses}>編號</div>
+      <div className={headerCellClasses}>部會</div>
+      <div className={headerCellClasses}>
+        審議日期 <br />
+        （階段）
+      </div>
+      <div className={headerCellClasses}>提案人</div>
+      <div className={headerCellClasses}>提案</div>
+      <div className={headerCellClasses}>審議結果</div>
+      <div className={headerCellClasses}>提案內容</div>
+      <div className={headerCellClasses}>
+        減列/
+        <br /> 凍結金額
+      </div>
+      <div className={headerCellClasses}>預算金額</div>
+      <div className={headerCellClasses}>關心數</div>
+      <div className={headerCellClasses}>我關心這個</div>
+    </div>
+  );
 };
 
 const TableRow = ({
@@ -86,31 +118,6 @@ const ProposalContent = ({ content }: { content: string; itemId: string }) => (
     </div>
   </div>
 );
-
-const VoteButtons = () => {
-  const voteOptions = [
-    { label: "sad", value: "sad" },
-    { label: "angry", value: "angry" },
-    { label: "neutral", value: "neutral" },
-    { label: "good", value: "good" },
-  ];
-
-  return (
-    <div className="flex w-full items-center justify-center gap-x-4">
-      {voteOptions.map(({ label, value }) => (
-        <button
-          key={value}
-          onClick={(e) => {
-            e.preventDefault();
-          }}
-          className={`rounded-full p-2`}
-        >
-          <Image src={`/image/vote-${label}.svg`} alt={label} />
-        </button>
-      ))}
-    </div>
-  );
-};
 
 const BudgetTableRow = ({ item }: { item: BudgetTableData }) => {
   return (
@@ -173,17 +180,16 @@ const BudgetTableRow = ({ item }: { item: BudgetTableData }) => {
       <TableRow label="關心數">{item.totalReacts}</TableRow>
       <TableRow label="我要關心這個">
         <div className="mb-9 flex w-full flex-col items-center justify-center gap-y-4">
-          <button
-            className="rounded-sm border-2 px-0.5 py-1"
-            onClick={(e) => {
-              e.preventDefault();
-              // TODO: wire up this button's action
-            }}
-          >
-            請支援心情
-          </button>
           <div className="flex w-full items-center justify-center rounded-3xl border-2 bg-white">
-            <VoteButtons />
+            <VoteButtons
+              proposal={{
+                id: item.id,
+                react_angry: item.react_angry,
+                react_disappoint: item.react_disappoint,
+                react_good: item.react_good,
+                react_whatever: item.react_whatever,
+              }}
+            />
           </div>
         </div>
       </TableRow>
@@ -192,8 +198,8 @@ const BudgetTableRow = ({ item }: { item: BudgetTableData }) => {
 };
 
 const DesktopTableRow = ({ item }: { item: BudgetTableData }) => {
-  const [isVoteMenuOpen, toggleIsVoteMenuOpen, setVoteMenuOpen] = useToggle();
   const voteMenuRef = useRef<HTMLDivElement>(null);
+  const [, , setVoteMenuOpen] = useToggle();
 
   const handleClickOutsideVoteMenu = () => {
     setVoteMenuOpen(false);
@@ -203,6 +209,7 @@ const DesktopTableRow = ({ item }: { item: BudgetTableData }) => {
     voteMenuRef as RefObject<HTMLElement>,
     handleClickOutsideVoteMenu
   );
+  const proposalKey = `${item.id}-${item.react_good}-${item.react_angry}-${item.react_disappoint}-${item.react_whatever}`;
 
   return (
     <>
@@ -284,68 +291,7 @@ const DesktopTableRow = ({ item }: { item: BudgetTableData }) => {
       </div>
       <div className="flex items-start justify-center pt-3">
         {/* <VoteButtons proposalId={item.id} /> */}
-        <div
-          ref={voteMenuRef}
-          className="relative rounded-sm border-2 bg-white px-0.5 py-1 text-[8px]"
-        >
-          <span
-            onClick={(e) => {
-              e.preventDefault();
-              toggleIsVoteMenuOpen();
-            }}
-            className="cursor-pointer"
-          >
-            請支援心情
-          </span>
-          {isVoteMenuOpen && (
-            <div className="md: absolute right-0 bottom-0 z-10 w-[69px] rounded-[24px] border-2 bg-white p-2.5 text-[9px] md:translate-x-8 md:translate-y-[10.5rem] lg:translate-x-11 lg:translate-y-[10.5rem]">
-              <div
-                onClick={toggleIsVoteMenuOpen}
-                className="flex flex-col items-center justify-center"
-              >
-                <Image
-                  src="/image/vote-good.svg"
-                  alt="vote-good"
-                  className="w-12"
-                />
-                <p>我覺得很讚</p>
-              </div>
-              <div
-                onClick={toggleIsVoteMenuOpen}
-                className="mt-1.5 flex flex-col items-center justify-center"
-              >
-                <Image
-                  src="/image/vote-angry.svg"
-                  alt="vote-angry"
-                  className="w-12"
-                />
-                <p>我感到生氣</p>
-              </div>
-              <div
-                onClick={toggleIsVoteMenuOpen}
-                className="mt-1.5 flex flex-col items-center justify-center"
-              >
-                <Image
-                  src="/image/vote-sad.svg"
-                  alt="vote-sad"
-                  className="w-12"
-                />
-                <p>我有點失望</p>
-              </div>
-              <div
-                onClick={toggleIsVoteMenuOpen}
-                className="mt-1.5 flex flex-col items-center justify-center"
-              >
-                <Image
-                  src="/image/vote-neutral.svg"
-                  alt="vote-neutral"
-                  className="w-12"
-                />
-                <p>我不在意</p>
-              </div>
-            </div>
-          )}
-        </div>
+        <VoteButtons key={proposalKey} proposal={item} displayMode="popup" />
       </div>
     </>
   );
@@ -357,45 +303,8 @@ const BudgetTable = ({ data, isDesktop, className = "" }: BudgetTableProps) => {
       <div className={`${className} space-y-10`}>
         {data.map((item) => (
           <div key={item.id}>
-            {/* Header Row */}
-            <div className="grid-rows-auto grid grid-cols-[1.2fr_1fr_1.5fr_1fr_1fr_1fr_2.5fr_1.5fr_1.5fr_1.3fr_1.2fr] bg-gray-100 font-bold">
-              <div className="flex items-center justify-center border-y-2 text-sm md:px-2 md:py-3.5 lg:px-4 lg:py-7">
-                編號
-              </div>
-              <div className="flex items-center justify-center border-y-2 px-4 py-7 text-sm md:px-2 md:py-3.5 lg:px-4 lg:py-7">
-                部會
-              </div>
-              <div className="flex items-center justify-center border-y-2 px-4 py-7 text-sm md:px-2 md:py-3.5 lg:px-4 lg:py-7">
-                審議日期 <br />
-                （階段）
-              </div>
-              <div className="flex items-center justify-center border-y-2 px-2 py-7 text-sm md:px-2 md:py-3.5 lg:px-4 lg:py-7">
-                提案人
-              </div>
-              <div className="flex items-center justify-center border-y-2 px-4 py-7 text-sm md:px-2 md:py-3.5 lg:px-4 lg:py-7">
-                提案
-              </div>
-              <div className="flex items-center justify-center border-y-2 px-4 py-7 text-sm md:px-2 md:py-3.5 lg:px-4 lg:py-7">
-                審議結果
-              </div>
-              <div className="flex items-center justify-center border-y-2 px-4 py-7 text-sm md:px-2 md:py-3.5 lg:px-4 lg:py-7">
-                提案內容
-              </div>
-              <div className="flex items-center justify-center border-y-2 px-4 py-7 text-sm md:px-2 md:py-3.5 lg:px-4 lg:py-7">
-                減列/
-                <br /> 凍結金額
-              </div>
-              <div className="flex items-center justify-center border-y-2 px-4 py-7 text-sm md:px-2 md:py-3.5 lg:px-4 lg:py-7">
-                預算金額
-              </div>
-              <div className="flex items-center justify-center border-y-2 px-4 py-7 text-sm md:px-2 md:py-3.5 lg:px-4 lg:py-7">
-                關心數
-              </div>
-              <div className="flex items-center justify-center border-y-2 px-4 py-7 text-sm md:px-2 md:py-3.5 lg:px-4 lg:py-7">
-                我關心這個
-              </div>
-            </div>
-            <div className="grid grid-cols-[1.2fr_1fr_1.5fr_1fr_1fr_1fr_2.5fr_1.5fr_1.5fr_1.3fr_1.2fr]">
+            <DesktopTableHeader />
+            <div className={`grid ${DESKTOP_GRID_COLS}`}>
               <DesktopTableRow item={item} />
             </div>
           </div>
