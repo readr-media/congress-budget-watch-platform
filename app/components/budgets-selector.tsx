@@ -67,15 +67,15 @@ const ByDepartmentSelector = ({ value }: { value: string }) => {
   // 從 store 取得狀態與 actions
   const departmentFilter = useStore(
     useBudgetSelectStore,
-    (state) => state.departmentFilter
+    (state) => state.state.departmentFilter
   );
   const setDepartmentCategory = useStore(
     useBudgetSelectStore,
-    (state) => state.setDepartmentCategory
+    (state) => state.actions.setDepartmentCategory
   );
   const setDepartmentId = useStore(
     useBudgetSelectStore,
-    (state) => state.setDepartmentId
+    (state) => state.actions.setDepartmentId
   );
 
   // Fetch governments data
@@ -203,11 +203,11 @@ const ByPeopleSelector = ({ value }: { value: string }) => {
   // 從 store 取得狀態與 actions
   const personId = useStore(
     useBudgetSelectStore,
-    (state) => state.peopleFilter.personId
+    (state) => state.state.peopleFilter.personId
   );
   const setPersonId = useStore(
     useBudgetSelectStore,
-    (state) => state.setPersonId
+    (state) => state.actions.setPersonId
   );
 
   // Fetch people list data
@@ -281,32 +281,35 @@ const BudgetsSelector: React.FC<BudgetsSelectorProps> = ({
 }) => {
   const selectedValue = useStore(
     useBudgetSelectStore,
-    (state) => state.selectedValue
+    (state) => state.state.selectedValue
   );
   const searchedValue = useStore(
     useBudgetSelectStore,
-    (state) => state.searchedValue
+    (state) => state.state.searchedValue
   );
-  const visible = useStore(useBudgetSelectStore, (state) => state.visible);
+  const visible = useStore(
+    useBudgetSelectStore,
+    (state) => state.state.visible
+  );
   const toggleVisible = useStore(
     useBudgetSelectStore,
-    (state) => state.toggleVisible
+    (state) => state.actions.toggleVisible
   );
   const setSearchedValue = useStore(
     useBudgetSelectStore,
-    (state) => state.setSearchedValue
+    (state) => state.actions.setSearchedValue
   );
   const setSelectedValue = useStore(
     useBudgetSelectStore,
-    (state) => state.setSelectedValue
+    (state) => state.actions.setSelectedValue
   );
   const clearDepartmentFilter = useStore(
     useBudgetSelectStore,
-    (state) => state.clearDepartmentFilter
+    (state) => state.actions.clearDepartmentFilter
   );
   const clearPeopleFilter = useStore(
     useBudgetSelectStore,
-    (state) => state.clearPeopleFilter
+    (state) => state.actions.clearPeopleFilter
   );
 
   useEffect(() => {

@@ -1,4 +1,7 @@
 import { createStore } from "zustand";
+import { immer } from "zustand/middleware/immer";
+import cloneDeep from "lodash/cloneDeep";
+import merge from "lodash/merge";
 
 type DepartmentFilter = {
   category: string | null;
@@ -9,7 +12,7 @@ type PeopleFilter = {
   personId: string | null;
 };
 
-type BudgetSelectProps = {
+type BudgetSelectorState = {
   selectedValue: string;
   searchedValue: string;
   visible: boolean;
@@ -20,7 +23,7 @@ type BudgetSelectProps = {
   selectedYear: number | null;
 };
 
-type BudgetSelectState = BudgetSelectProps & {
+type BudgetSelectorActions = {
   setSearchedValue: (value: string) => void;
   setSelectedValue: (value: string) => void;
   toggleVisible: () => void;
@@ -34,10 +37,15 @@ type BudgetSelectState = BudgetSelectProps & {
   setSelectedYear: (year: number | null) => void;
 };
 
+type BudgetSelectorStore = {
+  state: BudgetSelectorState;
+  actions: BudgetSelectorActions;
+};
+
 /**
  * Default props for the budget selector store
  */
-const DEFAULT_PROPS: BudgetSelectProps = {
+const DEFAULT_STATE: BudgetSelectorState = {
   selectedValue: "all",
   searchedValue: "",
   visible: true,
@@ -47,6 +55,10 @@ const DEFAULT_PROPS: BudgetSelectProps = {
   selectedYear: null,
 };
 
+const createInitialState = (
+  props: Partial<BudgetSelectorState> = {}
+): BudgetSelectorState => merge(cloneDeep(DEFAULT_STATE), props);
+
 /**
  * Creates a budget selector store with optional initial props
  * Following Zustand's initialize-state-with-props pattern
@@ -55,78 +67,63 @@ const DEFAULT_PROPS: BudgetSelectProps = {
  * @returns Zustand store instance
  */
 export const createBudgetSelectStore = (
-  initProps: Partial<BudgetSelectProps> = {}
+  initProps: Partial<BudgetSelectorState> = {}
 ) => {
-  const props = { ...DEFAULT_PROPS, ...initProps };
+  const initialState = createInitialState(initProps);
 
-  return createStore<BudgetSelectState>()((set, _get) => ({
-    // Initialize state with props
-    ...props,
-
-    // Actions
-    setSelectedValue: (value: string) =>
-      set((state) => ({ ...state, selectedValue: value })),
-
-    setSearchedValue: (value: string) =>
-      set((state) => ({ ...state, searchedValue: value })),
-
-    toggleVisible: () =>
-      set((state) => ({ ...state, visible: !state.visible })),
-
-    setSelectedSort: (value: string) =>
-      set((state) => ({ ...state, selectedSort: value })),
-
-    setDepartmentCategory: (category: string | null) =>
-      set((state) => ({
-        ...state,
-        departmentFilter: {
-          category,
-          departmentId: null, // 重置第二階段選擇
-        },
-      })),
-
-    setDepartmentId: (id: string | null) =>
-      set((state) => ({
-        ...state,
-        departmentFilter: {
-          ...state.departmentFilter,
-          departmentId: id,
-        },
-      })),
-
-    clearDepartmentFilter: () =>
-      set((state) => ({
-        ...state,
-        departmentFilter: {
-          category: null,
-          departmentId: null,
-        },
-      })),
-
-    resetToDefault: () =>
-      set((state) => ({
-        ...state,
-        selectedValue: DEFAULT_PROPS.selectedValue,
-      })),
-
-    setPersonId: (id: string | null) =>
-      set((state) => ({
-        ...state,
-        peopleFilter: {
-          personId: id,
-        },
-      })),
-
-    clearPeopleFilter: () =>
-      set((state) => ({
-        ...state,
-        peopleFilter: {
-          personId: null,
-        },
-      })),
-    setSelectedYear: (year: number | null) =>
-      set((state) => ({ ...state, selectedYear: year })),
-  }));
+  return createStore<BudgetSelectorStore>()(
+    immer((set) => ({
+      state: initialState,
+      actions: {
+        setSelectedValue: (value: string) =>
+          set((draft) => {
+            draft.state.selectedValue = value;
+          }),
+        setSearchedValue: (value: string) =>
+          set((draft) => {
+            draft.state.searchedValue = value;
+          }),
+        toggleVisible: () =>
+          set((draft) => {
+            draft.state.visible = !draft.state.visible;
+          }),
+        setSelectedSort: (value: string) =>
+          set((draft) => {
+            draft.state.selectedSort = value;
+          }),
+        resetToDefault: () =>
+          set((draft) => {
+            draft.state.selectedValue = DEFAULT_STATE.selectedValue;
+          }),
+        setDepartmentCategory: (category: string | null) =>
+          set((draft) => {
+            draft.state.departmentFilter.category = category;
+            draft.state.departmentFilter.departmentId = null;
+          }),
+        setDepartmentId: (id: string | null) =>
+          set((draft) => {
+            draft.state.departmentFilter.departmentId = id;
+          }),
+        clearDepartmentFilter: () =>
+          set((draft) => {
+            draft.state.departmentFilter.category = null;
+            draft.state.departmentFilter.departmentId = null;
+          }),
+        setPersonId: (id: string | null) =>
+          set((draft) => {
+            draft.state.peopleFilter.personId = id;
+          }),
+        clearPeopleFilter: () =>
+          set((draft) => {
+            draft.state.peopleFilter.personId = null;
+          }),
+        setSelectedYear: (year: number | null) =>
+          set((draft) => {
+            draft.state.selectedYear = year;
+          }),
+      },
+    }))
+  );
 };
 
 /**
@@ -142,23 +139,26 @@ export default defaultBudgetSelectStore;
 import { useStore } from "zustand";
 
 export const useSelectedSort = () =>
-  useStore(defaultBudgetSelectStore, (s) => s.selectedSort);
+  useStore(defaultBudgetSelectStore, (s) => s.state.selectedSort);
 
 export const useDepartmentId = () =>
-  useStore(defaultBudgetSelectStore, (s) => s.departmentFilter.departmentId);
+  useStore(
+    defaultBudgetSelectStore,
+    (s) => s.state.departmentFilter.departmentId
+  );
 
 export const usePersonId = () =>
-  useStore(defaultBudgetSelectStore, (s) => s.peopleFilter.personId);
+  useStore(defaultBudgetSelectStore, (s) => s.state.peopleFilter.personId);
 
 export const useSearchedValue = () =>
-  useStore(defaultBudgetSelectStore, (s) => s.searchedValue);
+  useStore(defaultBudgetSelectStore, (s) => s.state.searchedValue);
 
 export const useSelectedYear = () =>
-  useStore(defaultBudgetSelectStore, (s) => s.selectedYear);
+  useStore(defaultBudgetSelectStore, (s) => s.state.selectedYear);
 
 // Action Hooks
 export const useSetSelectedSort = () =>
-  useStore(defaultBudgetSelectStore, (s) => s.setSelectedSort);
+  useStore(defaultBudgetSelectStore, (s) => s.actions.setSelectedSort);
 
 export const useSetSelectedYear = () =>
-  useStore(defaultBudgetSelectStore, (s) => s.setSelectedYear);
+  useStore(defaultBudgetSelectStore, (s) => s.actions.setSelectedYear);

@@ -28,7 +28,7 @@ export const CustomInitExample: React.FC = () => {
     });
     console.log(
       "Custom store initialized with:",
-      customStore.getState().selectedValue
+      customStore.getState().state.selectedValue
     );
   }, []);
 
@@ -64,11 +64,11 @@ export const DirectStoreAccessExample: React.FC = () => {
 
     // Subscribe to changes
     const unsubscribe = customStore.subscribe((state) => {
-      setStoreState(state.selectedValue);
+      setStoreState(state.state.selectedValue);
     });
 
     // Set initial state
-    setStoreState(customStore.getState().selectedValue);
+    setStoreState(customStore.getState().state.selectedValue);
 
     return unsubscribe;
   }, []);

@@ -1,5 +1,7 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
+import { immer } from "zustand/middleware/immer";
+import cloneDeep from "lodash/cloneDeep";
 
 /**
  * Header state type
@@ -16,32 +18,37 @@ type ProgressState = {
   isComplete: boolean;
 };
 
-/**
- * UI Store actions type
- */
-type UIActions = {
-  // Header actions
+type UIStoreState = {
+  headerState: HeaderState;
+  progressState: ProgressState;
+};
+
+type UIStoreActions = {
   toggleShareModal: () => void;
   openShareModal: () => void;
   closeShareModal: () => void;
-
-  // Progress actions
   updateProgressStep: (step: number) => void;
   markProgressComplete: () => void;
   resetProgress: () => void;
-
-  // Combined actions
   resetUI: () => void;
 };
 
-/**
- * Complete UI Store state type
- */
-type UIState = {
-  headerState: HeaderState;
-  progressState: ProgressState;
-  actions: UIActions;
+type UIStore = {
+  state: UIStoreState;
+  actions: UIStoreActions;
 };
+
+const DEFAULT_STATE: UIStoreState = {
+  headerState: {
+    isShareModalOpen: false,
+  },
+  progressState: {
+    currentStep: 0,
+    isComplete: false,
+  },
+};
+
+const getDefaultState = (): UIStoreState => cloneDeep(DEFAULT_STATE);
 
 /**
  * UI Store using Zustand
@@ -49,116 +56,75 @@ type UIState = {
  * Manages global UI state for header and progress components
  * Following 2025 best practices with TypeScript and devtools integration
  */
-export const useUIStore = create<UIState>()(
+export const useUIStore = create<UIStore>()(
   devtools(
-    (set) => ({
-      // Initial header state
-      headerState: {
-        isShareModalOpen: false,
-      },
-
-      // Initial progress state
-      progressState: {
-        currentStep: 0,
-        isComplete: false,
-      },
-
-      // Actions
+    immer((set) => ({
+      state: getDefaultState(),
       actions: {
-        // Header actions
         toggleShareModal: () =>
           set(
-            (state) => ({
-              headerState: {
-                ...state.headerState,
-                isShareModalOpen: !state.headerState.isShareModalOpen,
-              },
-            }),
-            undefined,
-            "toggleShareModal"
+            (draft) => {
+              draft.state.headerState.isShareModalOpen =
+                !draft.state.headerState.isShareModalOpen;
+            },
+            false,
+            "ui/toggleShareModal"
           ),
-
         openShareModal: () =>
           set(
-            (state) => ({
-              headerState: {
-                ...state.headerState,
-                isShareModalOpen: true,
-              },
-            }),
-            undefined,
-            "openShareModal"
+            (draft) => {
+              draft.state.headerState.isShareModalOpen = true;
+            },
+            false,
+            "ui/openShareModal"
           ),
-
         closeShareModal: () =>
           set(
-            (state) => ({
-              headerState: {
-                ...state.headerState,
-                isShareModalOpen: false,
-              },
-            }),
-            undefined,
-            "closeShareModal"
+            (draft) => {
+              draft.state.headerState.isShareModalOpen = false;
+            },
+            false,
+            "ui/closeShareModal"
           ),
-
-        // Progress actions
         updateProgressStep: (step: number) =>
           set(
-            (state) => ({
-              progressState: {
-                ...state.progressState,
-                currentStep: step,
-                isComplete: false,
-              },
-            }),
-            undefined,
-            `updateProgressStep: ${step}`
+            (draft) => {
+              draft.state.progressState.currentStep = step;
+              draft.state.progressState.isComplete = false;
+            },
+            false,
+            `ui/updateProgressStep:${step}`
           ),
-
         markProgressComplete: () =>
           set(
-            (state) => ({
-              progressState: {
-                ...state.progressState,
-                isComplete: true,
-              },
-            }),
-            undefined,
-            "markProgressComplete"
+            (draft) => {
+              draft.state.progressState.isComplete = true;
+            },
+            false,
+            "ui/markProgressComplete"
           ),
-
         resetProgress: () =>
           set(
-            (_state) => ({
-              progressState: {
-                currentStep: 0,
-                isComplete: false,
-              },
-            }),
-            undefined,
-            "resetProgress"
+            (draft) => {
+              draft.state.progressState = cloneDeep(
+                DEFAULT_STATE.progressState
+              );
+            },
+            false,
+            "ui/resetProgress"
           ),
-
-        // Combined actions
         resetUI: () =>
           set(
-            {
-              headerState: {
-                isShareModalOpen: false,
-              },
-              progressState: {
-                currentStep: 0,
-                isComplete: false,
-              },
+            (draft) => {
+              draft.state = getDefaultState();
             },
-            undefined,
-            "resetUI"
+            false,
+            "ui/resetUI"
           ),
       },
-    }),
+    })),
     {
-      name: "ui-store", // DevTools name
+      name: "ui-store",
       enabled: process.env.NODE_ENV === "development",
     }
   )
@@ -169,18 +135,18 @@ export const useUIStore = create<UIState>()(
 /**
  * Hook to get header state
  */
-export const useHeaderState = () => useUIStore((state) => state.headerState);
+export const useHeaderState = () => useUIStore((store) => store.state.headerState);
 
 /**
  * Hook to get progress state
  */
 export const useProgressState = () =>
-  useUIStore((state) => state.progressState);
+  useUIStore((store) => store.state.progressState);
 
 /**
  * Hook to get actions
  */
-export const useUIActions = () => useUIStore((state) => state.actions);
+export const useUIActions = () => useUIStore((store) => store.actions);
 
 /**
  * Hook to get specific header actions

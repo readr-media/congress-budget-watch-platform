@@ -1,5 +1,7 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
+import { immer } from "zustand/middleware/immer";
+import cloneDeep from "lodash/cloneDeep";
 
 type VisualizationTab = "legislator" | "department";
 type VisualizationMode = "amount" | "count";
@@ -17,7 +19,7 @@ type VisualizationActions = {
   reset: () => void;
 };
 
-type VisualizationStoreState = {
+type VisualizationStore = {
   state: VisualizationState;
   actions: VisualizationActions;
 };
@@ -28,33 +30,47 @@ const DEFAULT_STATE: VisualizationState = {
   selectedYear: "2025",
 };
 
-export const useVisualizationStore = create<VisualizationStoreState>()(
+const getDefaultState = (): VisualizationState => cloneDeep(DEFAULT_STATE);
+
+export const useVisualizationStore = create<VisualizationStore>()(
   devtools(
-    (set) => ({
-      state: DEFAULT_STATE,
+    immer((set) => ({
+      state: getDefaultState(),
       actions: {
         setActiveTab: (tab) =>
           set(
-            (s) => ({ state: { ...s.state, activeTab: tab } }),
+            (draft) => {
+              draft.state.activeTab = tab;
+            },
             false,
             "visualization/setActiveTab"
           ),
         setMode: (mode) =>
           set(
-            (s) => ({ state: { ...s.state, mode } }),
+            (draft) => {
+              draft.state.mode = mode;
+            },
             false,
             "visualization/setMode"
           ),
         setSelectedYear: (year) =>
           set(
-            (s) => ({ state: { ...s.state, selectedYear: year } }),
+            (draft) => {
+              draft.state.selectedYear = year;
+            },
             false,
             "visualization/setSelectedYear"
           ),
         reset: () =>
-          set({ state: DEFAULT_STATE }, false, "visualization/reset"),
+          set(
+            (draft) => {
+              draft.state = getDefaultState();
+            },
+            false,
+            "visualization/reset"
+          ),
       },
-    }),
+    })),
     { name: "visualization-store", enabled: process.env.NODE_ENV === "development" }
   )
 );

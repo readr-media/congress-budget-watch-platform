@@ -1,5 +1,7 @@
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
+import { immer } from "zustand/middleware/immer";
+import cloneDeep from "lodash/cloneDeep";
 
 export type ReactType =
   | "react_angry"
@@ -7,47 +9,54 @@ export type ReactType =
   | "react_good"
   | "react_whatever";
 
-type VoteState = {
-  // Stores the user's vote for each proposal.
-  // e.g., { 'proposal-123': 'react_good' }
+type VoteStoreState = {
   votes: Record<string, ReactType>;
-  actions: {
-    setVote: (proposalId: string, vote: ReactType | null) => void;
-  };
 };
 
-export const useVoteStore = create<VoteState>()(
+type VoteStoreActions = {
+  setVote: (proposalId: string, vote: ReactType | null) => void;
+};
+
+type VoteStore = {
+  state: VoteStoreState;
+  actions: VoteStoreActions;
+};
+
+const DEFAULT_STATE: VoteStoreState = {
+  votes: {},
+};
+
+const getDefaultState = (): VoteStoreState => cloneDeep(DEFAULT_STATE);
+
+export const useVoteStore = create<VoteStore>()(
   devtools(
     persist(
-      (set) => ({
-        votes: {},
+      immer<VoteStore>((set) => ({
+        state: getDefaultState(),
         actions: {
-          setVote: (proposalId, vote) => {
-            console.log("setVote", proposalId, vote);
+          setVote: (proposalId, vote) =>
             set(
-              (state) => {
-                const newVotes = { ...state.votes };
+              (draft) => {
                 if (vote === null) {
-                  delete newVotes[proposalId];
+                  delete draft.state.votes[proposalId];
                 } else {
-                  newVotes[proposalId] = vote;
+                  draft.state.votes[proposalId] = vote;
                 }
-                return { votes: newVotes };
-              },
-              false,
-              "vote/setVote"
-            );
-          },
+              }
+            ),
         },
-      }),
+      })),
       {
         name: "vote-storage",
-        partialize: (state) => ({ votes: state.votes }),
+        partialize: (store) => ({ state: { votes: store.state.votes } }),
       }
     ),
-    { name: "vote-store" }
+    {
+      name: "vote-store",
+      enabled: process.env.NODE_ENV === "development",
+    }
   )
 );
 
-export const useUserVotes = () => useVoteStore((state) => state.votes);
-export const useVoteActions = () => useVoteStore((state) => state.actions);
+export const useUserVotes = () => useVoteStore((store) => store.state.votes);
+export const useVoteActions = () => useVoteStore((store) => store.actions);

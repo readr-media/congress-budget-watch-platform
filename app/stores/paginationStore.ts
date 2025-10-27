@@ -1,5 +1,7 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
+import { immer } from "zustand/middleware/immer";
+import cloneDeep from "lodash/cloneDeep";
 
 /**
  * 分頁狀態類型
@@ -26,6 +28,10 @@ type PaginationActions = {
  */
 type PaginationStoreState = {
   pagination: PaginationState;
+};
+
+type PaginationStore = {
+  state: PaginationStoreState;
   actions: PaginationActions;
 };
 
@@ -38,36 +44,39 @@ const DEFAULT_PAGINATION: PaginationState = {
   totalCount: 0,
 };
 
+const getDefaultState = (): PaginationStoreState => ({
+  pagination: cloneDeep(DEFAULT_PAGINATION),
+});
+
 /**
  * 分頁 Store
  * 
  * 管理 /all-budgets 頁面的分頁狀態
  * 遵循專案的 Zustand 最佳實踐模式
  */
-export const usePaginationStore = create<PaginationStoreState>()(
+export const usePaginationStore = create<PaginationStore>()(
   devtools(
-    (set) => ({
-      pagination: DEFAULT_PAGINATION,
+    immer((set) => ({
+      state: getDefaultState(),
 
       actions: {
         setPage: (page: number) =>
           set(
-            (state) => ({
-              pagination: { ...state.pagination, currentPage: page },
-            }),
+            (draft) => {
+              draft.state.pagination.currentPage = page;
+            },
             false,
             "pagination/setPage"
           ),
 
         nextPage: () =>
           set(
-            (state) => {
-              const { currentPage, pageSize, totalCount } = state.pagination;
+            (draft) => {
+              const { currentPage, pageSize, totalCount } =
+                draft.state.pagination;
               const totalPages = Math.ceil(totalCount / pageSize);
               const newPage = Math.min(currentPage + 1, totalPages);
-              return {
-                pagination: { ...state.pagination, currentPage: newPage },
-              };
+              draft.state.pagination.currentPage = newPage || 1;
             },
             false,
             "pagination/nextPage"
@@ -75,11 +84,9 @@ export const usePaginationStore = create<PaginationStoreState>()(
 
         prevPage: () =>
           set(
-            (state) => {
-              const newPage = Math.max(state.pagination.currentPage - 1, 1);
-              return {
-                pagination: { ...state.pagination, currentPage: newPage },
-              };
+            (draft) => {
+              const newPage = Math.max(draft.state.pagination.currentPage - 1, 1);
+              draft.state.pagination.currentPage = newPage;
             },
             false,
             "pagination/prevPage"
@@ -87,23 +94,23 @@ export const usePaginationStore = create<PaginationStoreState>()(
 
         setTotalCount: (count: number) =>
           set(
-            (state) => ({
-              pagination: { ...state.pagination, totalCount: count },
-            }),
+            (draft) => {
+              draft.state.pagination.totalCount = count;
+            },
             false,
             "pagination/setTotalCount"
           ),
 
         resetPagination: () =>
           set(
-            {
-              pagination: DEFAULT_PAGINATION,
+            (draft) => {
+              draft.state = getDefaultState();
             },
             false,
             "pagination/reset"
           ),
       },
-    }),
+    })),
     {
       name: "pagination-store",
       enabled: process.env.NODE_ENV === "development",
@@ -115,10 +122,10 @@ export const usePaginationStore = create<PaginationStoreState>()(
  * Selector hooks（避免不必要的重渲染）
  */
 export const usePagination = () =>
-  usePaginationStore((state) => state.pagination);
+  usePaginationStore((store) => store.state.pagination);
 
 export const usePaginationActions = () =>
-  usePaginationStore((state) => state.actions);
+  usePaginationStore((store) => store.actions);
 
 /**
  * 計算總頁數的 helper hook
