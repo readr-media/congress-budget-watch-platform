@@ -2,7 +2,7 @@ import CirclePackChart from "../circle-pack-chart";
 import type { NodeDatum } from "../helpers";
 
 const getBorderBottomClass = (index: number, totalItems: number) => {
-  return totalItems > 1 && index < totalItems - 1 ? "border-b-1" : "";
+  return totalItems > 1 && index < totalItems - 1 ? "border-b border-gray-200" : "";
 };
 
 type SessionChartProps = {

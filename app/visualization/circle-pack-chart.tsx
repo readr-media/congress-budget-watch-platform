@@ -17,6 +17,7 @@ const CirclePackChart = ({
   width: customWidth = 720,
   height: customHeight,
   padding = 3,
+  onNodeClick,
 }: CirclePackChartProps) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const navigate = useNavigate();
@@ -372,6 +373,10 @@ const CirclePackChart = ({
       // 防止在拖曳後觸發點擊
       if (event.defaultPrevented) return;
 
+      if (onNodeClick) {
+        onNodeClick(d.data);
+      }
+
       // 如果節點有 id，則導航到詳情頁
       if (d.data.proposerId && isVisualizationRoute && !d.children) {
         navigate(`/visualization/legislator/${d.data.proposerId}`);
@@ -393,7 +398,7 @@ const CirclePackChart = ({
     return () => {
       svg.remove();
     };
-  }, [root, width, height, color, navigate, isVisualizationRoute]);
+  }, [root, width, height, color, navigate, isVisualizationRoute, onNodeClick]);
 
   return (
     <div className="flex w-full items-center justify-center">
