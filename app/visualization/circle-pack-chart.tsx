@@ -15,6 +15,21 @@ type CirclePackChartProps = {
   onNodeClick?: (node: NodeDatum) => void | boolean;
 };
 
+const MOBILE_BREAKPOINT = 768;
+
+const findLargestChild = (
+  node: d3.HierarchyCircularNode<NodeDatum>
+): d3.HierarchyCircularNode<NodeDatum> | null => {
+  if (!node.children || node.children.length === 0) {
+    return null;
+  }
+  return node.children.reduce((largest, current) => {
+    const largestValue = largest.value ?? 0;
+    const currentValue = current.value ?? 0;
+    return currentValue > largestValue ? current : largest;
+  }, node.children[0]);
+};
+
 const CirclePackChart = ({
   data,
   width: customWidth = 720,
@@ -39,7 +54,7 @@ const CirclePackChart = ({
     [FROZEN_PATH_BASE, FROZEN_TRANSLATE_X, FROZEN_TRANSLATE_Y]
   );
 
-  const { root, width, height, color } = useMemo(() => {
+  const { root, width, height, color, initialFocus } = useMemo(() => {
     const width = customWidth ?? DEFAULT_CHART_WIDTH;
     const height = customHeight ?? width;
 
@@ -64,7 +79,11 @@ const CirclePackChart = ({
         );
 
     const root = pack(data);
-    return { root, width, height, color };
+    const isMobile = width < MOBILE_BREAKPOINT;
+    const focusNode =
+      (isMobile && findLargestChild(root)) || root;
+
+    return { root, width, height, color, initialFocus: focusNode };
   }, [data, customWidth, customHeight, padding]);
 
   useEffect(() => {
@@ -241,7 +260,7 @@ const CirclePackChart = ({
         }
       });
 
-    let focus: d3.HierarchyCircularNode<NodeDatum> = root;
+    let focus: d3.HierarchyCircularNode<NodeDatum> = initialFocus;
 
     function zoomTo(v: [number, number, number]) {
       const k = width / v[2];
@@ -303,13 +322,15 @@ const CirclePackChart = ({
       zoomTo(newView);
     }
 
-    // 建立 d3-zoom behavior 用於程式化縮放動畫
-    // 注意：我們不呼叫 svg.call(zoomBehavior) 來綁定事件監聽器，
-    // 因為我們想禁用使用者的手動縮放（滾輪、拖曳），
-    // 只保留程式化的點擊聚焦功能。
+    // 建立 d3-zoom behavior，用於程式化縮放與使用者拖曳平移
     const zoomBehavior = d3
       .zoom<SVGSVGElement, unknown>()
       .scaleExtent([0.5, 10]) // 限制縮放範圍：最小 0.5 倍，最大 10 倍
+      .filter((event) => {
+        // 禁用滑鼠滾輪或雙指手勢的縮放，只保留滑鼠/觸控拖曳
+        if (event.type === "wheel") return false;
+        return true;
+      })
       .on("zoom", (event) => {
         // 這個事件處理器只會在程式化縮放時被觸發
         applyZoomTransform(event.transform);
@@ -384,10 +405,23 @@ const CirclePackChart = ({
     }
 
     // 設定初始視圖
-    const initialView: [number, number, number] = [root.x, root.y, root.r * 2];
+    const initialTarget = initialFocus ?? root;
+    const initialView: [number, number, number] = [
+      initialTarget.x,
+      initialTarget.y,
+      initialTarget.r * 2,
+    ];
     zoomTo(initialView);
+    label
+      .style("fill-opacity", (dd: d3.HierarchyCircularNode<NodeDatum>) =>
+        dd.parent === focus || dd === focus ? "1" : "0"
+      )
+      .style("display", (dd: d3.HierarchyCircularNode<NodeDatum>) =>
+        dd.parent === focus || dd === focus ? "inline" : "none"
+      );
 
-    // initial interactions
+    // initial interactions 與拖曳綁定
+    svg.call(zoomBehavior as unknown as (selection: d3.Selection<SVGSVGElement, undefined, null, undefined>) => void);
     svg.on("click", (event) => {
       // 防止在拖曳後觸發點擊
       if (event.defaultPrevented) return;
@@ -431,7 +465,8 @@ const CirclePackChart = ({
     HOVER_STROKE_WIDTH,
     FROZEN_OUTER_SCALE,
     FROZEN_INNER_SCALE,
-    LABEL_CHILDREN_OFFSET_FACTOR,
+      LABEL_CHILDREN_OFFSET_FACTOR,
+      initialFocus,
   ]);
 
   return (
