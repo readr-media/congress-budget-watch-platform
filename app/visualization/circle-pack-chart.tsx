@@ -3,6 +3,35 @@ import { useEffect, useMemo, useRef, useCallback } from "react";
 import { FROZEN_PATH_D } from "~/constants/svg-paths";
 import type { NodeDatum } from "./helpers";
 
+const ANIMATION_CONFIG = {
+  focus: {
+    duration: 750,
+    slowMultiplier: 10,
+    easing: d3.easeCubicOut,
+  },
+  label: {
+    duration: 400,
+  },
+  thresholds: {
+    disableAnimationsAfter: 1000,
+  },
+  inertia: {
+    enabled: true,
+    maxHistory: 5,
+    decay: 0.92,
+    minVelocity: 0.02,
+    frameInterval: 16,
+  },
+} as const;
+
+const INTERACTION_FLAGS = {
+  enableNodeNavigation: false,
+} as const;
+
+const INERTIA_FLAGS = {
+  enabled: true,
+} as const;
+
 export type CirclePackPadding =
   | number
   | ((node: d3.HierarchyNode<NodeDatum>) => number);
@@ -54,7 +83,16 @@ const CirclePackChart = ({
     [FROZEN_PATH_BASE, FROZEN_TRANSLATE_X, FROZEN_TRANSLATE_Y]
   );
 
-  const { root, width, height, color, initialFocus } = useMemo(() => {
+  const {
+    root,
+    width,
+    height,
+    color,
+    initialFocus,
+    animations,
+    animationsEnabled,
+    inertiaEnabled,
+  } = useMemo(() => {
     const width = customWidth ?? DEFAULT_CHART_WIDTH;
     const height = customHeight ?? width;
 
@@ -83,7 +121,29 @@ const CirclePackChart = ({
     const focusNode =
       (isMobile && findLargestChild(root)) || root;
 
-    return { root, width, height, color, initialFocus: focusNode };
+    const totalNodes = root.descendants().length;
+    const disableAnimations =
+      totalNodes > ANIMATION_CONFIG.thresholds.disableAnimationsAfter;
+    const inertiaEnabled =
+      !disableAnimations &&
+      ANIMATION_CONFIG.inertia.enabled &&
+      INERTIA_FLAGS.enabled;
+
+    const animations = {
+      focus: disableAnimations ? 0 : ANIMATION_CONFIG.focus.duration,
+      label: disableAnimations ? 0 : ANIMATION_CONFIG.label.duration,
+    };
+
+    return {
+      root,
+      width,
+      height,
+      color,
+      initialFocus: focusNode,
+      animations,
+      animationsEnabled: !disableAnimations,
+      inertiaEnabled,
+    };
   }, [data, customWidth, customHeight, padding]);
 
   useEffect(() => {
@@ -260,14 +320,29 @@ const CirclePackChart = ({
         }
       });
 
-    let focus: d3.HierarchyCircularNode<NodeDatum> = initialFocus;
+    let focus: d3.HierarchyCircularNode<NodeDatum> | null =
+      initialFocus ?? root;
 
-    function zoomTo(v: [number, number, number]) {
+    const baseFocusDuration = animations.focus;
+    const slowFocusDuration =
+      animations.focus > 0
+        ? animations.focus * ANIMATION_CONFIG.focus.slowMultiplier
+        : 0;
+    const baseLabelDuration = animations.label;
+
+    const viewToTransform = (v: [number, number, number]): d3.ZoomTransform => {
+      const k = width / v[2];
+      return d3.zoomIdentity
+        .translate(width / 2, height / 2)
+        .scale(k)
+        .translate(-v[0], -v[1]);
+    };
+
+    const updateSceneForView = (v: [number, number, number]) => {
       const k = width / v[2];
       label.attr("transform", (d) => {
         const x = (d.x - v[0]) * k;
         const y = (d.y - v[1]) * k;
-        // 如果有子節點，將文字移到圓圈頂部
         if (d.children && d.children.length > 0) {
           const offsetY = -d.r * k * LABEL_CHILDREN_OFFSET_FACTOR;
           return `translate(${x}, ${y + offsetY})`;
@@ -279,7 +354,6 @@ const CirclePackChart = ({
         (d) => `translate(${(d.x - v[0]) * k},${(d.y - v[1]) * k})`
       );
 
-      // Adapt scaling for different node types
       node
         .filter((d) => !d.data.isFrozen)
         .select("circle")
@@ -287,152 +361,271 @@ const CirclePackChart = ({
         .attr("stroke-width", BASE_STROKE_WIDTH);
 
       const frozenNodes = node.filter((d) => d.data.isFrozen ?? false);
-      // Update outer border (first path)
       frozenNodes
         .select<SVGPathElement>(".frozen-border--outer")
-        .attr(
-          "transform",
-          (d) => createFrozenTransform(d.r, FROZEN_OUTER_SCALE, k)
+        .attr("transform", (d) =>
+          createFrozenTransform(d.r, FROZEN_OUTER_SCALE, k)
         );
-      // Update inner border (second path)
       frozenNodes
         .select<SVGPathElement>(".frozen-border--inner")
-        .attr(
-          "transform",
-          (d) => createFrozenTransform(d.r, FROZEN_INNER_SCALE, k)
+        .attr("transform", (d) =>
+          createFrozenTransform(d.r, FROZEN_INNER_SCALE, k)
         );
       frozenNodes.select("circle").attr("r", (d) => d.r * k);
-    }
+    };
 
-    // 將 view 轉換為 d3.ZoomTransform
-    function viewToTransform(v: [number, number, number]): d3.ZoomTransform {
-      const k = width / v[2];
-      return d3.zoomIdentity
-        .translate(width / 2, height / 2)
-        .scale(k)
-        .translate(-v[0], -v[1]);
-    }
-
-    // 從 d3.ZoomTransform 更新視圖
-    function applyZoomTransform(transform: d3.ZoomTransform) {
+    const applyZoomTransform = (transform: d3.ZoomTransform) => {
       const k = transform.k;
       const x = (width / 2 - transform.x) / k;
       const y = (height / 2 - transform.y) / k;
       const newView: [number, number, number] = [x, y, width / k];
-      zoomTo(newView);
-    }
+      updateSceneForView(newView);
+    };
+
+    const setView = (
+      target: d3.HierarchyCircularNode<NodeDatum>,
+      {
+        duration = baseFocusDuration,
+        easing = ANIMATION_CONFIG.focus.easing,
+      }: {
+        duration?: number;
+        easing?: (normalizedTime: number) => number;
+      } = {},
+    ) => {
+      const targetView: [number, number, number] = [
+        target.x,
+        target.y,
+        target.r * 2,
+      ];
+      const transform = viewToTransform(targetView);
+      const shouldAnimate =
+        animationsEnabled && duration !== undefined && duration > 0;
+
+      if (shouldAnimate) {
+        const transition = svg
+          .interrupt()
+          .transition()
+          .duration(duration)
+          .ease(easing);
+        (zoomBehavior.transform as unknown as (
+          transition: d3.Transition<SVGSVGElement, undefined, null, undefined>,
+          transform: d3.ZoomTransform
+        ) => void)(transition, transform);
+      } else {
+        (zoomBehavior.transform as unknown as (
+          selection: d3.Selection<SVGSVGElement, undefined, null, undefined>,
+          transform: d3.ZoomTransform
+        ) => void)(svg, transform);
+      }
+    };
+
+    const updateLabelVisibility = (
+      targetFocus: d3.HierarchyCircularNode<NodeDatum> | null,
+      duration = baseLabelDuration,
+    ) => {
+      const shouldAnimate =
+        animationsEnabled && duration !== undefined && duration > 0;
+
+      if (shouldAnimate) {
+        label
+          .interrupt()
+          .transition()
+          .duration(duration)
+          .ease(d3.easeCubicOut)
+          .style("fill-opacity", (dd) => {
+            if (!targetFocus) return "0";
+            return dd.parent === targetFocus || dd === targetFocus ? "1" : "0";
+          })
+          .on("start", function () {
+            const currentDatum = d3.select(
+              this as SVGTextElement
+            ).datum() as d3.HierarchyCircularNode<NodeDatum>;
+            const shouldShow =
+              targetFocus != null &&
+              (currentDatum.parent === targetFocus ||
+                currentDatum === targetFocus);
+            if (shouldShow) {
+              (this as SVGTextElement).style.display = "inline";
+            }
+          })
+          .on("end", function () {
+            const currentDatum = d3.select(
+              this as SVGTextElement
+            ).datum() as d3.HierarchyCircularNode<NodeDatum>;
+            const shouldShow =
+              targetFocus != null &&
+              (currentDatum.parent === targetFocus ||
+                currentDatum === targetFocus);
+            if (!shouldShow) {
+              (this as SVGTextElement).style.display = "none";
+            }
+          });
+      } else {
+        label
+          .interrupt()
+          .style("fill-opacity", (dd) => {
+            if (!targetFocus) return "0";
+            return dd.parent === targetFocus || dd === targetFocus ? "1" : "0";
+          })
+          .style("display", (dd) => {
+            const shouldShow =
+              targetFocus != null &&
+              (dd.parent === targetFocus || dd === targetFocus);
+            return shouldShow ? "inline" : "none";
+          });
+      }
+    };
+
+    let inertiaFrame: number | null = null;
+    const recentTransforms: Array<{
+      transform: d3.ZoomTransform;
+      timestamp: number;
+    }> = [];
+
+    const getCurrentTransform = () => {
+      const node = svg.node();
+      return node ? d3.zoomTransform(node as SVGSVGElement) : d3.zoomIdentity;
+    };
+
+    const addTransformHistory = (transform: d3.ZoomTransform) => {
+      const now = performance.now();
+      recentTransforms.push({ transform, timestamp: now });
+      if (recentTransforms.length > ANIMATION_CONFIG.inertia.maxHistory) {
+        recentTransforms.shift();
+      }
+    };
+
+    const clearInertia = () => {
+      if (inertiaFrame != null) {
+        cancelAnimationFrame(inertiaFrame);
+        inertiaFrame = null;
+      }
+      recentTransforms.length = 0;
+    };
+
+    const startInertia = () => {
+      if (!inertiaEnabled || recentTransforms.length < 2) return;
+
+      const latest = recentTransforms[recentTransforms.length - 1];
+      const previous = recentTransforms[recentTransforms.length - 2];
+      const dt = (latest.timestamp - previous.timestamp) / 1000; // seconds
+      if (dt <= 0) return;
+
+      let velocityX = (latest.transform.x - previous.transform.x) / dt;
+      let velocityY = (latest.transform.y - previous.transform.y) / dt;
+
+      const decay = ANIMATION_CONFIG.inertia.decay;
+      const minVelocity = ANIMATION_CONFIG.inertia.minVelocity;
+
+      const step = () => {
+        velocityX *= decay;
+        velocityY *= decay;
+
+        if (
+          Math.abs(velocityX) < minVelocity &&
+          Math.abs(velocityY) < minVelocity
+        ) {
+          clearInertia();
+          return;
+        }
+
+        const currentTransform = getCurrentTransform();
+        const deltaX =
+          velocityX * (ANIMATION_CONFIG.inertia.frameInterval / 1000);
+        const deltaY =
+          velocityY * (ANIMATION_CONFIG.inertia.frameInterval / 1000);
+        const nextTransform = currentTransform.translate(deltaX, deltaY);
+
+        (zoomBehavior.transform as unknown as (
+          selection: d3.Selection<SVGSVGElement, undefined, null, undefined>,
+          transform: d3.ZoomTransform
+        ) => void)(svg, nextTransform);
+
+        inertiaFrame = requestAnimationFrame(step);
+      };
+
+      clearInertia();
+      inertiaFrame = requestAnimationFrame(step);
+    };
 
     // 建立 d3-zoom behavior，用於程式化縮放與使用者拖曳平移
     const zoomBehavior = d3
       .zoom<SVGSVGElement, unknown>()
       .scaleExtent([0.5, 10]) // 限制縮放範圍：最小 0.5 倍，最大 10 倍
       .filter((event) => {
-        // 禁用滑鼠滾輪或雙指手勢的縮放，只保留滑鼠/觸控拖曳
         if (event.type === "wheel") return false;
+        if ("touches" in event && event.touches && event.touches.length > 1) {
+          return false;
+        }
         return true;
       })
+      .on("start", (event) => {
+        clearInertia();
+        if (event.sourceEvent && focus) {
+          focus = null;
+          updateLabelVisibility(null, baseLabelDuration);
+        }
+      })
       .on("zoom", (event) => {
-        // 這個事件處理器只會在程式化縮放時被觸發
         applyZoomTransform(event.transform);
+        addTransformHistory(event.transform);
+      })
+      .on("end", (event) => {
+        if (event.sourceEvent) {
+          startInertia();
+        }
       });
 
-    function zoom(
+    const focusOnNode = (
       event: (MouseEvent & { altKey?: boolean }) | null,
-      d: d3.HierarchyCircularNode<NodeDatum>
-    ) {
-      focus = d;
-      const isSlow = Boolean(event?.altKey);
-      const targetView: [number, number, number] = [
-        focus.x,
-        focus.y,
-        focus.r * 2,
-      ];
+      target: d3.HierarchyCircularNode<NodeDatum>,
+    ) => {
+      focus = target;
+      clearInertia();
+      const isSlow = Boolean(event?.altKey) && animationsEnabled;
+      const duration = isSlow ? slowFocusDuration : baseFocusDuration;
+      setView(target, { duration });
+      updateLabelVisibility(target, baseLabelDuration);
+    };
 
-      // 使用 d3-zoom 的程式化縮放
-      svg
-        .transition()
-        .duration(isSlow ? 7500 : 750)
-        .call(
-          zoomBehavior.transform as (
-            transition: d3.Transition<
-              SVGSVGElement,
-              undefined,
-              null,
-              undefined
-            >,
-            transform: d3.ZoomTransform
-          ) => void,
-          viewToTransform(targetView)
-        )
-        .on("end", () => {
-          // 更新標籤顯示
-          label
-            .style("fill-opacity", (dd: d3.HierarchyCircularNode<NodeDatum>) =>
-              dd.parent === focus || dd === focus ? "1" : "0"
-            )
-            .style("display", (dd: d3.HierarchyCircularNode<NodeDatum>) =>
-              dd.parent === focus || dd === focus ? "inline" : "none"
-            );
-        });
-
-      // 立即開始標籤過渡動畫
-      label
-        .transition()
-        .duration(isSlow ? 7500 : 750)
-        .style("fill-opacity", (dd: d3.HierarchyCircularNode<NodeDatum>) =>
-          dd.parent === focus || dd === focus ? "1" : "0"
-        )
-        .on(
-          "start",
-          function (
-            this: SVGTextElement,
-            dd: d3.HierarchyCircularNode<NodeDatum>
-          ) {
-            if (dd.parent === focus || dd === focus)
-              this.style.display = "inline";
-          }
-        )
-        .on(
-          "end",
-          function (
-            this: SVGTextElement,
-            dd: d3.HierarchyCircularNode<NodeDatum>
-          ) {
-            if (dd.parent !== focus && dd !== focus)
-              this.style.display = "none";
-          }
-        );
-    }
+    const resetToRoot = () => {
+      focus = root;
+      clearInertia();
+      setView(root, { duration: baseFocusDuration });
+      updateLabelVisibility(root, baseLabelDuration);
+    };
 
     // 設定初始視圖
     const initialTarget = initialFocus ?? root;
-    const initialView: [number, number, number] = [
-      initialTarget.x,
-      initialTarget.y,
-      initialTarget.r * 2,
-    ];
-    zoomTo(initialView);
-    label
-      .style("fill-opacity", (dd: d3.HierarchyCircularNode<NodeDatum>) =>
-        dd.parent === focus || dd === focus ? "1" : "0"
-      )
-      .style("display", (dd: d3.HierarchyCircularNode<NodeDatum>) =>
-        dd.parent === focus || dd === focus ? "inline" : "none"
+    setView(initialTarget, { duration: 0 });
+    updateLabelVisibility(initialTarget, 0);
+
+    if (!animationsEnabled && process.env.NODE_ENV !== "production") {
+      console.warn(
+        "[CirclePackChart] Animations disabled due to node count exceeding threshold."
       );
+    }
 
     // initial interactions 與拖曳綁定
-    svg.call(zoomBehavior as unknown as (selection: d3.Selection<SVGSVGElement, undefined, null, undefined>) => void);
+    svg.call(
+      zoomBehavior as unknown as (
+        selection: d3.Selection<SVGSVGElement, undefined, null, undefined>
+      ) => void
+    );
     svg.on("click", (event) => {
       // 防止在拖曳後觸發點擊
       if (event.defaultPrevented) return;
-      zoom(event as unknown as MouseEvent, root);
+      resetToRoot();
     });
 
     node.on("click", (event, d) => {
       // 防止在拖曳後觸發點擊
       if (event.defaultPrevented) return;
 
-      const callbackResult = onNodeClick?.(d.data);
+      const canNavigate =
+        INTERACTION_FLAGS.enableNodeNavigation && typeof onNodeClick === "function";
+      const callbackResult =
+        canNavigate && onNodeClick ? onNodeClick(d.data) : undefined;
       const shouldSkipZoom = callbackResult === true;
 
       if (shouldSkipZoom) {
@@ -441,7 +634,7 @@ const CirclePackChart = ({
       }
 
       if (focus !== d) {
-        zoom(event as unknown as MouseEvent, d);
+        focusOnNode(event as unknown as MouseEvent, d);
         event.stopPropagation();
       }
     });
@@ -452,6 +645,7 @@ const CirclePackChart = ({
 
     // cleanup
     return () => {
+      clearInertia();
       svg.remove();
     };
   }, [
@@ -465,8 +659,12 @@ const CirclePackChart = ({
     HOVER_STROKE_WIDTH,
     FROZEN_OUTER_SCALE,
     FROZEN_INNER_SCALE,
-      LABEL_CHILDREN_OFFSET_FACTOR,
-      initialFocus,
+    LABEL_CHILDREN_OFFSET_FACTOR,
+    initialFocus,
+    animations.focus,
+    animations.label,
+    animationsEnabled,
+    inertiaEnabled,
   ]);
 
   return (
