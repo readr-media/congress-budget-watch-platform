@@ -2306,6 +2306,14 @@ export type UserWhereUniqueInput = {
   id?: InputMaybe<Scalars['ID']['input']>;
 };
 
+export type GetLatestBudgetYearQueryVariables = Exact<{
+  skip: Scalars['Int']['input'];
+  take: Scalars['Int']['input'];
+}>;
+
+
+export type GetLatestBudgetYearQuery = { __typename?: 'Query', budgetYears?: Array<{ __typename?: 'BudgetYear', year?: number | null, budgetProgress?: string | null, dataProgress?: string | null }> | null };
+
 export type GetBudgetsWithGovernmentQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -2447,6 +2455,15 @@ export const VisualizationProposalWithContextFragmentDoc = new TypedDocumentStri
     }
   }
 }`, {"fragmentName":"VisualizationProposalWithContext"}) as unknown as TypedDocumentString<VisualizationProposalWithContextFragment, unknown>;
+export const GetLatestBudgetYearDocument = new TypedDocumentString(`
+    query GetLatestBudgetYear($skip: Int!, $take: Int!) {
+  budgetYears(orderBy: [{year: desc}], skip: $skip, take: $take) {
+    year
+    budgetProgress
+    dataProgress
+  }
+}
+    `) as unknown as TypedDocumentString<GetLatestBudgetYearQuery, GetLatestBudgetYearQueryVariables>;
 export const GetBudgetsWithGovernmentDocument = new TypedDocumentString(`
     query GetBudgetsWithGovernment {
   budgets {

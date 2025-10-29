@@ -1,5 +1,16 @@
 import { NavLink } from "react-router";
+import { useQuery } from "@tanstack/react-query";
 import Image from "~/components/image";
+import { execute } from "~/graphql/execute";
+import {
+  GET_LATEST_BUDGET_YEAR_QUERY,
+  budgetYearQueryKeys,
+} from "~/queries";
+import {
+  calculateProgressPercentage,
+  formatProgressText,
+} from "~/utils/progress";
+import type { BudgetProgressStage } from "~/constants/progress-stages";
 
 export function meta() {
   return [
@@ -16,11 +27,34 @@ type NavigationButton = {
   label: string;
   href: string;
   isExternal?: boolean;
-}
+};
 
 export default function Home() {
   const currentYear = new Date().getFullYear();
   const republicYear = currentYear - 1911;
+  const {
+    data: budgetYearData,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: budgetYearQueryKeys.latest(),
+    queryFn: () =>
+      execute(GET_LATEST_BUDGET_YEAR_QUERY, {
+        skip: 0,
+        take: 1,
+      }),
+  });
+
+  const latestBudgetYear = budgetYearData?.budgetYears?.[0] ?? null;
+  const progressStage = latestBudgetYear?.budgetProgress as
+    | BudgetProgressStage
+    | null
+    | undefined;
+  const progressPercentage = calculateProgressPercentage(progressStage);
+  const progressText = formatProgressText(
+    latestBudgetYear?.year ?? null,
+    latestBudgetYear?.dataProgress ?? null
+  );
 
   const navigationButtons: NavigationButton[] = [
     { label: "歷年預算", href: "/all-budgets" },
@@ -39,12 +73,37 @@ export default function Home() {
           </h1>
 
           {/* Banner Image */}
-          <div className="mb-8 flex justify-center">
+          <div className="mb-8 flex flex-col items-center justify-center">
             <Image
               src="/image/homepage-banner.svg"
               alt="國會預算監督平台 Banner"
-              className="h-auto w-full max-w-2xl"
+              className="h-auto w-full max-w-xl"
             />
+            {isLoading ? (
+              <div className="-mt-1 flex w-full max-w-[600px] items-center justify-center rounded-lg bg-gray-300 p-2 text-gray-600">
+                載入審議進度中...
+              </div>
+            ) : isError ? (
+              <div className="-mt-1 flex w-full max-w-[600px] items-center justify-center rounded-lg bg-red-100 p-2 text-red-600">
+                審議進度載入失敗，請稍後再試
+              </div>
+            ) : latestBudgetYear ? (
+              <div className="-mt-1 flex w-full max-w-[600px] items-center justify-start rounded-lg bg-[#3E51FF] pl-1 text-white">
+                <p className="mr-2 hidden w-[160px] rounded-lg bg-white px-3.5 text-[#3E51FF] md:flex">
+                  最新審議進度
+                </p>
+                <div className="flex w-full items-center justify-between">
+                  <p className="flex grow justify-center border-r border-white py-1">
+                    {progressText}
+                  </p>
+                  <p className="flex px-2">{progressPercentage}%</p>
+                </div>
+              </div>
+            ) : (
+              <div className="-mt-1 flex w-full max-w-[600px] items-center justify-center rounded-lg bg-gray-300 p-2 text-gray-600">
+                暫無審議進度資料
+              </div>
+            )}
           </div>
 
           {/* Description */}
@@ -77,7 +136,7 @@ export default function Home() {
           ))}
         </nav>
       </div>
-      <div className="flex items-center justify-center gap-x-2 mt-15 md:mt-25 md:gap-x-3">
+      <div className="mt-15 flex items-center justify-center gap-x-2 md:mt-25 md:gap-x-3">
         <Image
           src="/image/Friedrich-Naumann-Foundation-logo.svg"
           alt="Friedrich-Naumann-Foundation-logo"
