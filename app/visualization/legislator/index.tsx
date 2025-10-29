@@ -6,12 +6,16 @@ import SessionChart from "./session-chart";
 import BudgetTypeLegend from "~/components/budget-type-legend";
 import { BUDGET_TYPE_LEGEND_ITEMS } from "~/constants/legends";
 import {
-  GET_PAGINATED_PROPOSALS_QUERY,
+  GET_VISUALIZATION_PROPOSALS_QUERY,
   proposalQueryKeys,
-} from "~/queries/proposal.queries";
+} from "~/queries";
 import { execute } from "~/graphql/execute";
 import { OrderDirection, type ProposalWhereInput } from "~/graphql/graphql";
-import { transformToGroupedSessionData, formatAmountWithUnit } from "../helpers";
+import {
+  transformToGroupedSessionData,
+  formatAmountWithUnit,
+  mapVisualizationProposals,
+} from "../helpers";
 import {
   GET_PERSON_BY_ID_QUERY,
   peopleQueryKeys,
@@ -70,7 +74,7 @@ const VisualizationLegislator = () => {
   } = useQuery({
     queryKey: proposalQueryKeys.list({ whereFilter }),
     queryFn: () =>
-      execute(GET_PAGINATED_PROPOSALS_QUERY, {
+      execute(GET_VISUALIZATION_PROPOSALS_QUERY, {
         skip: 0,
         take: 1000, // Assuming we want to fetch all proposals for this view
         orderBy: [{ id: OrderDirection.Desc }],
@@ -140,7 +144,7 @@ const VisualizationLegislator = () => {
   }
 
   const person = peopleData?.people;
-  const proposals = proposalsData?.proposals || [];
+  const proposals = mapVisualizationProposals(proposalsData);
   const totalReductionAmount = sumBy(proposals, (p) => p.reductionAmount || 0);
   const totalFreezeAmount = sumBy(proposals, (p) => p.freezeAmount || 0);
   const formattedReductionAmount = formatAmountWithUnit(totalReductionAmount);

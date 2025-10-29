@@ -2368,6 +2368,26 @@ export type Update_Proposal_ReactsMutationVariables = Exact<{
 
 export type Update_Proposal_ReactsMutation = { __typename?: 'Mutation', updateProposal?: { __typename?: 'Proposal', id: string, react_angry?: number | null, react_disappoint?: number | null, react_good?: number | null, react_whatever?: number | null } | null };
 
+export type GetVisualizationProposalsQueryVariables = Exact<{
+  skip: Scalars['Int']['input'];
+  take: Scalars['Int']['input'];
+  orderBy: Array<ProposalOrderByInput> | ProposalOrderByInput;
+  where: ProposalWhereInput;
+}>;
+
+
+export type GetVisualizationProposalsQuery = { __typename?: 'Query', proposals?: Array<(
+    { __typename?: 'Proposal' }
+    & { ' $fragmentRefs'?: { 'VisualizationProposalWithContextFragment': VisualizationProposalWithContextFragment } }
+  )> | null };
+
+export type VisualizationProposalWithContextFragment = (
+  { __typename?: 'Proposal', government?: { __typename?: 'Government', name?: string | null, category?: string | null } | null, year?: { __typename?: 'BudgetYear', year?: number | null } | null }
+  & { ' $fragmentRefs'?: { 'VisualizationProposalBaseFragment': VisualizationProposalBaseFragment } }
+) & { ' $fragmentName'?: 'VisualizationProposalWithContextFragment' };
+
+export type VisualizationProposalBaseFragment = { __typename?: 'Proposal', id: string, freezeAmount?: number | null, reductionAmount?: number | null, proposalTypes?: Array<ProposalProposalTypeType> | null, proposers?: Array<{ __typename?: 'People', id: string, name?: string | null, party?: { __typename?: 'Party', name?: string | null, color?: string | null } | null }> | null } & { ' $fragmentName'?: 'VisualizationProposalBaseFragment' };
+
 export class TypedDocumentString<TResult, TVariables>
   extends String
   implements DocumentTypeDecoration<TResult, TVariables>
@@ -2386,7 +2406,47 @@ export class TypedDocumentString<TResult, TVariables>
     return this.value;
   }
 }
-
+export const VisualizationProposalBaseFragmentDoc = new TypedDocumentString(`
+    fragment VisualizationProposalBase on Proposal {
+  id
+  freezeAmount
+  reductionAmount
+  proposalTypes
+  proposers {
+    id
+    name
+    party {
+      name
+      color
+    }
+  }
+}
+    `, {"fragmentName":"VisualizationProposalBase"}) as unknown as TypedDocumentString<VisualizationProposalBaseFragment, unknown>;
+export const VisualizationProposalWithContextFragmentDoc = new TypedDocumentString(`
+    fragment VisualizationProposalWithContext on Proposal {
+  ...VisualizationProposalBase
+  government {
+    name
+    category
+  }
+  year {
+    year
+  }
+}
+    fragment VisualizationProposalBase on Proposal {
+  id
+  freezeAmount
+  reductionAmount
+  proposalTypes
+  proposers {
+    id
+    name
+    party {
+      name
+      color
+    }
+  }
+}`, {"fragmentName":"VisualizationProposalWithContext"}) as unknown as TypedDocumentString<VisualizationProposalWithContextFragment, unknown>;
 export const GetBudgetsWithGovernmentDocument = new TypedDocumentString(`
     query GetBudgetsWithGovernment {
   budgets {
@@ -2669,3 +2729,33 @@ export const Update_Proposal_ReactsDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<Update_Proposal_ReactsMutation, Update_Proposal_ReactsMutationVariables>;
+export const GetVisualizationProposalsDocument = new TypedDocumentString(`
+    query GetVisualizationProposals($skip: Int!, $take: Int!, $orderBy: [ProposalOrderByInput!]!, $where: ProposalWhereInput!) {
+  proposals(skip: $skip, take: $take, orderBy: $orderBy, where: $where) {
+    ...VisualizationProposalWithContext
+  }
+}
+    fragment VisualizationProposalWithContext on Proposal {
+  ...VisualizationProposalBase
+  government {
+    name
+    category
+  }
+  year {
+    year
+  }
+}
+fragment VisualizationProposalBase on Proposal {
+  id
+  freezeAmount
+  reductionAmount
+  proposalTypes
+  proposers {
+    id
+    name
+    party {
+      name
+      color
+    }
+  }
+}`) as unknown as TypedDocumentString<GetVisualizationProposalsQuery, GetVisualizationProposalsQueryVariables>;

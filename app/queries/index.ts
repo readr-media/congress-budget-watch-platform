@@ -21,3 +21,4 @@ export {
 
 export * from "./budget.queries";
 export * from "./proposal.queries";
+export * from "./visualization.queries";

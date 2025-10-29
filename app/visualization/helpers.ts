@@ -1,9 +1,50 @@
 import {
   ProposalProposalTypeType,
-  type GetPaginatedProposalsQuery,
+  type GetVisualizationProposalsQuery,
+  VisualizationProposalWithContextFragmentDoc,
+  VisualizationProposalBaseFragmentDoc,
+  type VisualizationProposalWithContextFragment,
+  type VisualizationProposalBaseFragment,
 } from "~/graphql/graphql";
 import { groupBy, mapValues, sumBy } from "lodash";
 import { formatNumber } from "~/budget-detail/helpers";
+import { useFragment } from "~/graphql";
+
+type VisualizationProposal = {
+  id: VisualizationProposalBaseFragment["id"];
+  freezeAmount: VisualizationProposalBaseFragment["freezeAmount"];
+  reductionAmount: VisualizationProposalBaseFragment["reductionAmount"];
+  proposalTypes: VisualizationProposalBaseFragment["proposalTypes"];
+  proposers: VisualizationProposalBaseFragment["proposers"];
+  government: VisualizationProposalWithContextFragment["government"];
+  year: VisualizationProposalWithContextFragment["year"];
+};
+
+const extractProposals = (
+  data: GetVisualizationProposalsQuery,
+): VisualizationProposal[] =>
+  useFragment(
+    VisualizationProposalWithContextFragmentDoc,
+    data.proposals ?? [],
+  ).map((proposal) => {
+    const base = useFragment(VisualizationProposalBaseFragmentDoc, proposal);
+    return {
+      id: base.id,
+      freezeAmount: base.freezeAmount,
+      reductionAmount: base.reductionAmount,
+      proposalTypes: base.proposalTypes,
+      proposers: base.proposers,
+      government: proposal.government,
+      year: proposal.year,
+    };
+  });
+
+export const mapVisualizationProposals = (
+  data?: GetVisualizationProposalsQuery | null,
+): VisualizationProposal[] => {
+  if (!data) return [];
+  return extractProposals(data);
+};
 
 export type NodeDatum = {
   name: string;
@@ -37,9 +78,9 @@ export const formatAmountWithUnit = (value: number): string => {
 };
 
 export const transformToCirclePackData = (
-  data: GetPaginatedProposalsQuery,
+  data: GetVisualizationProposalsQuery,
 ): NodeDatum => {
-  const proposals = data.proposals || [];
+  const proposals = extractProposals(data);
   const children = proposals
     .map<NodeDatum | null>((proposal) => {
       const { id, proposers, freezeAmount, reductionAmount } = proposal;
@@ -100,10 +141,10 @@ type VisualizationMode = "amount" | "count";
  * 將提案資料依立委與類型群組，回傳 DepartmentVisualization 可迭代的資料格式。
  */
 export const transformToGroupedByLegislatorData = (
-  data: GetPaginatedProposalsQuery,
+  data: GetVisualizationProposalsQuery,
   mode: VisualizationMode = "amount",
 ): VisualizationGroupedData => {
-  const proposals = data.proposals ?? [];
+  const proposals = extractProposals(data);
 
   const groupedByLegislator = groupBy(
     proposals,
@@ -226,10 +267,10 @@ export const transformToGroupedByLegislatorData = (
  * @returns NodeDatum[] - 每個元素代表一個年度的 session
  */
 export const transformToGroupedSessionData = (
-  data: GetPaginatedProposalsQuery,
+  data: GetVisualizationProposalsQuery,
   mode: "amount" | "count" = "amount"
 ): NodeDatum[] => {
-  const proposals = data.proposals || [];
+  const proposals = extractProposals(data);
 
   if (proposals.length === 0) {
     return [];
@@ -369,10 +410,10 @@ export const transformToGroupedSessionData = (
 };
 
 export const transformToCategorizedData = (
-  data: GetPaginatedProposalsQuery,
+  data: GetVisualizationProposalsQuery,
   mode: "amount" | "count",
 ): Record<string, NodeDatum> => {
-  const proposals = data.proposals || [];
+  const proposals = extractProposals(data);
 
   // 依 mode 決定是否過濾提案
   const proposalsToProcess =

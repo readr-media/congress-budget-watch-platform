@@ -1,12 +1,12 @@
 import { useMemo } from "react";
-import type { GetPaginatedProposalsQuery } from "~/graphql/graphql";
+import type { GetVisualizationProposalsQuery } from "~/graphql/graphql";
 import { transformToCategorizedData, type NodeDatum } from "../helpers";
 import CirclePackChart, {
   type CirclePackPadding,
 } from "../circle-pack-chart";
 
 type DepartmentVisualizationProps = {
-  data: GetPaginatedProposalsQuery;
+  data: GetVisualizationProposalsQuery;
   width?: number;
   onNodeClick: (node: NodeDatum) => void;
   mode: "amount" | "count";

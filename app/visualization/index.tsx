@@ -5,7 +5,10 @@ import { VisualizationSelector } from "~/components/visualization-selector";
 import { DepartmentVisualization } from "./department";
 import BudgetTypeLegend from "~/components/budget-type-legend";
 import { BUDGET_TYPE_LEGEND_ITEMS } from "~/constants/legends";
-import { GET_PAGINATED_PROPOSALS_QUERY, proposalQueryKeys } from "~/queries";
+import {
+  GET_VISUALIZATION_PROPOSALS_QUERY,
+  proposalQueryKeys,
+} from "~/queries";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { execute } from "~/graphql/execute";
 import {
@@ -18,6 +21,7 @@ import { sortOptions } from "~/constants/options";
 import {
   transformToGroupedByLegislatorData,
   formatAmountWithUnit,
+  mapVisualizationProposals,
   type VisualizationGroupedData,
   type NodeDatum,
 } from "./helpers";
@@ -118,7 +122,7 @@ const Visualization = () => {
       parseInt(selectedYear.value)
     ),
     queryFn: () =>
-      execute(GET_PAGINATED_PROPOSALS_QUERY, {
+      execute(GET_VISUALIZATION_PROPOSALS_QUERY, {
         skip: 0,
         take: pageSize,
         orderBy,
@@ -137,7 +141,7 @@ const Visualization = () => {
   );
 
   const summaryStats = useMemo(() => {
-    const proposals = data?.proposals ?? [];
+    const proposals = mapVisualizationProposals(data);
 
     const reductionProposals = filter(
       proposals,
