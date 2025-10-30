@@ -1,34 +1,43 @@
-import {
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  type RefObject,
-} from "react";
+import { useEffect, useMemo, useRef, useState, type RefObject } from "react";
 import { useToggle, useOnClickOutside } from "usehooks-ts";
 import Image from "./image";
 import { formatNumber } from "~/budget-detail/helpers";
-import {
-  useVoteActions,
-  useProposalVoteCounts,
-} from "~/stores/vote.store";
+import { useVoteActions, useProposalVoteCounts } from "~/stores/vote.store";
 import { useVoteQueue } from "~/queries/use-vote-queue";
 import type { ReactionType, VoteCounts } from "~/types/store/vote";
-import type { VoteButtonsProps } from "~/types/components/voteButtons";
+import type {
+  ReactionIcons,
+  VoteButtonsProps,
+} from "~/types/components/voteButtons";
 
-const VOTE_OPTIONS: { type: ReactionType; label: string; icon: string }[] = [
-  { type: "react_good", label: "我覺得很讚", icon: "/image/vote-good.svg" },
-  { type: "react_angry", label: "我感到生氣", icon: "/image/vote-angry.svg" },
-  {
-    type: "react_disappoint",
-    label: "我有點失望",
-    icon: "/image/vote-sad.svg",
+const REACTION_ICONS: ReactionIcons = {
+  react_good: {
+    default: "/image/vote-good-default.svg",
+    hover: "/image/vote-good-hover.svg",
+    active: "/image/vote-good-active.svg",
   },
-  {
-    type: "react_whatever",
-    label: "我不在意",
-    icon: "/image/vote-neutral.svg",
+  react_angry: {
+    default: "/image/vote-angry-default.svg",
+    hover: "/image/vote-angry-hover.svg",
+    active: "/image/vote-angry-active.svg",
   },
+  react_disappoint: {
+    default: "/image/vote-sad-default.svg",
+    hover: "/image/vote-sad-hover.svg",
+    active: "/image/vote-sad-active.svg",
+  },
+  react_whatever: {
+    default: "/image/vote-whatever-default.svg",
+    hover: "/image/vote-whatever-hover.svg",
+    active: "/image/vote-whatever-active.svg",
+  },
+};
+
+const VOTE_OPTIONS: { type: ReactionType; label: string }[] = [
+  { type: "react_good", label: "我覺得很讚" },
+  { type: "react_angry", label: "我感到生氣" },
+  { type: "react_disappoint", label: "我有點失望" },
+  { type: "react_whatever", label: "我不在意" },
 ];
 
 export function VoteButtons({
@@ -51,6 +60,7 @@ export function VoteButtons({
 
   const handleClickOutsideVoteMenu = () => {
     setVoteMenuOpen(false);
+    setHoveredReaction(null);
     cancelScheduledFlush();
     void flushPending();
   };
@@ -73,12 +83,27 @@ export function VoteButtons({
   const storeVoteCounts = useProposalVoteCounts(proposalId);
   const voteCounts = storeVoteCounts ?? initialCounts;
 
-  const [selectedReaction, setSelectedReaction] =
-    useState<ReactionType | null>(null);
+  const [selectedReaction, setSelectedReaction] = useState<ReactionType | null>(
+    null
+  );
+  const [hoveredReaction, setHoveredReaction] = useState<ReactionType | null>(
+    null
+  );
+
+  const getReactionIcon = (reaction: ReactionType) => {
+    if (selectedReaction === reaction) {
+      return REACTION_ICONS[reaction].active;
+    }
+    if (hoveredReaction === reaction) {
+      return REACTION_ICONS[reaction].hover;
+    }
+    return REACTION_ICONS[reaction].default;
+  };
 
   const handleVote = (reaction: ReactionType) => {
     setSelectedReaction(reaction);
     queueVote(proposalId, reaction);
+    setHoveredReaction(null);
 
     if (displayMode === "popup") {
       toggleIsVoteMenuOpen();
@@ -123,15 +148,25 @@ export function VoteButtons({
         </span>
         {isVoteMenuOpen && (
           <div className="md: absolute right-0 bottom-0 z-10 w-[69px] rounded-[24px] border-2 bg-white p-2.5 text-[9px] md:translate-x-8 md:translate-y-[10.5rem] lg:translate-x-11 lg:translate-y-[10.5rem]">
-            {VOTE_OPTIONS.map(({ type, label, icon }) => (
+            {VOTE_OPTIONS.map(({ type, label }) => (
               <div
                 key={type}
                 onClick={() => handleVote(type)}
+                onMouseEnter={() => setHoveredReaction(type)}
+                onMouseLeave={() =>
+                  setHoveredReaction((current) =>
+                    current === type ? null : current
+                  )
+                }
                 className={`mt-1.5 flex cursor-pointer flex-col items-center justify-center first:mt-0 ${
                   selectedReaction === type ? "shadow-lg" : ""
                 }`}
               >
-                <Image src={icon} alt={label} className="w-12" />
+                <Image
+                  src={getReactionIcon(type)}
+                  alt={label}
+                  className="w-12"
+                />
                 <p>{label}</p>
               </div>
             ))}
@@ -143,22 +178,19 @@ export function VoteButtons({
 
   return (
     <div className="flex justify-center space-x-2">
-      {VOTE_OPTIONS.map(({ type, icon }) => (
+      {VOTE_OPTIONS.map(({ type, label }) => (
         <button
           key={type}
           onClick={() => handleVote(type)}
-          className={`flex h-20 w-20 flex-col items-center justify-center rounded-lg p-2 transition-all duration-200 sm:h-24 sm:w-24 ${
-            selectedReaction === type
-              ? "scale-105 shadow-lg"
-              : "bg-gray-100 hover:bg-gray-200"
-          }`}
+          onMouseEnter={() => setHoveredReaction(type)}
+          onMouseLeave={() =>
+            setHoveredReaction((current) => (current === type ? null : current))
+          }
+          className="flex h-20 w-20 flex-col items-center justify-center rounded-lg p-2 transition-all duration-200 sm:h-24 sm:w-24"
         >
           <Image
-            src={icon}
-            alt={
-              VOTE_OPTIONS.find((opt) => opt.type === type)?.label ??
-              "Vote option image"
-            }
+            src={getReactionIcon(type)}
+            alt={label}
             className="mb-1 h-8 w-8 sm:h-10 sm:w-10"
           />
           <span className="text-xs font-medium sm:text-sm">
