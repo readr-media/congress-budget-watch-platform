@@ -1,6 +1,7 @@
-import { useMemo, useState, useRef, useCallback } from "react";
+import { useMemo, useState, useRef, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { VisualizationSelector } from "~/components/visualization-selector";
+import Select, { type SingleValue } from "react-select";
 
 import { DepartmentVisualization } from "./department";
 import BudgetTypeLegend from "~/components/budget-type-legend";
@@ -11,9 +12,12 @@ import {
 } from "~/queries";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { execute } from "~/graphql/execute";
+import { useFragment } from "~/graphql";
 import {
   OrderDirection,
   ProposalProposalTypeType,
+  VisualizationProposalBaseFragmentDoc,
+  VisualizationProposalWithContextFragmentDoc,
   type ProposalOrderByInput,
   type ProposalWhereInput,
 } from "~/graphql/graphql";
@@ -87,6 +91,42 @@ const Visualization = () => {
   const [mode, setMode] = useState<"amount" | "count">("amount");
   const [selectedYear, setSelectedYear] = useState<OptionType>(yearOptions[0]);
   const isDesktop = useMediaQuery("(min-width: 768px)");
+  const isMobile = !isDesktop;
+  const [selectedLegislatorOption, setSelectedLegislatorOption] =
+    useState<OptionType | null>(null);
+  const [selectedDepartmentOption, setSelectedDepartmentOption] =
+    useState<OptionType | null>(null);
+  const [shouldAutoSelectLegislator, setShouldAutoSelectLegislator] =
+    useState(true);
+  const [shouldAutoSelectDepartment, setShouldAutoSelectDepartment] =
+    useState(true);
+  const handleTabChange = useCallback(
+    (tab: "legislator" | "department") => {
+      setActiveTab(tab);
+      if (!isDesktop) {
+        if (tab === "legislator") {
+          setShouldAutoSelectLegislator(true);
+        } else {
+          setShouldAutoSelectDepartment(true);
+        }
+      }
+    },
+    [isDesktop]
+  );
+  useEffect(() => {
+    if (isDesktop) {
+      setSelectedLegislatorOption(null);
+      setSelectedDepartmentOption(null);
+      setShouldAutoSelectLegislator(true);
+      setShouldAutoSelectDepartment(true);
+    }
+  }, [isDesktop]);
+  const handleClearMobileFilters = useCallback(() => {
+    setSelectedLegislatorOption(null);
+    setSelectedDepartmentOption(null);
+    setShouldAutoSelectLegislator(false);
+    setShouldAutoSelectDepartment(false);
+  }, []);
   const selectedSort = "id-asc";
   const currentPage = 1;
   const pageSize = 1000;
@@ -130,6 +170,140 @@ const Visualization = () => {
       }),
     placeholderData: keepPreviousData, // 避免切頁時閃爍
   });
+  const allProposals = useMemo(() => mapVisualizationProposals(data), [data]);
+  const legislatorOptions = useMemo<OptionType[]>(() => {
+    const unique = new Map<string, OptionType>();
+    allProposals.forEach((proposal) => {
+      const proposer = proposal.proposers?.[0];
+      const value = proposer?.id ?? proposer?.name ?? "";
+      const label = proposer?.name ?? "未命名立委";
+      if (value) {
+        unique.set(value, { value, label });
+      }
+    });
+    return Array.from(unique.values()).sort((a, b) =>
+      a.label.localeCompare(b.label, "zh-Hant")
+    );
+  }, [allProposals]);
+  const departmentOptions = useMemo<OptionType[]>(() => {
+    const unique = new Map<string, OptionType>();
+    allProposals.forEach((proposal) => {
+      const government = proposal.government;
+      if (!government) return;
+      const value = government.name ?? government.category ?? "";
+      if (!value) return;
+      const label = government.name ?? "未命名部會";
+      unique.set(value, { value, label });
+    });
+    return Array.from(unique.values()).sort((a, b) =>
+      a.label.localeCompare(b.label, "zh-Hant")
+    );
+  }, [allProposals]);
+  const filteredLegislatorProposalIds = useMemo(() => {
+    if (isDesktop) return null;
+    if (activeTab !== "legislator" || !selectedLegislatorOption) return null;
+    const ids = allProposals
+      .filter((proposal) => {
+        const proposer = proposal.proposers?.[0];
+        const value = proposer?.id ?? proposer?.name ?? "";
+        return value === selectedLegislatorOption.value;
+      })
+      .map((proposal) => proposal.id)
+      .filter((id): id is string => Boolean(id));
+    return new Set(ids);
+  }, [activeTab, allProposals, isDesktop, selectedLegislatorOption]);
+  const filteredDepartmentProposalIds = useMemo(() => {
+    if (isDesktop) return null;
+    if (activeTab !== "department" || !selectedDepartmentOption) return null;
+    const ids = allProposals
+      .filter((proposal) => {
+        const government = proposal.government;
+        const value = government?.name ?? government?.category ?? "";
+        return value === selectedDepartmentOption.value;
+      })
+      .map((proposal) => proposal.id)
+      .filter((id): id is string => Boolean(id));
+    return new Set(ids);
+  }, [activeTab, allProposals, isDesktop, selectedDepartmentOption]);
+  useEffect(() => {
+    if (!isMobile) return;
+
+    if (activeTab === "legislator") {
+      const hasSelection =
+        selectedLegislatorOption &&
+        legislatorOptions.some(
+          (option) => option.value === selectedLegislatorOption.value
+        );
+      if (!hasSelection) {
+        if (shouldAutoSelectLegislator && legislatorOptions.length > 0) {
+          setSelectedLegislatorOption(legislatorOptions[0]);
+        } else if (selectedLegislatorOption) {
+          setSelectedLegislatorOption(null);
+        }
+      }
+    } else if (activeTab === "department") {
+      const hasSelection =
+        selectedDepartmentOption &&
+        departmentOptions.some(
+          (option) => option.value === selectedDepartmentOption.value
+        );
+      if (!hasSelection) {
+        if (shouldAutoSelectDepartment && departmentOptions.length > 0) {
+          setSelectedDepartmentOption(departmentOptions[0]);
+        } else if (selectedDepartmentOption) {
+          setSelectedDepartmentOption(null);
+        }
+      }
+    }
+  }, [
+    activeTab,
+    departmentOptions,
+    isMobile,
+    legislatorOptions,
+    selectedDepartmentOption,
+    selectedLegislatorOption,
+    shouldAutoSelectDepartment,
+    shouldAutoSelectLegislator,
+  ]);
+  const effectiveData = useMemo(() => {
+    if (!data) return null;
+    if (isDesktop) return data;
+
+    let filteredIds: Set<string> | null = null;
+    if (activeTab === "legislator" && filteredLegislatorProposalIds) {
+      filteredIds = filteredLegislatorProposalIds;
+    } else if (activeTab === "department" && filteredDepartmentProposalIds) {
+      filteredIds = filteredDepartmentProposalIds;
+    }
+
+    if (!filteredIds) {
+      return data;
+    }
+
+    const ids = filteredIds;
+    const filteredProposals =
+      data.proposals?.filter((proposal) => {
+        if (!proposal) return false;
+        const proposalWithContext = useFragment(
+          VisualizationProposalWithContextFragmentDoc,
+          proposal
+        );
+        const base = useFragment(
+          VisualizationProposalBaseFragmentDoc,
+          proposalWithContext
+        );
+        const proposalId = base.id;
+        return proposalId != null && ids.has(proposalId);
+      }) ?? [];
+
+    return { ...data, proposals: filteredProposals };
+  }, [
+    activeTab,
+    data,
+    filteredDepartmentProposalIds,
+    filteredLegislatorProposalIds,
+    isDesktop,
+  ]);
 
   const handleNodeClick = useCallback(
     (node: NodeDatum) => {
@@ -141,7 +315,7 @@ const Visualization = () => {
   );
 
   const summaryStats = useMemo(() => {
-    const proposals = mapVisualizationProposals(data);
+    const proposals = mapVisualizationProposals(effectiveData);
 
     const reductionProposals = filter(
       proposals,
@@ -164,21 +338,20 @@ const Visualization = () => {
       freezeCount: freezeProposals.length,
       mainResolutionCount: mainResolutionProposals.length,
     };
-  }, [data]);
+  }, [effectiveData]);
 
   const formattedReductionAmount = formatAmountWithUnit(
-    summaryStats.totalReductionAmount,
+    summaryStats.totalReductionAmount
   );
   const formattedFreezeAmount = formatAmountWithUnit(
-    summaryStats.totalFreezeAmount,
+    summaryStats.totalFreezeAmount
   );
 
-  const legislatorVisualizationData = useMemo<
-    VisualizationGroupedData | null
-  >(() => {
-    if (!data) return null;
-    return transformToGroupedByLegislatorData(data, mode);
-  }, [data, mode]);
+  const legislatorVisualizationData =
+    useMemo<VisualizationGroupedData | null>(() => {
+      if (!effectiveData) return null;
+      return transformToGroupedByLegislatorData(effectiveData, mode);
+    }, [effectiveData, mode]);
 
   const legislatorPadding = useMemo<CirclePackPadding | undefined>(() => {
     if (mode !== "amount") return undefined;
@@ -208,13 +381,22 @@ const Visualization = () => {
     );
   }
 
+  if (!data) {
+    return null;
+  }
+
+  const visualizationData = effectiveData ?? data;
+  const isShowingAll =
+    (activeTab === "legislator" && !selectedLegislatorOption) ||
+    (activeTab === "department" && !selectedDepartmentOption);
+
   return (
     <div>
       <div className="flex flex-col gap-y-3 p-4">
-        <div className="flex flex-col gap-y-2 md:flex-row md:items-center md:justify-center md:gap-x-6">
+        <div className="hidden flex-col gap-y-2 md:flex md:flex-row md:items-center md:justify-center md:gap-x-6">
           <div className="flex items-center justify-center gap-x-1.5 md:gap-x-6">
             <button
-              onClick={() => setActiveTab("legislator")}
+              onClick={() => handleTabChange("legislator")}
               className={`rounded px-2.5 transition-colors ${
                 activeTab === "legislator"
                   ? "bg-[#3E51FF] text-white"
@@ -224,7 +406,7 @@ const Visualization = () => {
               依立委
             </button>
             <button
-              onClick={() => setActiveTab("department")}
+              onClick={() => handleTabChange("department")}
               className={`rounded px-2.5 transition-colors ${
                 activeTab === "department"
                   ? "bg-[#3E51FF] text-white"
@@ -243,6 +425,91 @@ const Visualization = () => {
               }}
             />
           </div>
+        </div>
+        <div className="flex flex-col gap-y-2 md:hidden">
+          <div className="flex items-center justify-center gap-x-1.5">
+            <button
+              onClick={handleClearMobileFilters}
+              className={`rounded px-2.5 transition-colors ${
+                isShowingAll
+                  ? "bg-[#3E51FF] text-white"
+                  : "border border-gray-300 bg-white text-gray-800"
+              }`}
+            >
+              看全部
+            </button>
+            <button
+              onClick={() => handleTabChange("legislator")}
+              className={`rounded px-2.5 transition-colors ${
+                activeTab === "legislator"
+                  ? "bg-[#3E51FF] text-white"
+                  : "border border-gray-300 bg-white text-gray-800"
+              }`}
+            >
+              依立委
+            </button>
+            <button
+              onClick={() => handleTabChange("department")}
+              className={`rounded px-2.5 transition-colors ${
+                activeTab === "department"
+                  ? "bg-[#3E51FF] text-white"
+                  : "border border-gray-300 bg-white text-gray-800"
+              }`}
+            >
+              依部會
+            </button>
+          </div>
+          <div className="flex items-center justify-center">
+            <VisualizationSelector
+              options={yearOptions}
+              value={selectedYear}
+              onChange={(option) => {
+                if (option) setSelectedYear(option);
+              }}
+            />
+          </div>
+          {activeTab === "legislator" &&
+            (legislatorOptions.length > 0 ? (
+              <div className="flex items-center justify-center">
+                <Select
+                  className="w-60"
+                  value={selectedLegislatorOption}
+                  options={legislatorOptions}
+                  onChange={(option) => {
+                    const singleValue = option as SingleValue<OptionType>;
+                    setSelectedLegislatorOption(singleValue ?? null);
+                    setShouldAutoSelectLegislator(false);
+                  }}
+                  placeholder="選擇立委"
+                  isSearchable
+                />
+              </div>
+            ) : (
+              <p className="text-center text-sm text-gray-500">
+                目前沒有立委資料
+              </p>
+            ))}
+          {activeTab === "department" &&
+            (departmentOptions.length > 0 ? (
+              <div className="flex items-center justify-center">
+                <Select
+                  className="w-60"
+                  value={selectedDepartmentOption}
+                  options={departmentOptions}
+                  onChange={(option) => {
+                    const singleValue = option as SingleValue<OptionType>;
+                    setSelectedDepartmentOption(singleValue ?? null);
+                    setShouldAutoSelectDepartment(false);
+                  }}
+                  placeholder="選擇部會"
+                  isSearchable
+                />
+              </div>
+            ) : (
+              <p className="text-center text-sm text-gray-500">
+                目前沒有部會資料
+              </p>
+            ))}
         </div>
         <div>
           <div className="flex flex-col items-center justify-center gap-4 md:flex-row md:gap-x-6">
@@ -274,9 +541,7 @@ const Visualization = () => {
           <div>
             <p>
               總共刪減{" "}
-              <span className="text-[#E9808E]">
-                {formattedReductionAmount}
-              </span>
+              <span className="text-[#E9808E]">{formattedReductionAmount}</span>
               （
               <span className="text-[#E9808E]">
                 {summaryStats.reductionCount}
@@ -285,10 +550,7 @@ const Visualization = () => {
             </p>
             <p>
               凍結{" "}
-              <span className="text-[#E9808E]">
-                {formattedFreezeAmount}
-              </span>
-              （
+              <span className="text-[#E9808E]">{formattedFreezeAmount}</span>（
               <span className="text-[#E9808E]">{summaryStats.freezeCount}</span>
               個提案）
             </p>
@@ -306,20 +568,20 @@ const Visualization = () => {
         {!isLoading && (
           <div ref={chartContainerRef} className="chart-container">
             {activeTab === "legislator" &&
-              data &&
+              visualizationData &&
               legislatorVisualizationData && (
                 <DepartmentVisualization
-                  data={data}
+                  data={visualizationData}
                   transformedData={legislatorVisualizationData}
                   padding={legislatorPadding}
                   onNodeClick={handleNodeClick}
                   width={chartWidth}
                   mode={mode}
                 />
-            )}
-            {activeTab === "department" && data && (
+              )}
+            {activeTab === "department" && visualizationData && (
               <DepartmentVisualization
-                data={data}
+                data={visualizationData}
                 onNodeClick={handleNodeClick}
                 width={chartWidth}
                 mode={mode}
