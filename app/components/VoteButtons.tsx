@@ -1,17 +1,22 @@
-import { useState } from "react";
-import type { Proposal } from "~/graphql/graphql";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type RefObject,
+} from "react";
+import { useToggle, useOnClickOutside } from "usehooks-ts";
+import Image from "./image";
+import { formatNumber } from "~/budget-detail/helpers";
+import { useVoteMutation } from "~/queries/use-vote-mutation";
 import {
   useVoteActions,
-  useUserVotes,
-  type ReactType,
+  useProposalVoteCounts,
 } from "~/stores/vote.store";
-import { useVoteMutation } from "~/queries/use-vote-mutation";
-import { formatNumber } from "~/budget-detail/helpers";
-import Image from "./image";
-import { useToggle, useOnClickOutside } from "usehooks-ts";
-import { useRef, type RefObject } from "react";
+import type { ReactionType, VoteCounts } from "~/types/store/vote";
+import type { VoteButtonsProps } from "~/types/components/voteButtons";
 
-const VOTE_OPTIONS: { type: ReactType; label: string; icon: string }[] = [
+const VOTE_OPTIONS: { type: ReactionType; label: string; icon: string }[] = [
   { type: "react_good", label: "我覺得很讚", icon: "/image/vote-good.svg" },
   { type: "react_angry", label: "我感到生氣", icon: "/image/vote-angry.svg" },
   {
@@ -26,26 +31,23 @@ const VOTE_OPTIONS: { type: ReactType; label: string; icon: string }[] = [
   },
 ];
 
-type VoteCounts = Record<ReactType, number>;
-
-interface VoteButtonsProps {
-  proposal: Pick<
-    Proposal,
-    "id" | "react_good" | "react_angry" | "react_disappoint" | "react_whatever"
-  >;
-  displayMode?: "inline" | "popup";
-}
-
 export function VoteButtons({
   proposal,
   displayMode = "inline",
 }: VoteButtonsProps) {
-  const userVotes = useUserVotes();
-  const { setVote } = useVoteActions();
+  const { initProposal, setProposalCounts } = useVoteActions();
   const voteMutation = useVoteMutation();
 
   const [isVoteMenuOpen, toggleIsVoteMenuOpen, setVoteMenuOpen] = useToggle();
   const voteMenuRef = useRef<HTMLDivElement>(null);
+
+  const {
+    id: proposalId,
+    react_good,
+    react_angry,
+    react_disappoint,
+    react_whatever,
+  } = proposal;
 
   const handleClickOutsideVoteMenu = () => {
     setVoteMenuOpen(false);
@@ -56,75 +58,69 @@ export function VoteButtons({
     handleClickOutsideVoteMenu
   );
 
-  const [voteCounts, setVoteCounts] = useState<VoteCounts>({
-    react_good: proposal.react_good ?? 0,
-    react_angry: proposal.react_angry ?? 0,
-    react_disappoint: proposal.react_disappoint ?? 0,
-    react_whatever: proposal.react_whatever ?? 0,
-  });
+  const initialCounts = useMemo<VoteCounts>(
+    () => ({
+      react_good: react_good ?? 0,
+      react_angry: react_angry ?? 0,
+      react_disappoint: react_disappoint ?? 0,
+      react_whatever: react_whatever ?? 0,
+    }),
+    [react_good, react_angry, react_disappoint, react_whatever]
+  );
 
-  const currentUserVote = userVotes[proposal.id] ?? null;
+  const storeVoteCounts = useProposalVoteCounts(proposalId);
+  const voteCounts = storeVoteCounts ?? initialCounts;
 
-  const handleVote = (newVoteType: ReactType) => {
-    const previousUserVote = currentUserVote;
+  const [selectedReaction, setSelectedReaction] =
+    useState<ReactionType | null>(null);
 
-    // Optimistic UI Update
-    const newVoteCounts = { ...voteCounts };
-    let newUserVote: ReactType | null = newVoteType;
+  const handleVote = (newVoteType: ReactionType) => {
+    const previousCounts = { ...voteCounts };
+    const previousSelected = selectedReaction;
 
-    if (previousUserVote) {
-      newVoteCounts[previousUserVote] -= 1;
-    }
+    const newVoteCounts: VoteCounts = {
+      ...voteCounts,
+      [newVoteType]: voteCounts[newVoteType] + 1,
+    };
 
-    if (previousUserVote === newVoteType) {
-      // Unvoting
-      newUserVote = null;
-    } else {
-      // New vote or changing vote
-      newVoteCounts[newVoteType] += 1;
-    }
+    setSelectedReaction(newVoteType);
+    setProposalCounts(proposalId, newVoteCounts);
 
-    setVoteCounts(newVoteCounts);
-    setVote(proposal.id, newUserVote);
-
-    // Backend Mutation
-    const apiPayload: Partial<VoteCounts> = {};
-    if (previousUserVote) {
-      apiPayload[previousUserVote] = newVoteCounts[previousUserVote];
-    }
-    if (newUserVote) {
-      apiPayload[newUserVote] = newVoteCounts[newUserVote];
-    }
+    const apiPayload: Partial<VoteCounts> = {
+      [newVoteType]: newVoteCounts[newVoteType],
+    };
 
     if (displayMode === "popup") {
       toggleIsVoteMenuOpen();
     }
 
     voteMutation.mutate(
-      { proposalId: proposal.id, apiPayload },
+      { proposalId, apiPayload },
       {
-        onSuccess: () => {
-          // Optional: You might want to refetch proposal data on success
-          // to ensure full consistency with the backend.
-          // This is often handled by invalidating queries in the mutation's onSettled callback.
-        },
         onError: () => {
-          // Rollback on error
-          // The state is already captured in closures, so we can directly use them.
-          const rolledBackCounts = { ...voteCounts };
-          if (previousUserVote) {
-            rolledBackCounts[previousUserVote] += 1;
-          }
-          if (newUserVote && newUserVote !== previousUserVote) {
-            rolledBackCounts[newUserVote] -= 1;
-          }
-          setVoteCounts(rolledBackCounts);
-          setVote(proposal.id, previousUserVote);
-          // Optional: Add user notification
+          setProposalCounts(proposalId, previousCounts);
+          setSelectedReaction(previousSelected);
         },
       }
     );
   };
+
+  useEffect(() => {
+    initProposal({
+      id: proposalId,
+      react_good,
+      react_angry,
+      react_disappoint,
+      react_whatever,
+    });
+  }, [
+    initProposal,
+    proposalId,
+    react_good,
+    react_angry,
+    react_disappoint,
+    react_whatever,
+  ]);
 
   if (displayMode === "popup") {
     return (
@@ -148,7 +144,7 @@ export function VoteButtons({
                 key={type}
                 onClick={() => handleVote(type)}
                 className={`mt-1.5 flex cursor-pointer flex-col items-center justify-center first:mt-0 ${
-                  currentUserVote === type ? "shadow-lg" : ""
+                  selectedReaction === type ? "shadow-lg" : ""
                 }`}
               >
                 <Image src={icon} alt={label} className="w-12" />
@@ -168,7 +164,7 @@ export function VoteButtons({
           key={type}
           onClick={() => handleVote(type)}
           className={`flex h-20 w-20 flex-col items-center justify-center rounded-lg p-2 transition-all duration-200 sm:h-24 sm:w-24 ${
-            currentUserVote === type
+            selectedReaction === type
               ? "scale-105 shadow-lg"
               : "bg-gray-100 hover:bg-gray-200"
           }`}
@@ -177,7 +173,7 @@ export function VoteButtons({
             src={icon}
             alt={
               VOTE_OPTIONS.find((opt) => opt.type === type)?.label ??
-              'Vote option image'
+              "Vote option image"
             }
             className="mb-1 h-8 w-8 sm:h-10 sm:w-10"
           />

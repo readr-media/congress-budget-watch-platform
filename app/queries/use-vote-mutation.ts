@@ -1,11 +1,11 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { UPDATE_PROPOSAL_REACTS } from "./proposal.queries";
 import { execute } from "~/graphql/execute";
-import type { ReactType } from "~/stores/vote.store";
+import type { ReactionType } from "~/types/store/vote";
 
 export interface VoteVariables {
   proposalId: string;
-  apiPayload: Partial<Record<ReactType, number>>;
+  apiPayload: Partial<Record<ReactionType, number>>;
 }
 
 export const useVoteMutation = () => {
