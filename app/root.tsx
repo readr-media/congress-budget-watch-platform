@@ -41,9 +41,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         <QueryClientProvider client={queryClient}>
-          <div className="grid min-h-screen grid-rows-[auto_auto_1fr_auto]">
-            <BudgetHeader />
-            <DataProgressMarquee />
+          <div className="grid min-h-screen grid-rows-[auto_1fr_auto]">
+            <div>
+              <BudgetHeader />
+              <DataProgressMarquee />
+            </div>
             <main>{children}</main>
             <Footer />
           </div>
