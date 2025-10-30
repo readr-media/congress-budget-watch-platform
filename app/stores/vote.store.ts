@@ -12,6 +12,7 @@ import type { Proposal } from "~/graphql/graphql";
 
 const DEFAULT_STATE: VoteStoreState = {
   votes: {},
+  pending: {},
 };
 
 // 建立新的instance
@@ -36,6 +37,13 @@ const toVoteCounts = (
   react_whatever: proposal.react_whatever ?? 0,
 });
 
+const ensurePendingMap = (state: VoteStoreState) => {
+  if (!state.pending) {
+    state.pending = {};
+  }
+  return state.pending;
+};
+
 export const useVoteStore = create<VoteStore>()(
   devtools(
     persist(
@@ -53,25 +61,58 @@ export const useVoteStore = create<VoteStore>()(
             >
           ) => {
             set((draft) => {
-              draft.state.votes[proposal.id] = toVoteCounts(proposal);
+              const pendingMap = ensurePendingMap(draft.state);
+              const pending = pendingMap[proposal.id];
+              const hasPending =
+                pending && Object.keys(pending).length > 0;
+              if (
+                !(proposal.id in draft.state.votes) ||
+                !hasPending
+              ) {
+                draft.state.votes[proposal.id] = toVoteCounts(proposal);
+              }
             });
           },
-          incrementVote: (proposalId: string, reaction: ReactionType) =>
+          queueVote: (proposalId: string, reaction: ReactionType) =>
             set((draft) => {
+              const pendingMap = ensurePendingMap(draft.state);
               if (!(proposalId in draft.state.votes)) {
                 draft.state.votes[proposalId] = createEmptyCounts();
               }
               draft.state.votes[proposalId][reaction] += 1;
+              if (!(proposalId in pendingMap)) {
+                pendingMap[proposalId] = {};
+              }
+              pendingMap[proposalId][reaction] = true;
             }),
           setProposalCounts: (proposalId: string, counts: VoteCounts) =>
             set((draft) => {
               draft.state.votes[proposalId] = { ...createEmptyCounts(), ...counts };
             }),
+          removePendingReactions: (proposalId: string, reactions: ReactionType[]) =>
+            set((draft) => {
+              const pendingMap = ensurePendingMap(draft.state);
+              const pending = pendingMap[proposalId];
+              if (!pending) return;
+              reactions.forEach((reaction) => {
+                delete pending[reaction];
+              });
+              if (Object.keys(pending).length === 0) {
+                delete draft.state.pending[proposalId];
+              }
+            }),
+          clearProposalPending: (proposalId: string) =>
+            set((draft) => {
+              const pendingMap = ensurePendingMap(draft.state);
+              delete pendingMap[proposalId];
+            }),
         },
       })),
       {
         name: "vote-storage",
-        partialize: (store) => ({ state: { votes: store.state.votes } }),
+        partialize: (store) => ({
+          state: { votes: store.state.votes, pending: store.state.pending },
+        }),
       }
     ),
     {
@@ -84,3 +125,4 @@ export const useVoteStore = create<VoteStore>()(
 export const useVoteActions = () => useVoteStore((store) => store.actions);
 export const useProposalVoteCounts = (proposalId: string) =>
   useVoteStore((store) => store.state.votes[proposalId]);
+export const usePendingVotes = () => useVoteStore((store) => store.state.pending);

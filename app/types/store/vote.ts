@@ -10,6 +10,7 @@ export type VoteCounts = Record<ReactionType, number>;
 
 export type VoteStoreState = {
   votes: Record<string, VoteCounts>;
+  pending: Record<string, Partial<Record<ReactionType, boolean>>>;
 };
 
 export type VoteStoreActions = {
@@ -23,8 +24,13 @@ export type VoteStoreActions = {
       | "react_whatever"
     >
   ) => void;
-  incrementVote: (proposalId: string, reaction: ReactionType) => void;
+  queueVote: (proposalId: string, reaction: ReactionType) => void;
   setProposalCounts: (proposalId: string, counts: VoteCounts) => void;
+  removePendingReactions: (
+    proposalId: string,
+    reactions: ReactionType[]
+  ) => void;
+  clearProposalPending: (proposalId: string) => void;
 };
 
 export type VoteStore = {

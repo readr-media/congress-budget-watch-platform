@@ -8,11 +8,11 @@ import {
 import { useToggle, useOnClickOutside } from "usehooks-ts";
 import Image from "./image";
 import { formatNumber } from "~/budget-detail/helpers";
-import { useVoteMutation } from "~/queries/use-vote-mutation";
 import {
   useVoteActions,
   useProposalVoteCounts,
 } from "~/stores/vote.store";
+import { useVoteQueue } from "~/queries/use-vote-queue";
 import type { ReactionType, VoteCounts } from "~/types/store/vote";
 import type { VoteButtonsProps } from "~/types/components/voteButtons";
 
@@ -35,8 +35,8 @@ export function VoteButtons({
   proposal,
   displayMode = "inline",
 }: VoteButtonsProps) {
-  const { initProposal, setProposalCounts } = useVoteActions();
-  const voteMutation = useVoteMutation();
+  const { initProposal, queueVote } = useVoteActions();
+  const { scheduleFlush, flushPending, cancelScheduledFlush } = useVoteQueue();
 
   const [isVoteMenuOpen, toggleIsVoteMenuOpen, setVoteMenuOpen] = useToggle();
   const voteMenuRef = useRef<HTMLDivElement>(null);
@@ -51,6 +51,8 @@ export function VoteButtons({
 
   const handleClickOutsideVoteMenu = () => {
     setVoteMenuOpen(false);
+    cancelScheduledFlush();
+    void flushPending();
   };
 
   useOnClickOutside(
@@ -74,35 +76,17 @@ export function VoteButtons({
   const [selectedReaction, setSelectedReaction] =
     useState<ReactionType | null>(null);
 
-  const handleVote = (newVoteType: ReactionType) => {
-    const previousCounts = { ...voteCounts };
-    const previousSelected = selectedReaction;
-
-    const newVoteCounts: VoteCounts = {
-      ...voteCounts,
-      [newVoteType]: voteCounts[newVoteType] + 1,
-    };
-
-    setSelectedReaction(newVoteType);
-    setProposalCounts(proposalId, newVoteCounts);
-
-    const apiPayload: Partial<VoteCounts> = {
-      [newVoteType]: newVoteCounts[newVoteType],
-    };
+  const handleVote = (reaction: ReactionType) => {
+    setSelectedReaction(reaction);
+    queueVote(proposalId, reaction);
 
     if (displayMode === "popup") {
       toggleIsVoteMenuOpen();
+      cancelScheduledFlush();
+      void flushPending();
+    } else {
+      scheduleFlush();
     }
-
-    voteMutation.mutate(
-      { proposalId, apiPayload },
-      {
-        onError: () => {
-          setProposalCounts(proposalId, previousCounts);
-          setSelectedReaction(previousSelected);
-        },
-      }
-    );
   };
 
   useEffect(() => {
