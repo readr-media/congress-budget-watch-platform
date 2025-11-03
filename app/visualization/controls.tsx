@@ -53,6 +53,8 @@ export const DesktopControls = ({
               onYearChange(option as SelectOption);
             }
           }}
+          aria-label="選擇年度"
+          inputId="visualization-year-desktop"
         />
       </div>
     </div>
@@ -133,6 +135,8 @@ export const MobileControls = ({
               onYearChange(option as SelectOption);
             }
           }}
+          aria-label="選擇年度"
+          inputId="visualization-year-mobile"
         />
       </div>
       {activeTab === "legislator" &&
@@ -147,6 +151,8 @@ export const MobileControls = ({
             }}
             placeholder="選擇立委"
             isSearchable
+            aria-label="選擇立委"
+            inputId="visualization-legislator"
           />
         ) : (
           <p className="text-center text-sm text-gray-500">目前沒有立委資料</p>
@@ -163,6 +169,8 @@ export const MobileControls = ({
             }}
             placeholder="選擇部會"
             isSearchable
+            aria-label="選擇部會"
+            inputId="visualization-department"
           />
         ) : (
           <p className="text-center text-sm text-gray-500">目前沒有部會資料</p>

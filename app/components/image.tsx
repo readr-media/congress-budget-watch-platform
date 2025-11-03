@@ -1,14 +1,11 @@
+import type { ImgHTMLAttributes } from "react";
 import { STATIC_ASSETS_PREFIX } from "~/constants/config";
 
-const Image = ({
-  src,
-  ...props
-}: {
+type ImageProps = ImgHTMLAttributes<HTMLImageElement> & {
   src: string;
-  alt: string;
-  className?: string;
-  props?: React.HTMLAttributes<HTMLImageElement>;
-}) => {
+};
+
+const Image = ({ src, ...props }: ImageProps) => {
   return <img src={STATIC_ASSETS_PREFIX + src} {...props} />;
 };
 

@@ -1,4 +1,5 @@
 import { NavLink } from "react-router";
+import type { LinksFunction } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 import Image from "~/components/image";
 import { execute } from "~/graphql/execute";
@@ -11,6 +12,7 @@ import {
   formatProgressText,
 } from "~/utils/progress";
 import type { BudgetProgressStage } from "~/constants/progress-stages";
+import { STATIC_ASSETS_PREFIX } from "~/constants/config";
 
 export function meta() {
   return [
@@ -22,6 +24,15 @@ export function meta() {
     },
   ];
 }
+
+export const links: LinksFunction = () => [
+  {
+    rel: "preload",
+    as: "image",
+    href: `${STATIC_ASSETS_PREFIX}/image/homepage-banner.svg`,
+    fetchpriority: "high",
+  },
+];
 
 type NavigationButton = {
   label: string;
@@ -77,30 +88,34 @@ export default function Home() {
             <Image
               src="/image/homepage-banner.svg"
               alt="國會預算監督平台 Banner"
+              width={380}
+              height={189}
+              loading="eager"
+              fetchPriority="high"
               className="h-auto w-full max-w-xl"
             />
             {isLoading ? (
-              <div className="-mt-1 flex w-full max-w-banner items-center justify-center rounded-lg bg-gray-300 p-2 text-gray-600">
+              <div className="-mt-1 flex min-h-[60px] w-full max-w-banner items-center justify-center rounded-lg bg-gray-300 p-2 text-gray-600">
                 載入審議進度中...
               </div>
             ) : isError ? (
-              <div className="-mt-1 flex w-full max-w-banner items-center justify-center rounded-lg bg-red-100 p-2 text-red-600">
+              <div className="-mt-1 flex min-h-[60px] w-full max-w-banner items-center justify-center rounded-lg bg-red-100 p-2 text-red-600">
                 審議進度載入失敗，請稍後再試
               </div>
             ) : latestBudgetYear ? (
-              <div className="-mt-1 flex w-full max-w-banner items-center justify-start rounded-lg bg-brand-primary pl-1 text-white">
-                <p className="mr-2 hidden w-[160px] rounded-lg bg-white px-3.5 text-brand-primary md:flex">
+              <div className="-mt-1 flex min-h-[48px] w-full max-w-banner items-center justify-start rounded-lg bg-brand-primary pl-1 text-white">
+                <p className="mr-2 hidden w-[160px] rounded-lg bg-white px-3.5 py-2 text-brand-primary md:flex">
                   最新審議進度
                 </p>
                 <div className="flex w-full items-center justify-between">
-                  <p className="flex grow justify-center border-r border-white py-1">
+                  <p className="flex grow justify-center border-r border-white py-2">
                     {progressText}
                   </p>
                   <p className="flex px-2">{progressPercentage}%</p>
                 </div>
               </div>
             ) : (
-              <div className="-mt-1 flex w-full max-w-banner items-center justify-center rounded-lg bg-gray-300 p-2 text-gray-600">
+              <div className="-mt-1 flex min-h-[60px] w-full max-w-banner items-center justify-center rounded-lg bg-gray-300 p-2 text-gray-600">
                 暫無審議進度資料
               </div>
             )}
@@ -114,17 +129,15 @@ export default function Home() {
 
         {/* Navigation Buttons */}
         <nav
-          className="flex flex-col md:grid md:grid-cols-2 md:gap-6 lg:grid-cols-4"
+          className="flex flex-col gap-3 md:grid md:grid-cols-2 md:gap-6 lg:grid-cols-4 lg:gap-4"
           aria-label="主要導航"
         >
-          {navigationButtons.map((button, index) => (
+          {navigationButtons.map((button) => (
             <NavLink
               key={button.label}
               to={button.href}
               className={({ isActive }) =>
-                `rounded-lg border-3 border-brand-accent px-6 py-4 text-center text-lg font-medium transition-colors ${
-                  index > 0 ? "-mt-[10px] md:mt-0" : ""
-                } ${
+                `flex min-h-[72px] w-full items-center justify-center rounded-lg border-3 border-brand-accent px-6 py-4 text-center text-lg font-medium transition-colors ${
                   isActive
                     ? "bg-brand-accent text-white"
                     : "bg-white text-brand-accent hover:bg-brand-accent hover:text-white"
@@ -140,10 +153,22 @@ export default function Home() {
         <Image
           src="/image/Friedrich-Naumann-Foundation-logo.svg"
           alt="Friedrich-Naumann-Foundation-logo"
+          width={130}
+          height={48}
           className="h-auto w-[130px] md:w-50"
         />
-        <Image src="/image/CCW-logo.svg" alt="Citizen-Watch-logo" />
-        <Image src="/image/donate-CCW-logo.svg" alt="donate-CCW-logo" />
+        <Image
+          src="/image/CCW-logo.svg"
+          alt="Citizen-Watch-logo"
+          width={90}
+          height={48}
+        />
+        <Image
+          src="/image/donate-CCW-logo.svg"
+          alt="donate-CCW-logo"
+          width={120}
+          height={48}
+        />
       </div>
     </div>
   );

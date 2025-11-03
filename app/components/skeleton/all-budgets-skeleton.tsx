@@ -42,7 +42,11 @@ const AllBudgetsSkeleton = ({ isDesktop }: { isDesktop: boolean }) => {
       <div className="h-0.5 w-full bg-black md:hidden" />
 
       {/* Table skeleton */}
-      <div className="mt-4 space-y-6">
+      <div
+        className={`mt-4 space-y-6 ${
+          isDesktop ? "min-h-[620px]" : "min-h-[680px]"
+        }`}
+      >
         {Array.from({ length: skeletonCount }).map((_, idx) => (
           <div key={idx}>
             {isDesktop ? (

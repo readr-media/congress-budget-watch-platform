@@ -371,10 +371,13 @@ const BudgetsSelector: React.FC<BudgetsSelectorProps> = ({
             </div>
           ))}
           <section className="md:flex md:items-center">
-            <p>或搜尋：</p>
+            <label htmlFor="budget-search-input" className="mr-2">
+              或搜尋：
+            </label>
             <input
+              id="budget-search-input"
               type="search"
-              placeholder="搜尋"
+              placeholder="輸入關鍵字搜尋"
               value={searchedValue}
               onChange={(e) => setSearchedValue(e.target.value)}
               className="rounded-sm border-2 bg-white text-center md:w-80"

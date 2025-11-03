@@ -1,6 +1,13 @@
+const FOOTER_BASE_HEIGHT_PX = 220;
+
 const Footer = () => {
   return (
-    <footer className="bg-footer flex h-[176px] w-full flex-col justify-center gap-3 p-10 md:mx-auto md:h-32 md:gap-4">
+    <footer
+      style={{
+        minHeight: `${FOOTER_BASE_HEIGHT_PX}px`,
+      }}
+      className="bg-footer flex w-full flex-shrink-0 flex-col justify-center gap-3 px-10 py-10 md:mx-auto md:gap-4 md:px-10 md:py-8"
+    >
       {/* Attribution Text */}
       <p className="text-center text-xs text-neutral-200 md:text-sm">
         此計畫由
@@ -39,7 +46,7 @@ const Footer = () => {
           href="https://data.gov.tw"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-info-accenthover:underline"
+          className="text-info-accent hover:underline"
         >
           開放資料
         </a>

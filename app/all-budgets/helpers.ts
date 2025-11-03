@@ -11,6 +11,12 @@ import {
 } from "~/budget-detail/helpers";
 import type { BudgetTableData } from "~/components/budget-table";
 
+const PROPOSAL_TYPE_LABEL_MAP: Record<ProposalProposalTypeType, string> = {
+  freeze: "凍結",
+  reduce: "刪減",
+  other: "主提案",
+};
+
 function getProposalTypeDisplay(
   proposalTypes?: (ProposalProposalTypeType | null)[] | null
 ): string {
@@ -19,7 +25,10 @@ function getProposalTypeDisplay(
   }
   return proposalTypes
     .filter((proposalType) => proposalType !== null)
-    .map((proposalType) => proposalType![0] ?? "")
+    .map((proposalType) => {
+      if (!proposalType) return "";
+      return PROPOSAL_TYPE_LABEL_MAP[proposalType] ?? proposalType;
+    })
     .join("、");
 }
 
@@ -66,7 +75,6 @@ export function proposalToBudgetTableData(proposal: Proposal): BudgetTableData {
     committeedDate: () => undefined,
     totalReacts: calculateTotalReacts,
   };
-
   return Object.keys(spec).reduce((acc, key) => {
     acc[key as keyof BudgetTableData] =
       spec[key as keyof typeof spec](proposal);

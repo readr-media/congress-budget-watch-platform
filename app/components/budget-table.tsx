@@ -91,9 +91,12 @@ const ProposalContent = ({ content }: { content: string; itemId: string }) => (
       <div className="absolute right-0 bottom-0">
         <Dialog.Root>
           <Dialog.Trigger asChild>
-            <span className="shrink-0 text-blue-600 hover:underline">
+            <button
+              type="button"
+              className="shrink-0 text-blue-600 hover:underline"
+            >
               [更多]
-            </span>
+            </button>
           </Dialog.Trigger>
           <Dialog.Portal>
             <Dialog.Overlay className="fixed inset-0 bg-black/40" />
@@ -249,11 +252,14 @@ const DesktopTableRow = ({ item }: { item: BudgetTableData }) => {
         <div className="relative w-full">
           <p className="line-clamp-4">{item.proposalContent}</p>
           <Dialog.Root>
-            <Dialog.Trigger asChild>
-              <span className="cursor-pointer text-xs text-blue-600 hover:underline">
-                [更多]
-              </span>
-            </Dialog.Trigger>
+          <Dialog.Trigger asChild>
+            <button
+              type="button"
+              className="cursor-pointer text-xs text-blue-600 hover:underline"
+            >
+              [更多]
+            </button>
+          </Dialog.Trigger>
             <Dialog.Portal>
               <Dialog.Overlay className="fixed inset-0 bg-black/40" />
               <Dialog.Content className="fixed top-1/2 left-1/2 max-h-[80vh] w-[90vw] max-w-[720px] -translate-x-1/2 -translate-y-1/2 overflow-auto rounded-md bg-white p-4 shadow-lg">

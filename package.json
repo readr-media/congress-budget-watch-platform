@@ -7,7 +7,7 @@
     "deploy:gcp:prod": "sh ./deploy-prod.sh",
     "deploy:gcp:dev": "sh ./deploy-dev.sh",
     "dev": "react-router dev",
-    "start": "react-router-serve ./build/client/index.html",
+    "start": "vite preview --outDir build/client",
     "typecheck": "react-router typegen && tsc",
     "codegen": "graphql-codegen --config codegen.ts --concurrency 1",
     "format": "prettier --write .",

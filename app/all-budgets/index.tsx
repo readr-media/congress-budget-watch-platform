@@ -1,4 +1,11 @@
-import { useMemo, useEffect, useRef } from "react";
+import {
+  useMemo,
+  useEffect,
+  useRef,
+  useState,
+  Suspense,
+  lazy,
+} from "react";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { redirect, useSearchParams } from "react-router";
 import Select, { type StylesConfig, type SingleValue } from "react-select";
@@ -11,9 +18,6 @@ import {
 } from "~/queries";
 import content from "./page-content";
 import ProgressBar from "~/components/progress-bar";
-import BudgetsSelector from "~/components/budgets-selector";
-import SortToolbar from "~/components/sort-toolbar";
-import BudgetTable from "~/components/budget-table";
 import {
   useSelectedSort,
   useSetSelectedSort,
@@ -34,7 +38,6 @@ import type {
 import { OrderDirection } from "~/graphql/graphql";
 import { SortDirection } from "~/constants/enums";
 import AllBudgetsSkeleton from "~/components/skeleton/all-budgets-skeleton";
-import Pagination from "~/components/pagination";
 import { usePagination, usePaginationActions } from "~/stores/paginationStore";
 import { proposalToBudgetTableData } from "./helpers";
 import useDebounce from "~/hooks/useDebounce";
@@ -48,6 +51,48 @@ import {
 } from "~/constants/colors";
 
 type YearOptionType = { value: number | null; label: string };
+
+const BudgetsSelector = lazy(() => import("~/components/budgets-selector"));
+const SortToolbar = lazy(() => import("~/components/sort-toolbar"));
+const BudgetTable = lazy(() => import("~/components/budget-table"));
+const Pagination = lazy(() => import("~/components/pagination"));
+
+const BudgetsSelectorFallback = () => (
+  <div className="flex justify-center py-4">
+    <div className="h-[92px] w-full max-w-[640px] animate-pulse rounded border-2 border-dashed border-neutral-300 bg-white" />
+  </div>
+);
+
+const SortToolbarFallback = () => (
+  <div className="flex items-center justify-end pt-3">
+    <div className="h-8 w-40 animate-pulse rounded bg-gray-200" />
+  </div>
+);
+
+const TableFallback = ({ isDesktop }: { isDesktop: boolean }) => (
+  <div
+    className={`mt-4 w-full animate-pulse rounded border-2 border-dashed border-neutral-300 bg-white ${
+      isDesktop ? "min-h-[620px]" : "min-h-[680px]"
+    }`}
+  />
+);
+
+const PaginationFallback = ({ className = "" }: { className?: string }) => (
+  <div className={`flex justify-center ${className}`}>
+    <div className="h-10 w-64 animate-pulse rounded-full border border-dashed border-neutral-300" />
+  </div>
+);
+
+export function meta() {
+  return [
+    { title: "歷年預算列表 - 國會預算監督平台" },
+    {
+      name: "description",
+      content:
+        "檢視中央政府歷年預算提案與審議結果，依部會、立委、金額與年份快速篩選，掌握刪減與凍結決議。",
+    },
+  ];
+}
 
 export const AllBudgets = () => {
   const [searchParams] = useSearchParams();
@@ -83,9 +128,24 @@ export const AllBudgets = () => {
   // 重複資料檢測 Map
   const seenProposalIds = useRef<Map<string, boolean>>(new Map());
 
+  const [yearsQueryEnabled, setYearsQueryEnabled] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+    const rafId = window.requestAnimationFrame(() => {
+      setYearsQueryEnabled(true);
+    });
+    return () => {
+      window.cancelAnimationFrame(rafId);
+    };
+  }, []);
+
   const { data: yearsData } = useQuery({
     queryKey: proposalQueryKeys.years(),
     queryFn: () => execute(GET_PROPOSAL_YEARS_QUERY),
+    enabled: yearsQueryEnabled,
   });
 
   const yearOptions: YearOptionType[] = useMemo(() => {
@@ -375,19 +435,29 @@ export const AllBudgets = () => {
 
         {/* budgets selector start */}
         <div className="h-0.5 w-full bg-black md:hidden" />
-        <BudgetsSelector />
+        <Suspense fallback={<BudgetsSelectorFallback />}>
+          <BudgetsSelector />
+        </Suspense>
         <div className="h-0.5 w-full bg-black md:hidden" />
 
         {/* 上方分頁元件（新增）*/}
-        <Pagination className="mt-4" />
+        <Suspense fallback={<PaginationFallback className="mt-4" />}>
+          <Pagination className="mt-4" />
+        </Suspense>
         {/* 排序下拉（react-select） */}
-        <SortToolbar selectedValue={selectedSort} onChange={setSelectedSort} />
+        <Suspense fallback={<SortToolbarFallback />}>
+          <SortToolbar selectedValue={selectedSort} onChange={setSelectedSort} />
+        </Suspense>
 
         {/* 使用新的表格組件渲染清單 */}
-        <BudgetTable isDesktop={isDesktop} data={tableData} className="mt-4" />
+        <Suspense fallback={<TableFallback isDesktop={isDesktop} />}>
+          <BudgetTable isDesktop={isDesktop} data={tableData} className="mt-4" />
+        </Suspense>
 
         {/* 下方分頁元件（新增，複用同一元件）*/}
-        <Pagination className="mt-4 mb-8" />
+        <Suspense fallback={<PaginationFallback className="mt-4 mb-8" />}>
+          <Pagination className="mt-4 mb-8" />
+        </Suspense>
 
         {/* Placeholder data 載入提示（可選）*/}
         {isPlaceholderData && (

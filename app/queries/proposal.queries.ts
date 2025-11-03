@@ -247,20 +247,11 @@ export const GET_PAGINATED_PROPOSALS_QUERY = graphql(`
   ) {
     proposals(skip: $skip, take: $take, orderBy: $orderBy, where: $where) {
       id
-      description
-      year {
-        id
-        year
-      }
       reason
-      publishStatus
       result
       freezeAmount
       reductionAmount
-      budgetImageUrl
       proposalTypes
-      recognitionAnswer
-      unfreezeStatus
       react_angry
       react_disappoint
       react_good
@@ -268,38 +259,14 @@ export const GET_PAGINATED_PROPOSALS_QUERY = graphql(`
       government {
         id
         name
-        category
-        description
       }
       budget {
         id
-        projectName
         budgetAmount
-        year
-        type
-        majorCategory
-        mediumCategory
-        minorCategory
       }
       proposers {
         id
         name
-        type
-        description
-        party {
-          id
-          name
-          color
-        }
-        committees {
-          id
-          name
-        }
-      }
-      coSigners {
-        id
-        name
-        type
       }
     }
     proposalsCount(where: $where)
