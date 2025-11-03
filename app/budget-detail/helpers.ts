@@ -100,7 +100,11 @@ export function meetingsToTimeline(
   meetings?: Meeting[] | null
 ): TimelineItem[] {
   if (!meetings || meetings.length === 0) return [];
-
+  console.log({ meetings });
+  const meetingTypeMap = {
+    budget_review: "預算審議",
+    budget_unfreeze: "預算解凍",
+  };
   return meetings.map((meeting, index) => ({
     id: meeting.id || index,
     date: meeting.meetingDate
@@ -110,7 +114,9 @@ export function meetingsToTimeline(
           day: "numeric",
         })
       : "日期未定",
-    title: meeting.displayName || meeting.type || "會議",
+    title:
+      meetingTypeMap[(meeting.type as keyof typeof meetingTypeMap) ?? ""] ||
+      "會議",
     description: meeting.description || meeting.location || "",
   }));
 }
@@ -147,7 +153,7 @@ export function formatBudgetCategory(
 ): string {
   const parts = [majorCategory, mediumCategory, minorCategory].filter(Boolean);
 
-  if (parts.length === 0) return "N/A";
+  if (parts.length === 0) return "暫無科目計畫";
 
   return parts.join(" > ");
 }
