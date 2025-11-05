@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { find, filter, sumBy } from "lodash";
 import { useMediaQuery } from "usehooks-ts";
@@ -57,7 +57,7 @@ type UseVisualizationStateResult = {
   departmentOptions: SelectOption[];
   selectedDepartmentOption: SelectOption | null;
   handleDepartmentChange: (option: SelectOption | null) => void;
-  handleClearMobileFilters: () => void;
+  handleToggleShowAll: () => void;
   isShowingAll: boolean;
   isDesktop: boolean;
   isMobile: boolean;
@@ -77,10 +77,13 @@ export const useVisualizationState = (): UseVisualizationStateResult => {
   const [selectedYear, setSelectedYear] = useState<SelectOption>(
     YEAR_OPTIONS[0],
   );
-  const [selectedLegislatorOption, setSelectedLegislatorOption] =
+const [selectedLegislatorOption, setSelectedLegislatorOption] =
     useState<SelectOption | null>(null);
   const [selectedDepartmentOption, setSelectedDepartmentOption] =
     useState<SelectOption | null>(null);
+
+  const previousLegislatorOption = useRef<SelectOption | null>(null);
+  const previousDepartmentOption = useRef<SelectOption | null>(null);
   const [shouldAutoSelectLegislator, setShouldAutoSelectLegislator] =
     useState(true);
   const [shouldAutoSelectDepartment, setShouldAutoSelectDepartment] =
@@ -165,6 +168,9 @@ export const useVisualizationState = (): UseVisualizationStateResult => {
     (option: SelectOption | null) => {
       setSelectedLegislatorOption(option);
       setShouldAutoSelectLegislator(false);
+      if (option) {
+        previousLegislatorOption.current = option;
+      }
     },
     [],
   );
@@ -173,16 +179,38 @@ export const useVisualizationState = (): UseVisualizationStateResult => {
     (option: SelectOption | null) => {
       setSelectedDepartmentOption(option);
       setShouldAutoSelectDepartment(false);
+      if (option) {
+        previousDepartmentOption.current = option;
+      }
     },
     [],
   );
 
-  const handleClearMobileFilters = useCallback(() => {
-    setSelectedLegislatorOption(null);
-    setSelectedDepartmentOption(null);
-    setShouldAutoSelectLegislator(false);
-    setShouldAutoSelectDepartment(false);
-  }, []);
+  const handleToggleShowAll = useCallback(() => {
+    if (activeTab === "legislator") {
+      if (selectedLegislatorOption) {
+        previousLegislatorOption.current = selectedLegislatorOption;
+        setSelectedLegislatorOption(null);
+        setShouldAutoSelectLegislator(false);
+      } else if (previousLegislatorOption.current) {
+        setSelectedLegislatorOption(previousLegislatorOption.current);
+        setShouldAutoSelectLegislator(false);
+      }
+    } else if (activeTab === "department") {
+      if (selectedDepartmentOption) {
+        previousDepartmentOption.current = selectedDepartmentOption;
+        setSelectedDepartmentOption(null);
+        setShouldAutoSelectDepartment(false);
+      } else if (previousDepartmentOption.current) {
+        setSelectedDepartmentOption(previousDepartmentOption.current);
+        setShouldAutoSelectDepartment(false);
+      }
+    }
+  }, [
+    activeTab,
+    selectedLegislatorOption,
+    selectedDepartmentOption,
+  ]);
 
   const allProposals = useMemo(
     () => mapVisualizationProposals(data),
@@ -387,7 +415,7 @@ export const useVisualizationState = (): UseVisualizationStateResult => {
     departmentOptions,
     selectedDepartmentOption,
     handleDepartmentChange,
-    handleClearMobileFilters,
+    handleToggleShowAll,
     isShowingAll,
     isDesktop,
     isMobile,

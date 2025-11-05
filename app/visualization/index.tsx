@@ -71,7 +71,7 @@ const Visualization = () => {
     departmentOptions,
     selectedDepartmentOption,
     handleDepartmentChange,
-    handleClearMobileFilters,
+    handleToggleShowAll,
     isShowingAll,
     isDesktop,
     isLoading,
@@ -147,7 +147,7 @@ const Visualization = () => {
           selectedYear={selectedYear}
           onYearChange={handleYearChange}
           isShowingAll={isShowingAll}
-          onClearFilters={handleClearMobileFilters}
+          onToggleShowAll={handleToggleShowAll}
           legislatorOptions={legislatorOptions}
           selectedLegislator={selectedLegislatorOption}
           onLegislatorChange={handleLegislatorChange}
