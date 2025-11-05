@@ -55,7 +55,8 @@ export type NodeDatum = {
   name: string;
   value?: number;
   color?: string;
-  id: string; // 代表提案 ID
+  id: string; // 圖表節點唯一 ID
+  proposalId?: string; // 代表提案 ID（僅單一提案節點使用）
   proposerId?: string; // 代表提案人 ID
   isFrozen?: boolean;
   proposalType?: ProposalVisualizationType;
@@ -179,45 +180,56 @@ export const transformToGroupedByLegislatorData = (
         proposal.proposalTypes?.includes(ProposalProposalTypeType.Other),
       );
 
-      const pushFinancialNode = (
-        key: Extract<ProposalVisualizationType, "freeze" | "reduce">,
-        proposalsForKey: typeof legislatorProposals,
-        getAmount: (proposal: (typeof legislatorProposals)[number]) => number,
-      ) => {
-        if (!proposalsForKey.length) return;
-        const totalAmount = sumBy(proposalsForKey, getAmount);
-        const totalCount = proposalsForKey.length;
-        const rawValue = mode === "amount" ? totalAmount : totalCount;
-
-        if (rawValue <= 0) return;
-
-        const displayValue =
-          mode === "amount"
-            ? formatAmountWithUnit(totalAmount)
-            : `${totalCount}案`;
-
-        legislatorNodes.push({
-          id: `${proposerId}-${key}`,
-          name: `${legislatorName}\n${GROUP_LABELS[key]}\n${displayValue}`,
-          value: Math.pow(rawValue, 0.45),
-          color: partyColor,
-          proposerId: mainProposer?.id,
-          proposalType: key,
-          isFrozen: key === "freeze",
+      if (mode === "amount") {
+        freezeProposals.forEach((proposal) => {
+          const amount = proposal.freezeAmount ?? 0;
+          if (amount <= 0) return;
+          legislatorNodes.push({
+            id: `${proposal.id}-freeze`,
+            proposalId: proposal.id ?? undefined,
+            name: `${legislatorName}\n${GROUP_LABELS.freeze}\n${formatAmountWithUnit(amount)}`,
+            value: Math.pow(amount, 0.45),
+            color: partyColor,
+            proposerId: mainProposer?.id,
+            proposalType: "freeze",
+            isFrozen: true,
+          });
         });
-      };
 
-      pushFinancialNode(
-        "freeze",
-        freezeProposals,
-        (proposal) => proposal.freezeAmount ?? 0,
-      );
+        reductionProposals.forEach((proposal) => {
+          const amount = proposal.reductionAmount ?? 0;
+          if (amount <= 0) return;
+          legislatorNodes.push({
+            id: `${proposal.id}-reduce`,
+            proposalId: proposal.id ?? undefined,
+            name: `${legislatorName}\n${GROUP_LABELS.reduce}\n${formatAmountWithUnit(amount)}`,
+            value: Math.pow(amount, 0.45),
+            color: partyColor,
+            proposerId: mainProposer?.id,
+            proposalType: "reduce",
+          });
+        });
+      } else {
+        const pushCountNode = (
+          key: Extract<ProposalVisualizationType, "freeze" | "reduce">,
+          proposalsForKey: typeof legislatorProposals,
+        ) => {
+          if (!proposalsForKey.length) return;
+          const totalCount = proposalsForKey.length;
+          legislatorNodes.push({
+            id: `${proposerId}-${key}`,
+            name: `${legislatorName}\n${GROUP_LABELS[key]}\n${totalCount}案`,
+            value: Math.pow(totalCount, 0.45),
+            color: partyColor,
+            proposerId: mainProposer?.id,
+            proposalType: key,
+            isFrozen: key === "freeze",
+          });
+        };
 
-      pushFinancialNode(
-        "reduce",
-        reductionProposals,
-        (proposal) => proposal.reductionAmount ?? 0,
-      );
+        pushCountNode("freeze", freezeProposals);
+        pushCountNode("reduce", reductionProposals);
+      }
 
       if (mode === "count" && mainResolutionProposals.length > 0) {
         const totalCount = mainResolutionProposals.length;
@@ -467,6 +479,7 @@ export const transformToCategorizedData = (
 
           proposerNodes.push({
             id: `proposer-${categoryName}-${proposerId}-${key}`,
+            proposalId: undefined,
             name: `${proposerName}\n${GROUP_LABELS[key]}\n${displayValue}`,
             value: Math.pow(rawValue, 0.45),
             color: partyColor,
@@ -493,6 +506,7 @@ export const transformToCategorizedData = (
           if (totalCount > 0) {
             proposerNodes.push({
               id: `proposer-${categoryName}-${proposerId}-main-resolution`,
+              proposalId: undefined,
               name: `${proposerName}\n${GROUP_LABELS.other}\n${totalCount}案`,
               value: Math.pow(totalCount, 0.45),
               color: partyColor,

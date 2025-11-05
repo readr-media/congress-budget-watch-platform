@@ -2,7 +2,9 @@ import CirclePackChart from "../circle-pack-chart";
 import type { NodeDatum } from "../helpers";
 
 const getBorderBottomClass = (index: number, totalItems: number) => {
-  return totalItems > 1 && index < totalItems - 1 ? "border-b border-gray-200" : "";
+  return totalItems > 1 && index < totalItems - 1
+    ? "border-b border-gray-200"
+    : "";
 };
 
 type SessionChartProps = {
@@ -26,7 +28,7 @@ const SessionChart = ({ data, yearToCommitteeMap }: SessionChartProps) => {
       {data.map((session, index) => (
         <div
           key={session.id}
-          className={`mb-2 flex w-full flex-col items-start justify-center ${getBorderBottomClass(
+          className={`mb-2 flex w-full max-w-[1000px] flex-col items-start justify-center ${getBorderBottomClass(
             index,
             data.length
           )}`}

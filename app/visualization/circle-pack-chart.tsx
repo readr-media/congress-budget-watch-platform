@@ -24,7 +24,7 @@ const ANIMATION_CONFIG = {
 } as const;
 
 const INTERACTION_FLAGS = {
-  enableNodeNavigation: false,
+  enableNodeNavigation: true,
 } as const;
 
 const INERTIA_FLAGS = {
@@ -391,6 +391,7 @@ const CirclePackChart = ({
 
     let focus: d3.HierarchyCircularNode<NodeDatum> | null =
       initialFocus ?? root;
+    let lastFocusedNodeId: string | null = focus?.data.id ?? null;
 
     const baseFocusDuration = animations.focus;
     const slowFocusDuration =
@@ -659,6 +660,7 @@ const CirclePackChart = ({
       target: d3.HierarchyCircularNode<NodeDatum>,
     ) => {
       focus = target;
+      lastFocusedNodeId = target.data.id;
       clearInertia();
       const isSlow = Boolean(event?.altKey) && animationsEnabled;
       const duration = isSlow ? slowFocusDuration : baseFocusDuration;
@@ -668,6 +670,7 @@ const CirclePackChart = ({
 
     const resetToRoot = () => {
       focus = root;
+      lastFocusedNodeId = root.data.id;
       clearInertia();
       setView(root, { duration: baseFocusDuration });
       updateLabelVisibility(root, baseLabelDuration);
@@ -700,20 +703,25 @@ const CirclePackChart = ({
       // 防止在拖曳後觸發點擊
       if (event.defaultPrevented) return;
 
-      const canNavigate =
-        INTERACTION_FLAGS.enableNodeNavigation && typeof onNodeClick === "function";
-      const callbackResult =
-        canNavigate && onNodeClick ? onNodeClick(d.data) : undefined;
-      const shouldSkipZoom = callbackResult === true;
+      const nodeId = d.data.id;
+      const isRepeatClick = lastFocusedNodeId === nodeId;
 
-      if (shouldSkipZoom) {
+      if (!isRepeatClick) {
+        focusOnNode(event as unknown as MouseEvent, d);
         event.stopPropagation();
         return;
       }
 
-      if (focus !== d) {
-        focusOnNode(event as unknown as MouseEvent, d);
-        event.stopPropagation();
+      const canNavigate =
+        INTERACTION_FLAGS.enableNodeNavigation &&
+        typeof onNodeClick === "function";
+
+      if (canNavigate && onNodeClick) {
+        const result = onNodeClick(d.data);
+        if (result !== false) {
+          lastFocusedNodeId = null;
+          event.stopPropagation();
+        }
       }
     });
 
