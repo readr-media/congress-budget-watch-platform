@@ -1,6 +1,6 @@
 # run pnpm build
 echo "Building project..."
-pnpm build
+REACT_ROUTER_BASENAME="/project/3/dev-congress-budget-watch/" pnpm build
 echo "Build complete."
 
 # deploy to gcloud storage
