@@ -1,39 +1,5 @@
 import { graphql } from "~/graphql";
 
-/**
- * GraphQL query to get all proposals ordered by ID descending
- * Includes related government, budget, and proposers data
- *
- * Usage Example:
- *
- * ```tsx
- * import { useQuery } from "@tanstack/react-query";
- * import { execute } from "~/graphql/execute";
- * import { GET_PROPOSALS_QUERY, proposalQueryKeys } from "~/queries";
- *
- * const MyComponent = () => {
- *   const { data, isLoading, isError } = useQuery({
- *     queryKey: proposalQueryKeys.lists(),
- *     queryFn: () => execute(GET_PROPOSALS_QUERY),
- *   });
- *
- *   if (isLoading) return <div>Loading...</div>;
- *   if (isError) return <div>Error loading proposals</div>;
- *
- *   return (
- *     <div>
- *       {data?.proposals?.map((proposal) => (
- *         <div key={proposal.id}>
- *           <h3>{proposal.description}</h3>
- *           <p>Amount: {proposal.freezeAmount || proposal.reductionAmount}</p>
- *         </div>
- *       ))}
- *       <p>Total: {data?.proposalsCount}</p>
- *     </div>
- *   );
- * };
- * ```
- */
 export const GET_PROPOSALS_QUERY = graphql(`
   query GetProposalsOrderedByIdDesc {
     proposals(orderBy: [{ id: desc }]) {
@@ -80,32 +46,6 @@ export const GET_PROPOSALS_QUERY = graphql(`
   }
 `);
 
-/**
- * GraphQL query to get a single proposal by ID
- * Includes all related data needed for the detail page
- *
- * Usage Example:
- *
- * ```tsx
- * import { useQuery } from "@tanstack/react-query";
- * import { execute } from "~/graphql/execute";
- * import { GET_PROPOSAL_BY_ID_QUERY, proposalQueryKeys } from "~/queries";
- *
- * const BudgetDetail = () => {
- *   const { id } = useParams();
- *   const { data, isLoading, isError } = useQuery({
- *     queryKey: proposalQueryKeys.detail(id!),
- *     queryFn: () => execute(GET_PROPOSAL_BY_ID_QUERY, { id: id! }),
- *     enabled: !!id,
- *   });
- *
- *   if (isLoading) return <BudgetDetailSkeleton />;
- *   if (isError || !data?.proposal) return <div>Error</div>;
- *
- *   return <div>{data.proposal.description}</div>;
- * };
- * ```
- */
 export const GET_PROPOSAL_BY_ID_QUERY = graphql(`
   query GetProposalById($id: ID!) {
     proposal(where: { id: $id }) {
@@ -221,23 +161,6 @@ export const proposalQueryKeys = {
   years: () => [...proposalQueryKeys.all, "years"] as const,
 } as const;
 
-/**
- * GraphQL query to get paginated proposals with total count
- * Supports pagination (skip/take) and ordering
- *
- * Usage Example:
- *
- * ```tsx
- * const { data } = useQuery({
- *   queryKey: proposalQueryKeys.paginated(page, pageSize, sortBy),
- *   queryFn: () => execute(GET_PAGINATED_PROPOSALS_QUERY, {
- *     skip: (page - 1) * pageSize,
- *     take: pageSize,
- *     orderBy: [{ id: 'desc' }],
- *   }),
- * });
- * ```
- */
 export const GET_PAGINATED_PROPOSALS_QUERY = graphql(`
   query GetPaginatedProposals(
     $skip: Int!
@@ -251,6 +174,14 @@ export const GET_PAGINATED_PROPOSALS_QUERY = graphql(`
       year {
         id
         year
+      }
+      meetings {
+        id
+        type
+        committee {
+          endDate
+          startDate
+        }
       }
       reason
       publishStatus

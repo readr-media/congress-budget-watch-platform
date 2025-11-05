@@ -888,11 +888,13 @@ type Proposal {
   description: String
   freezeAmount: Float
   government: Government
+  historicalParentProposals: Proposal
   historicalProposals(cursor: ProposalWhereUniqueInput, orderBy: [ProposalOrderByInput!]! = [], skip: Int! = 0, take: Int, where: ProposalWhereInput! = {}): [Proposal!]
   historicalProposalsCount(where: ProposalWhereInput! = {}): Int
   id: ID!
   meetings(cursor: MeetingWhereUniqueInput, orderBy: [MeetingOrderByInput!]! = [], skip: Int! = 0, take: Int, where: MeetingWhereInput! = {}): [Meeting!]
   meetingsCount(where: MeetingWhereInput! = {}): Int
+  mergedParentProposals: Proposal
   mergedProposals(cursor: ProposalWhereUniqueInput, orderBy: [ProposalOrderByInput!]! = [], skip: Int! = 0, take: Int, where: ProposalWhereInput! = {}): [Proposal!]
   mergedProposalsCount(where: ProposalWhereInput! = {}): Int
   proposalTypes: [ProposalProposalTypeType!]
@@ -920,8 +922,10 @@ input ProposalCreateInput {
   description: String
   freezeAmount: Float
   government: GovernmentRelateToOneForCreateInput
+  historicalParentProposals: ProposalRelateToOneForCreateInput
   historicalProposals: ProposalRelateToManyForCreateInput
   meetings: MeetingRelateToManyForCreateInput
+  mergedParentProposals: ProposalRelateToOneForCreateInput
   mergedProposals: ProposalRelateToManyForCreateInput
   proposalTypes: [ProposalProposalTypeType!]
   proposers: PeopleRelateToManyForCreateInput
@@ -980,6 +984,17 @@ input ProposalRelateToManyForUpdateInput {
   set: [ProposalWhereUniqueInput!]
 }
 
+input ProposalRelateToOneForCreateInput {
+  connect: ProposalWhereUniqueInput
+  create: ProposalCreateInput
+}
+
+input ProposalRelateToOneForUpdateInput {
+  connect: ProposalWhereUniqueInput
+  create: ProposalCreateInput
+  disconnect: Boolean
+}
+
 input ProposalUpdateArgs {
   data: ProposalUpdateInput!
   where: ProposalWhereUniqueInput!
@@ -992,8 +1007,10 @@ input ProposalUpdateInput {
   description: String
   freezeAmount: Float
   government: GovernmentRelateToOneForUpdateInput
+  historicalParentProposals: ProposalRelateToOneForUpdateInput
   historicalProposals: ProposalRelateToManyForUpdateInput
   meetings: MeetingRelateToManyForUpdateInput
+  mergedParentProposals: ProposalRelateToOneForUpdateInput
   mergedProposals: ProposalRelateToManyForUpdateInput
   proposalTypes: [ProposalProposalTypeType!]
   proposers: PeopleRelateToManyForUpdateInput
@@ -1021,9 +1038,11 @@ input ProposalWhereInput {
   description: StringNullableFilter
   freezeAmount: FloatNullableFilter
   government: GovernmentWhereInput
+  historicalParentProposals: ProposalWhereInput
   historicalProposals: ProposalManyRelationFilter
   id: IDFilter
   meetings: MeetingManyRelationFilter
+  mergedParentProposals: ProposalWhereInput
   mergedProposals: ProposalManyRelationFilter
   proposers: PeopleManyRelationFilter
   publishStatus: StringNullableFilter

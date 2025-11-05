@@ -1393,11 +1393,13 @@ export type Proposal = {
   description?: Maybe<Scalars['String']['output']>;
   freezeAmount?: Maybe<Scalars['Float']['output']>;
   government?: Maybe<Government>;
+  historicalParentProposals?: Maybe<Proposal>;
   historicalProposals?: Maybe<Array<Proposal>>;
   historicalProposalsCount?: Maybe<Scalars['Int']['output']>;
   id: Scalars['ID']['output'];
   meetings?: Maybe<Array<Meeting>>;
   meetingsCount?: Maybe<Scalars['Int']['output']>;
+  mergedParentProposals?: Maybe<Proposal>;
   mergedProposals?: Maybe<Array<Proposal>>;
   mergedProposalsCount?: Maybe<Scalars['Int']['output']>;
   proposalTypes?: Maybe<Array<ProposalProposalTypeType>>;
@@ -1509,8 +1511,10 @@ export type ProposalCreateInput = {
   description?: InputMaybe<Scalars['String']['input']>;
   freezeAmount?: InputMaybe<Scalars['Float']['input']>;
   government?: InputMaybe<GovernmentRelateToOneForCreateInput>;
+  historicalParentProposals?: InputMaybe<ProposalRelateToOneForCreateInput>;
   historicalProposals?: InputMaybe<ProposalRelateToManyForCreateInput>;
   meetings?: InputMaybe<MeetingRelateToManyForCreateInput>;
+  mergedParentProposals?: InputMaybe<ProposalRelateToOneForCreateInput>;
   mergedProposals?: InputMaybe<ProposalRelateToManyForCreateInput>;
   proposalTypes?: InputMaybe<Array<ProposalProposalTypeType>>;
   proposers?: InputMaybe<PeopleRelateToManyForCreateInput>;
@@ -1569,6 +1573,17 @@ export type ProposalRelateToManyForUpdateInput = {
   set?: InputMaybe<Array<ProposalWhereUniqueInput>>;
 };
 
+export type ProposalRelateToOneForCreateInput = {
+  connect?: InputMaybe<ProposalWhereUniqueInput>;
+  create?: InputMaybe<ProposalCreateInput>;
+};
+
+export type ProposalRelateToOneForUpdateInput = {
+  connect?: InputMaybe<ProposalWhereUniqueInput>;
+  create?: InputMaybe<ProposalCreateInput>;
+  disconnect?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
 export type ProposalUpdateArgs = {
   data: ProposalUpdateInput;
   where: ProposalWhereUniqueInput;
@@ -1581,8 +1596,10 @@ export type ProposalUpdateInput = {
   description?: InputMaybe<Scalars['String']['input']>;
   freezeAmount?: InputMaybe<Scalars['Float']['input']>;
   government?: InputMaybe<GovernmentRelateToOneForUpdateInput>;
+  historicalParentProposals?: InputMaybe<ProposalRelateToOneForUpdateInput>;
   historicalProposals?: InputMaybe<ProposalRelateToManyForUpdateInput>;
   meetings?: InputMaybe<MeetingRelateToManyForUpdateInput>;
+  mergedParentProposals?: InputMaybe<ProposalRelateToOneForUpdateInput>;
   mergedProposals?: InputMaybe<ProposalRelateToManyForUpdateInput>;
   proposalTypes?: InputMaybe<Array<ProposalProposalTypeType>>;
   proposers?: InputMaybe<PeopleRelateToManyForUpdateInput>;
@@ -1610,9 +1627,11 @@ export type ProposalWhereInput = {
   description?: InputMaybe<StringNullableFilter>;
   freezeAmount?: InputMaybe<FloatNullableFilter>;
   government?: InputMaybe<GovernmentWhereInput>;
+  historicalParentProposals?: InputMaybe<ProposalWhereInput>;
   historicalProposals?: InputMaybe<ProposalManyRelationFilter>;
   id?: InputMaybe<IdFilter>;
   meetings?: InputMaybe<MeetingManyRelationFilter>;
+  mergedParentProposals?: InputMaybe<ProposalWhereInput>;
   mergedProposals?: InputMaybe<ProposalManyRelationFilter>;
   proposers?: InputMaybe<PeopleManyRelationFilter>;
   publishStatus?: InputMaybe<StringNullableFilter>;
@@ -2366,7 +2385,7 @@ export type GetPaginatedProposalsQueryVariables = Exact<{
 }>;
 
 
-export type GetPaginatedProposalsQuery = { __typename?: 'Query', proposalsCount?: number | null, proposals?: Array<{ __typename?: 'Proposal', id: string, description?: string | null, reason?: string | null, publishStatus?: string | null, result?: string | null, freezeAmount?: number | null, reductionAmount?: number | null, budgetImageUrl?: string | null, proposalTypes?: Array<ProposalProposalTypeType> | null, recognitionAnswer?: string | null, unfreezeStatus?: string | null, react_angry?: number | null, react_disappoint?: number | null, react_good?: number | null, react_whatever?: number | null, year?: { __typename?: 'BudgetYear', id: string, year?: number | null } | null, government?: { __typename?: 'Government', id: string, name?: string | null, category?: string | null, description?: string | null } | null, budget?: { __typename?: 'Budget', id: string, projectName?: string | null, budgetAmount?: number | null, year?: number | null, type?: string | null, majorCategory?: string | null, mediumCategory?: string | null, minorCategory?: string | null } | null, proposers?: Array<{ __typename?: 'People', id: string, name?: string | null, type?: string | null, description?: string | null, party?: { __typename?: 'Party', id: string, name?: string | null, color?: string | null } | null, committees?: Array<{ __typename?: 'Committee', id: string, name?: string | null }> | null }> | null, coSigners?: Array<{ __typename?: 'People', id: string, name?: string | null, type?: string | null }> | null }> | null };
+export type GetPaginatedProposalsQuery = { __typename?: 'Query', proposalsCount?: number | null, proposals?: Array<{ __typename?: 'Proposal', id: string, description?: string | null, reason?: string | null, publishStatus?: string | null, result?: string | null, freezeAmount?: number | null, reductionAmount?: number | null, budgetImageUrl?: string | null, proposalTypes?: Array<ProposalProposalTypeType> | null, recognitionAnswer?: string | null, unfreezeStatus?: string | null, react_angry?: number | null, react_disappoint?: number | null, react_good?: number | null, react_whatever?: number | null, year?: { __typename?: 'BudgetYear', id: string, year?: number | null } | null, meetings?: Array<{ __typename?: 'Meeting', id: string, type?: string | null, committee?: Array<{ __typename?: 'Committee', endDate?: any | null, startDate?: any | null }> | null }> | null, government?: { __typename?: 'Government', id: string, name?: string | null, category?: string | null, description?: string | null } | null, budget?: { __typename?: 'Budget', id: string, projectName?: string | null, budgetAmount?: number | null, year?: number | null, type?: string | null, majorCategory?: string | null, mediumCategory?: string | null, minorCategory?: string | null } | null, proposers?: Array<{ __typename?: 'People', id: string, name?: string | null, type?: string | null, description?: string | null, party?: { __typename?: 'Party', id: string, name?: string | null, color?: string | null } | null, committees?: Array<{ __typename?: 'Committee', id: string, name?: string | null }> | null }> | null, coSigners?: Array<{ __typename?: 'People', id: string, name?: string | null, type?: string | null }> | null }> | null };
 
 export type Update_Proposal_ReactsMutationVariables = Exact<{
   where: ProposalWhereUniqueInput;
@@ -2681,6 +2700,14 @@ export const GetPaginatedProposalsDocument = new TypedDocumentString(`
     year {
       id
       year
+    }
+    meetings {
+      id
+      type
+      committee {
+        endDate
+        startDate
+      }
     }
     reason
     publishStatus

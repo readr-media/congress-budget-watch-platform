@@ -250,7 +250,7 @@ export const AllBudgets = () => {
       }),
     placeholderData: keepPreviousData, // 避免切頁時閃爍
   });
-
+  console.log("data", data);
   // 更新總數到 store（用於計算總頁數）
   useEffect(() => {
     if (data?.proposalsCount != null) {
