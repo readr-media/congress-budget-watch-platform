@@ -60,6 +60,9 @@ const findLargestChild = (
 
 const WAVE_STROKE_WIDTH = 6;
 const WAVE_SAMPLES_MULTIPLIER = 6;
+const MAIN_RESOLUTION_STROKE_DASHARRAY = "4,4";
+const MAIN_RESOLUTION_STROKE_COLOR = "#000";
+const MAIN_RESOLUTION_STROKE_WIDTH = 2;
 
 const getWaveCountForRadius = (radius: number) => {
   if (radius < 60) return 8;
@@ -205,6 +208,12 @@ const CirclePackChart = ({
               ".frozen-wave"
             )
             .attr("stroke-width", WAVE_STROKE_WIDTH + 1.5);
+        } else if (d.data.proposalType === "main-resolution") {
+          selection
+            .selectAll<SVGCircleElement, d3.HierarchyCircularNode<NodeDatum>>(
+              ".node-base-circle"
+            )
+            .attr("stroke-width", MAIN_RESOLUTION_STROKE_WIDTH + 1);
         } else {
           selection
             .selectAll<SVGCircleElement, d3.HierarchyCircularNode<NodeDatum>>(
@@ -221,6 +230,12 @@ const CirclePackChart = ({
               ".frozen-wave"
             )
             .attr("stroke-width", WAVE_STROKE_WIDTH);
+        } else if (d.data.proposalType === "main-resolution") {
+          selection
+            .selectAll<SVGCircleElement, d3.HierarchyCircularNode<NodeDatum>>(
+              ".node-base-circle"
+            )
+            .attr("stroke-width", MAIN_RESOLUTION_STROKE_WIDTH);
         } else {
           selection
             .selectAll<SVGCircleElement, d3.HierarchyCircularNode<NodeDatum>>(
@@ -238,8 +253,25 @@ const CirclePackChart = ({
         "fill",
         (d) => d.data.color ?? (d.children ? color(d.depth) : "white")
       )
-      .attr("stroke", (d) => (d.data.isFrozen ? "none" : "#000"))
-      .attr("stroke-width", BASE_STROKE_WIDTH);
+      .attr("stroke", (d) => {
+        if (d.data.proposalType === "main-resolution") {
+          return MAIN_RESOLUTION_STROKE_COLOR;
+        }
+        if (d.data.isFrozen) {
+          return "none";
+        }
+        return "#000";
+      })
+      .attr("stroke-width", (d) =>
+        d.data.proposalType === "main-resolution"
+          ? MAIN_RESOLUTION_STROKE_WIDTH
+          : BASE_STROKE_WIDTH
+      )
+      .attr("stroke-dasharray", (d) =>
+        d.data.proposalType === "main-resolution"
+          ? MAIN_RESOLUTION_STROKE_DASHARRAY
+          : "none"
+      );
 
     const frozenNodes = node.filter((d) => d.data.isFrozen ?? false);
 
@@ -252,6 +284,18 @@ const CirclePackChart = ({
       .attr("stroke-linejoin", "round")
       .attr("stroke-linecap", "round")
       .attr("d", (d) => createScallopedPath(d.r));
+
+    const mainResolutionNodes = node.filter(
+      (d) => d.data.proposalType === "main-resolution"
+    );
+
+    mainResolutionNodes
+      .selectAll<SVGCircleElement, d3.HierarchyCircularNode<NodeDatum>>(
+        ".node-base-circle"
+      )
+      .attr("stroke", MAIN_RESOLUTION_STROKE_COLOR)
+      .attr("stroke-width", MAIN_RESOLUTION_STROKE_WIDTH)
+      .attr("stroke-dasharray", MAIN_RESOLUTION_STROKE_DASHARRAY);
 
     const label = svg
       .append("g")
@@ -384,10 +428,23 @@ const CirclePackChart = ({
          ".node-base-circle"
        )
         .attr("r", (d) => d.r * k)
-        .attr("stroke-width", (d) =>
-          d.data.isFrozen ? 0 : BASE_STROKE_WIDTH
-        )
-        .attr("stroke", (d) => (d.data.isFrozen ? "none" : "#000"));
+        .attr("stroke-width", (d) => {
+          if (d.data.proposalType === "main-resolution") {
+            return MAIN_RESOLUTION_STROKE_WIDTH;
+          }
+          return d.data.isFrozen ? 0 : BASE_STROKE_WIDTH;
+        })
+        .attr("stroke", (d) => {
+          if (d.data.proposalType === "main-resolution") {
+            return MAIN_RESOLUTION_STROKE_COLOR;
+          }
+          return d.data.isFrozen ? "none" : "#000";
+        })
+        .attr("stroke-dasharray", (d) =>
+          d.data.proposalType === "main-resolution"
+            ? MAIN_RESOLUTION_STROKE_DASHARRAY
+            : "none"
+        );
 
       node
         .selectAll<SVGPathElement, d3.HierarchyCircularNode<NodeDatum>>(

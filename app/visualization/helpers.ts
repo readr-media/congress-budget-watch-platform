@@ -46,6 +46,11 @@ export const mapVisualizationProposals = (
   return extractProposals(data);
 };
 
+export type ProposalVisualizationType =
+  | "freeze"
+  | "reduce"
+  | "main-resolution";
+
 export type NodeDatum = {
   name: string;
   value?: number;
@@ -53,6 +58,7 @@ export type NodeDatum = {
   id: string; // 代表提案 ID
   proposerId?: string; // 代表提案人 ID
   isFrozen?: boolean;
+  proposalType?: ProposalVisualizationType;
   children?: NodeDatum[];
 };
 
@@ -151,10 +157,10 @@ export const transformToGroupedByLegislatorData = (
     (proposal) => proposal.proposers?.[0]?.id ?? "unknown-proposer",
   );
 
-  const legislatorNodes: NodeDatum[] = Object.entries(
-    groupedByLegislator,
-  )
-    .map<NodeDatum | null>(([proposerId, legislatorProposals]) => {
+  const legislatorNodes: NodeDatum[] = [];
+
+  Object.entries(groupedByLegislator).forEach(
+    ([proposerId, legislatorProposals]) => {
       const mainProposer = legislatorProposals[0]?.proposers?.[0];
       const legislatorName = mainProposer?.name ?? "未知立委";
       const partyName = mainProposer?.party?.name ?? "無黨籍";
@@ -173,77 +179,61 @@ export const transformToGroupedByLegislatorData = (
         proposal.proposalTypes?.includes(ProposalProposalTypeType.Other),
       );
 
-      const groupDefinitions: Array<{
-        key: keyof typeof GROUP_LABELS;
-        proposals: typeof legislatorProposals;
-        getAmount: (proposal: (typeof legislatorProposals)[number]) => number;
-        isFrozen?: boolean;
-      }> = [
-        {
-          key: "freeze",
-          proposals: freezeProposals,
-          getAmount: (proposal) => proposal.freezeAmount ?? 0,
-          isFrozen: true,
-        },
-        {
-          key: "reduce",
-          proposals: reductionProposals,
-          getAmount: (proposal) => proposal.reductionAmount ?? 0,
-        },
-        {
-          key: "other",
-          proposals: mainResolutionProposals,
-          getAmount: () => 0,
-        },
-      ];
+      const pushFinancialNode = (
+        key: Extract<ProposalVisualizationType, "freeze" | "reduce">,
+        proposalsForKey: typeof legislatorProposals,
+        getAmount: (proposal: (typeof legislatorProposals)[number]) => number,
+      ) => {
+        if (!proposalsForKey.length) return;
+        const totalAmount = sumBy(proposalsForKey, getAmount);
+        const totalCount = proposalsForKey.length;
+        const rawValue = mode === "amount" ? totalAmount : totalCount;
 
-      const groupNodes: NodeDatum[] = groupDefinitions
-        .map<NodeDatum | null>(({ key, proposals, getAmount, isFrozen }) => {
-          if (!proposals.length) return null;
+        if (rawValue <= 0) return;
 
-          const totalAmount = sumBy(proposals, getAmount);
-          const totalCount = proposals.length;
+        const displayValue =
+          mode === "amount"
+            ? formatAmountWithUnit(totalAmount)
+            : `${totalCount}案`;
 
-          let rawValue = 0;
-          if (mode === "amount") {
-            rawValue = key === "other" ? totalCount : totalAmount;
-          } else {
-            rawValue = totalCount;
-          }
-
-          if (rawValue <= 0) {
-            return null;
-          }
-
-          const displayValue =
-            mode === "amount" && key !== "other"
-              ? formatAmountWithUnit(totalAmount)
-              : `${totalCount}案`;
-
-          return {
-            id: `${proposerId}-${key}`,
-            name: `${GROUP_LABELS[key]}\n${displayValue}`,
-            value: Math.pow(rawValue, 0.45),
-            color: GROUP_DISPLAY_COLORS[key] ?? partyColor,
-            proposerId: mainProposer?.id,
-            isFrozen,
-            children: [],
-          };
-        })
-        .filter((node): node is NodeDatum => node !== null);
-
-      if (!groupNodes.length) {
-        return null;
-      }
-
-      return {
-        id: `legislator-${proposerId}`,
-        name: legislatorName,
-        color: partyColor,
-        children: groupNodes,
+        legislatorNodes.push({
+          id: `${proposerId}-${key}`,
+          name: `${legislatorName}\n${GROUP_LABELS[key]}\n${displayValue}`,
+          value: Math.pow(rawValue, 0.45),
+          color: partyColor,
+          proposerId: mainProposer?.id,
+          proposalType: key,
+          isFrozen: key === "freeze",
+        });
       };
-    })
-    .filter((node): node is NodeDatum => node !== null);
+
+      pushFinancialNode(
+        "freeze",
+        freezeProposals,
+        (proposal) => proposal.freezeAmount ?? 0,
+      );
+
+      pushFinancialNode(
+        "reduce",
+        reductionProposals,
+        (proposal) => proposal.reductionAmount ?? 0,
+      );
+
+      if (mode === "count" && mainResolutionProposals.length > 0) {
+        const totalCount = mainResolutionProposals.length;
+        if (totalCount > 0) {
+          legislatorNodes.push({
+            id: `${proposerId}-main-resolution`,
+            name: `${legislatorName}\n${GROUP_LABELS.other}\n${totalCount}案`,
+            value: Math.pow(totalCount, 0.45),
+            color: partyColor,
+            proposerId: mainProposer?.id,
+            proposalType: "main-resolution",
+          });
+        }
+      }
+    },
+  );
 
   return {
     立委提案彙整: {
@@ -436,35 +426,80 @@ export const transformToCategorizedData = (
       (p) => p.proposers?.[0]?.id ?? "unknown-proposer",
     );
 
-    const proposerNodes: NodeDatum[] = Object.entries(groupedByProposer).map(
+    const proposerNodes: NodeDatum[] = [];
+
+    Object.entries(groupedByProposer).forEach(
       ([proposerId, proposerProposals]) => {
         const mainProposer = proposerProposals[0]?.proposers?.[0];
-        const party = mainProposer?.party?.name ?? "無黨籍";
+        const proposerName = mainProposer?.name ?? "未知";
+        const partyName = mainProposer?.party?.name ?? "無黨籍";
+        const partyColor =
+          mainProposer?.party?.color ??
+          PARTY_COLORS.get(partyName) ??
+          DEFAULT_COLOR;
 
-        if (mode === "amount") {
-          const totalAmount = sumBy(
-            proposerProposals,
-            (p) => (p.freezeAmount ?? 0) + (p.reductionAmount ?? 0),
-          );
-          const scaledValue = Math.pow(totalAmount, 0.45);
+        const freezeProposals = proposerProposals.filter(
+          (proposal) => (proposal.freezeAmount ?? 0) > 0,
+        );
+        const reductionProposals = proposerProposals.filter(
+          (proposal) => (proposal.reductionAmount ?? 0) > 0,
+        );
+        const mainResolutionProposals = proposerProposals.filter((proposal) =>
+          proposal.proposalTypes?.includes(ProposalProposalTypeType.Other),
+        );
 
-          return {
-            id: `proposer-${categoryName}-${proposerId}`,
-            name: `${mainProposer?.name ?? "未知"}\n${party}\n${formatAmountWithUnit(totalAmount)}`,
-            value: scaledValue,
-            color: PARTY_COLORS.get(party) || DEFAULT_COLOR,
+        const pushFinancialNode = (
+          key: Extract<ProposalVisualizationType, "freeze" | "reduce">,
+          proposalsForKey: typeof proposerProposals,
+          getAmount: (proposal: (typeof proposerProposals)[number]) => number,
+        ) => {
+          if (!proposalsForKey.length) return;
+          const totalAmount = sumBy(proposalsForKey, getAmount);
+          const totalCount = proposalsForKey.length;
+          const rawValue = mode === "amount" ? totalAmount : totalCount;
+
+          if (rawValue <= 0) return;
+
+          const displayValue =
+            mode === "amount"
+              ? formatAmountWithUnit(totalAmount)
+              : `${totalCount}案`;
+
+          proposerNodes.push({
+            id: `proposer-${categoryName}-${proposerId}-${key}`,
+            name: `${proposerName}\n${GROUP_LABELS[key]}\n${displayValue}`,
+            value: Math.pow(rawValue, 0.45),
+            color: partyColor,
             proposerId: mainProposer?.id,
-          };
-        } else {
-          // mode === "count"
-          const proposalCount = proposerProposals.length;
-          return {
-            id: `proposer-${categoryName}-${proposerId}`,
-            name: `${mainProposer?.name ?? "未知"}\n${party}\n${proposalCount}案`,
-            value: proposalCount,
-            color: PARTY_COLORS.get(party) || DEFAULT_COLOR,
-            proposerId: mainProposer?.id,
-          };
+            proposalType: key,
+            isFrozen: key === "freeze",
+          });
+        };
+
+        pushFinancialNode(
+          "freeze",
+          freezeProposals,
+          (proposal) => proposal.freezeAmount ?? 0,
+        );
+
+        pushFinancialNode(
+          "reduce",
+          reductionProposals,
+          (proposal) => proposal.reductionAmount ?? 0,
+        );
+
+        if (mode === "count" && mainResolutionProposals.length > 0) {
+          const totalCount = mainResolutionProposals.length;
+          if (totalCount > 0) {
+            proposerNodes.push({
+              id: `proposer-${categoryName}-${proposerId}-main-resolution`,
+              name: `${proposerName}\n${GROUP_LABELS.other}\n${totalCount}案`,
+              value: Math.pow(totalCount, 0.45),
+              color: partyColor,
+              proposerId: mainProposer?.id,
+              proposalType: "main-resolution",
+            });
+          }
         }
       },
     );

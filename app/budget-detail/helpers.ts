@@ -69,13 +69,21 @@ export function formatNumber(num?: number | null): string {
     return num.toLocaleString("zh-TW");
   }
 
+  const formatWithUnit = (value: number, unit: string) => {
+    const formatted = value.toFixed(1);
+    const normalized = formatted.endsWith(".0")
+      ? formatted.slice(0, -2)
+      : formatted;
+    return `${normalized} ${unit}`;
+  };
+
   const inYi = num / 1_0000_0000;
   if (Math.abs(inYi) >= 1) {
-    return `${inYi.toFixed(1)} 億`;
+    return formatWithUnit(inYi, "億");
   }
 
   const inWan = num / 1_0000;
-  return `${inWan.toFixed(1)} 萬`;
+  return formatWithUnit(inWan, "萬");
 }
 
 /**
