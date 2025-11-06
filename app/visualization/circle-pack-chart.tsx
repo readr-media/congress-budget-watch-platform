@@ -89,7 +89,10 @@ const createScallopedPath = (radius: number) => {
     const r = radius + offset;
     const x = r * Math.cos(t);
     const y = r * Math.sin(t);
-    path += i === 0 ? `M ${x.toFixed(3)} ${y.toFixed(3)}` : ` L ${x.toFixed(3)} ${y.toFixed(3)}`;
+    path +=
+      i === 0
+        ? `M ${x.toFixed(3)} ${y.toFixed(3)}`
+        : ` L ${x.toFixed(3)} ${y.toFixed(3)}`;
   }
 
   return `${path} Z`;
@@ -103,6 +106,12 @@ const CirclePackChart = ({
   onNodeClick,
 }: CirclePackChartProps) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const focusRef = useRef<d3.HierarchyCircularNode<NodeDatum> | null>(null);
+  const lastFocusedNodeIdRef = useRef<string | null>(null);
+  const inertiaFrameRef = useRef<number | null>(null);
+  const transformHistoryRef = useRef<
+    Array<{ transform: d3.ZoomTransform; timestamp: number }>
+  >([]);
   const DEFAULT_CHART_WIDTH = 720;
   const LABEL_CHILDREN_OFFSET_FACTOR = 0.88;
   const HOVER_STROKE_WIDTH = 2;
@@ -135,16 +144,15 @@ const CirclePackChart = ({
         .pack<NodeDatum>()
         .size([width, height])
         .padding((node) => paddingAccessor(node))(
-          d3
-            .hierarchy<NodeDatum>(data)
-            .sum((d) => (typeof d.value === "number" ? d.value : 0))
-            .sort((a, b) => (b.value ?? 0) - (a.value ?? 0))
-        );
+        d3
+          .hierarchy<NodeDatum>(data)
+          .sum((d) => (typeof d.value === "number" ? d.value : 0))
+          .sort((a, b) => (b.value ?? 0) - (a.value ?? 0))
+      );
 
     const root = pack(data);
     const isMobile = width < MOBILE_BREAKPOINT;
-    const focusNode =
-      (isMobile && findLargestChild(root)) || root;
+    const focusNode = (isMobile && findLargestChild(root)) || root;
 
     const totalNodes = root.descendants().length;
     const disableAnimations =
@@ -184,7 +192,6 @@ const CirclePackChart = ({
         `max-width: 100%; height: auto; display: block; cursor: default;`
       );
 
-
     const nodesData: d3.HierarchyCircularNode<NodeDatum>[] = root
       .descendants()
       .slice(1) as d3.HierarchyCircularNode<NodeDatum>[];
@@ -204,21 +211,24 @@ const CirclePackChart = ({
         const selection = d3.select(this);
         if (d.data.isFrozen) {
           selection
-            .selectAll<SVGPathElement, d3.HierarchyCircularNode<NodeDatum>>(
-              ".frozen-wave"
-            )
+            .selectAll<
+              SVGPathElement,
+              d3.HierarchyCircularNode<NodeDatum>
+            >(".frozen-wave")
             .attr("stroke-width", WAVE_STROKE_WIDTH + 1.5);
         } else if (d.data.proposalType === "main-resolution") {
           selection
-            .selectAll<SVGCircleElement, d3.HierarchyCircularNode<NodeDatum>>(
-              ".node-base-circle"
-            )
+            .selectAll<
+              SVGCircleElement,
+              d3.HierarchyCircularNode<NodeDatum>
+            >(".node-base-circle")
             .attr("stroke-width", MAIN_RESOLUTION_STROKE_WIDTH + 1);
         } else {
           selection
-            .selectAll<SVGCircleElement, d3.HierarchyCircularNode<NodeDatum>>(
-              ".node-base-circle"
-            )
+            .selectAll<
+              SVGCircleElement,
+              d3.HierarchyCircularNode<NodeDatum>
+            >(".node-base-circle")
             .attr("stroke-width", HOVER_STROKE_WIDTH);
         }
       })
@@ -226,21 +236,24 @@ const CirclePackChart = ({
         const selection = d3.select(this);
         if (d.data.isFrozen) {
           selection
-            .selectAll<SVGPathElement, d3.HierarchyCircularNode<NodeDatum>>(
-              ".frozen-wave"
-            )
+            .selectAll<
+              SVGPathElement,
+              d3.HierarchyCircularNode<NodeDatum>
+            >(".frozen-wave")
             .attr("stroke-width", WAVE_STROKE_WIDTH);
         } else if (d.data.proposalType === "main-resolution") {
           selection
-            .selectAll<SVGCircleElement, d3.HierarchyCircularNode<NodeDatum>>(
-              ".node-base-circle"
-            )
+            .selectAll<
+              SVGCircleElement,
+              d3.HierarchyCircularNode<NodeDatum>
+            >(".node-base-circle")
             .attr("stroke-width", MAIN_RESOLUTION_STROKE_WIDTH);
         } else {
           selection
-            .selectAll<SVGCircleElement, d3.HierarchyCircularNode<NodeDatum>>(
-              ".node-base-circle"
-            )
+            .selectAll<
+              SVGCircleElement,
+              d3.HierarchyCircularNode<NodeDatum>
+            >(".node-base-circle")
             .attr("stroke-width", BASE_STROKE_WIDTH);
         }
       });
@@ -290,9 +303,10 @@ const CirclePackChart = ({
     );
 
     mainResolutionNodes
-      .selectAll<SVGCircleElement, d3.HierarchyCircularNode<NodeDatum>>(
-        ".node-base-circle"
-      )
+      .selectAll<
+        SVGCircleElement,
+        d3.HierarchyCircularNode<NodeDatum>
+      >(".node-base-circle")
       .attr("stroke", MAIN_RESOLUTION_STROKE_COLOR)
       .attr("stroke-width", MAIN_RESOLUTION_STROKE_WIDTH)
       .attr("stroke-dasharray", MAIN_RESOLUTION_STROKE_DASHARRAY);
@@ -389,9 +403,12 @@ const CirclePackChart = ({
         }
       });
 
-    let focus: d3.HierarchyCircularNode<NodeDatum> | null =
-      initialFocus ?? root;
-    let lastFocusedNodeId: string | null = focus?.data.id ?? null;
+    const setFocus = (target: d3.HierarchyCircularNode<NodeDatum> | null) => {
+      focusRef.current = target;
+      lastFocusedNodeIdRef.current = target?.data.id ?? null;
+    };
+
+    setFocus(initialFocus ?? root);
 
     const baseFocusDuration = animations.focus;
     const slowFocusDuration =
@@ -424,10 +441,10 @@ const CirclePackChart = ({
         (d) => `translate(${(d.x - v[0]) * k},${(d.y - v[1]) * k})`
       );
 
-     node
-       .selectAll<SVGCircleElement, d3.HierarchyCircularNode<NodeDatum>>(
-         ".node-base-circle"
-       )
+      node
+        .selectAll<SVGCircleElement, d3.HierarchyCircularNode<NodeDatum>>(
+          ".node-base-circle"
+        )
         .attr("r", (d) => d.r * k)
         .attr("stroke-width", (d) => {
           if (d.data.proposalType === "main-resolution") {
@@ -471,7 +488,7 @@ const CirclePackChart = ({
       }: {
         duration?: number;
         easing?: (normalizedTime: number) => number;
-      } = {},
+      } = {}
     ) => {
       const targetView: [number, number, number] = [
         target.x,
@@ -488,26 +505,35 @@ const CirclePackChart = ({
           .transition()
           .duration(duration)
           .ease(easing);
-        (zoomBehavior.transform as unknown as (
-          transition: d3.Transition<SVGSVGElement, undefined, null, undefined>,
-          transform: d3.ZoomTransform
-        ) => void)(transition, transform);
+        (
+          zoomBehavior.transform as unknown as (
+            transition: d3.Transition<
+              SVGSVGElement,
+              undefined,
+              null,
+              undefined
+            >,
+            transform: d3.ZoomTransform
+          ) => void
+        )(transition, transform);
       } else {
-        (zoomBehavior.transform as unknown as (
-          selection: d3.Selection<SVGSVGElement, undefined, null, undefined>,
-          transform: d3.ZoomTransform
-        ) => void)(svg, transform);
+        (
+          zoomBehavior.transform as unknown as (
+            selection: d3.Selection<SVGSVGElement, undefined, null, undefined>,
+            transform: d3.ZoomTransform
+          ) => void
+        )(svg, transform);
       }
     };
 
     const updateLabelVisibility = (
       targetFocus: d3.HierarchyCircularNode<NodeDatum> | null,
-      duration = baseLabelDuration,
+      duration = baseLabelDuration
     ) => {
       const shouldAnimate =
         animationsEnabled && duration !== undefined && duration > 0;
       const resolveVisibility = (
-        node: d3.HierarchyCircularNode<NodeDatum>,
+        node: d3.HierarchyCircularNode<NodeDatum>
       ): boolean => {
         if (targetFocus == null) {
           return node.parent === root;
@@ -525,18 +551,18 @@ const CirclePackChart = ({
             return resolveVisibility(dd) ? "1" : "0";
           })
           .on("start", function () {
-            const currentDatum = d3.select(
-              this as SVGTextElement
-            ).datum() as d3.HierarchyCircularNode<NodeDatum>;
+            const currentDatum = d3
+              .select(this as SVGTextElement)
+              .datum() as d3.HierarchyCircularNode<NodeDatum>;
             const shouldShow = resolveVisibility(currentDatum);
             if (shouldShow) {
               (this as SVGTextElement).style.display = "inline";
             }
           })
           .on("end", function () {
-            const currentDatum = d3.select(
-              this as SVGTextElement
-            ).datum() as d3.HierarchyCircularNode<NodeDatum>;
+            const currentDatum = d3
+              .select(this as SVGTextElement)
+              .datum() as d3.HierarchyCircularNode<NodeDatum>;
             const shouldShow = resolveVisibility(currentDatum);
             if (!shouldShow) {
               (this as SVGTextElement).style.display = "none";
@@ -555,12 +581,6 @@ const CirclePackChart = ({
       }
     };
 
-    let inertiaFrame: number | null = null;
-    const recentTransforms: Array<{
-      transform: d3.ZoomTransform;
-      timestamp: number;
-    }> = [];
-
     const getCurrentTransform = () => {
       const node = svg.node();
       return node ? d3.zoomTransform(node as SVGSVGElement) : d3.zoomIdentity;
@@ -568,25 +588,29 @@ const CirclePackChart = ({
 
     const addTransformHistory = (transform: d3.ZoomTransform) => {
       const now = performance.now();
-      recentTransforms.push({ transform, timestamp: now });
-      if (recentTransforms.length > ANIMATION_CONFIG.inertia.maxHistory) {
-        recentTransforms.shift();
+      transformHistoryRef.current.push({ transform, timestamp: now });
+      if (
+        transformHistoryRef.current.length > ANIMATION_CONFIG.inertia.maxHistory
+      ) {
+        transformHistoryRef.current.shift();
       }
     };
 
     const clearInertia = () => {
-      if (inertiaFrame != null) {
-        cancelAnimationFrame(inertiaFrame);
-        inertiaFrame = null;
+      if (inertiaFrameRef.current != null) {
+        cancelAnimationFrame(inertiaFrameRef.current);
+        inertiaFrameRef.current = null;
       }
-      recentTransforms.length = 0;
+      transformHistoryRef.current.length = 0;
     };
 
     const startInertia = () => {
-      if (!inertiaEnabled || recentTransforms.length < 2) return;
+      if (!inertiaEnabled || transformHistoryRef.current.length < 2) return;
 
-      const latest = recentTransforms[recentTransforms.length - 1];
-      const previous = recentTransforms[recentTransforms.length - 2];
+      const latest =
+        transformHistoryRef.current[transformHistoryRef.current.length - 1];
+      const previous =
+        transformHistoryRef.current[transformHistoryRef.current.length - 2];
       const dt = (latest.timestamp - previous.timestamp) / 1000; // seconds
       if (dt <= 0) return;
 
@@ -615,16 +639,18 @@ const CirclePackChart = ({
           velocityY * (ANIMATION_CONFIG.inertia.frameInterval / 1000);
         const nextTransform = currentTransform.translate(deltaX, deltaY);
 
-        (zoomBehavior.transform as unknown as (
-          selection: d3.Selection<SVGSVGElement, undefined, null, undefined>,
-          transform: d3.ZoomTransform
-        ) => void)(svg, nextTransform);
+        (
+          zoomBehavior.transform as unknown as (
+            selection: d3.Selection<SVGSVGElement, undefined, null, undefined>,
+            transform: d3.ZoomTransform
+          ) => void
+        )(svg, nextTransform);
 
-        inertiaFrame = requestAnimationFrame(step);
+        inertiaFrameRef.current = requestAnimationFrame(step);
       };
 
       clearInertia();
-      inertiaFrame = requestAnimationFrame(step);
+      inertiaFrameRef.current = requestAnimationFrame(step);
     };
 
     // 建立 d3-zoom behavior，用於程式化縮放與使用者拖曳平移
@@ -640,8 +666,8 @@ const CirclePackChart = ({
       })
       .on("start", (event) => {
         clearInertia();
-        if (event.sourceEvent && focus) {
-          focus = null;
+        if (event.sourceEvent && focusRef.current) {
+          setFocus(null);
           updateLabelVisibility(null, baseLabelDuration);
         }
       })
@@ -657,10 +683,9 @@ const CirclePackChart = ({
 
     const focusOnNode = (
       event: (MouseEvent & { altKey?: boolean }) | null,
-      target: d3.HierarchyCircularNode<NodeDatum>,
+      target: d3.HierarchyCircularNode<NodeDatum>
     ) => {
-      focus = target;
-      lastFocusedNodeId = target.data.id;
+      setFocus(target);
       clearInertia();
       const isSlow = Boolean(event?.altKey) && animationsEnabled;
       const duration = isSlow ? slowFocusDuration : baseFocusDuration;
@@ -669,8 +694,7 @@ const CirclePackChart = ({
     };
 
     const resetToRoot = () => {
-      focus = root;
-      lastFocusedNodeId = root.data.id;
+      setFocus(root);
       clearInertia();
       setView(root, { duration: baseFocusDuration });
       updateLabelVisibility(root, baseLabelDuration);
@@ -704,7 +728,7 @@ const CirclePackChart = ({
       if (event.defaultPrevented) return;
 
       const nodeId = d.data.id;
-      const isRepeatClick = lastFocusedNodeId === nodeId;
+      const isRepeatClick = lastFocusedNodeIdRef.current === nodeId;
 
       if (!isRepeatClick) {
         focusOnNode(event as unknown as MouseEvent, d);
@@ -719,7 +743,7 @@ const CirclePackChart = ({
       if (canNavigate && onNodeClick) {
         const result = onNodeClick(d.data);
         if (result !== false) {
-          lastFocusedNodeId = null;
+          lastFocusedNodeIdRef.current = null;
           event.stopPropagation();
         }
       }
