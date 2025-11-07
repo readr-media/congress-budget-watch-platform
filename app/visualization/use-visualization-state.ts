@@ -235,12 +235,9 @@ const [selectedLegislatorOption, setSelectedLegislatorOption] =
   const departmentOptions = useMemo<SelectOption[]>(() => {
     const unique = new Map<string, SelectOption>();
     allProposals.forEach((proposal) => {
-      const government = proposal.government;
-      if (!government) return;
-      const value = government.name ?? government.category ?? "";
-      if (!value) return;
-      const label = government.name ?? "未命名部會";
-      unique.set(value, { value, label });
+      const category = proposal.government?.category?.trim();
+      const value = category && category.length > 0 ? category : "未分類";
+      unique.set(value, { value, label: value });
     });
     return Array.from(unique.values()).sort((a, b) =>
       a.label.localeCompare(b.label, "zh-Hant"),
@@ -266,8 +263,8 @@ const [selectedLegislatorOption, setSelectedLegislatorOption] =
     if (activeTab !== "department" || !selectedDepartmentOption) return null;
     const ids = allProposals
       .filter((proposal) => {
-        const government = proposal.government;
-        const value = government?.name ?? government?.category ?? "";
+        const category = proposal.government?.category?.trim();
+        const value = category && category.length > 0 ? category : "未分類";
         return value === selectedDepartmentOption.value;
       })
       .map((proposal) => proposal.id)

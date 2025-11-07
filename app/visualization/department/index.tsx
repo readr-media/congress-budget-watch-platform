@@ -43,6 +43,7 @@ export const DepartmentVisualization = ({
   );
 
   const categories = Object.keys(categorizedData);
+  console.log({ categories });
 
   if (categories.length === 0) {
     return (
