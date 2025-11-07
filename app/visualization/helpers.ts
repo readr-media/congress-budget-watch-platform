@@ -6,7 +6,16 @@ import {
   type VisualizationProposalWithContextFragment,
   type VisualizationProposalBaseFragment,
 } from "~/graphql/graphql";
-import { groupBy, mapValues, sumBy } from "lodash";
+import {
+  defaultTo,
+  entries,
+  forEach,
+  groupBy,
+  map,
+  mapValues,
+  reduce,
+  sumBy,
+} from "lodash";
 import { formatNumber } from "~/budget-detail/helpers";
 import { useFragment } from "~/graphql";
 
@@ -418,12 +427,7 @@ export const transformToCategorizedData = (
   );
 
   return mapValues(groupedByDepartment, (departmentProposals, categoryName) => {
-    // 第二層：在類別內按 proposer.id 分組
-
     const proposerNodes: NodeDatum[] = [];
-
-    console.log({ groupedByDepartment });
-
     const mainProposer = departmentProposals[0]?.proposers?.[0];
     const proposerName = mainProposer?.name ?? "未知提案者";
     const partyName = mainProposer?.party?.name ?? "未知黨籍";
@@ -447,46 +451,41 @@ export const transformToCategorizedData = (
       proposalsForKey: typeof departmentProposals
     ) => {
       if (!proposalsForKey.length) return;
-      const totalCount = proposalsForKey.length;
       const groupedByProposer = groupBy(
         proposalsForKey,
         (p) => p.proposers?.[0]?.id ?? "unknown-proposer"
       );
       console.log({ groupedByProposer });
-      Object.entries(groupedByProposer).forEach(
+      forEach(
+        entries(groupedByProposer),
         ([proposerId, groupedByProposerProposals]) => {
-          const proposalIds = groupedByProposerProposals.map((p) => p.id);
-          const freezeAmount =
-            groupedByProposerProposals.reduce(
+          const proposalIds = map(groupedByProposerProposals, (p) => p.id);
+          const freezeAmount = defaultTo(
+            reduce(
+              groupedByProposerProposals,
               (acc, cur) => acc + (cur.freezeAmount ?? 0),
               0
-            ) ?? 0;
-          const reductionAmount =
-            groupedByProposerProposals.reduce(
+            ),
+            0
+          );
+          const reductionAmount = defaultTo(
+            reduce(
+              groupedByProposerProposals,
               (acc, cur) => acc + (cur.reductionAmount ?? 0),
               0
-            ) ?? 0;
-          if (mode === "amount" && freezeAmount <= 0 && reductionAmount <= 0)
-            return;
-          const amount =
-            mode === "count"
-              ? `${totalCount}案`
-              : key === "freeze"
-                ? formatAmountWithUnit(freezeAmount ?? 0)
-                : formatAmountWithUnit(reductionAmount ?? 0);
+            ),
+            0
+          );
+
+          if (freezeAmount <= 0 && reductionAmount <= 0) return;
           proposerNodes.push({
             id: `proposer-${categoryName}-${proposerId}-${key}-${proposalIds}`,
             proposalId: `${proposalIds}`,
-            name: `${groupedByProposerProposals[0]?.proposers?.[0].name}\n${GROUP_LABELS[key]}\n${amount}`,
-            value:
-              mode === "amount"
-                ? Math.pow(
-                    key === "freeze"
-                      ? (freezeAmount ?? 0)
-                      : (reductionAmount ?? 0),
-                    0.45
-                  )
-                : totalCount,
+            name: `${groupedByProposerProposals[0]?.proposers?.[0].name}\n${GROUP_LABELS[key]}\n${formatAmountWithUnit(defaultTo(key === "freeze" ? freezeAmount : reductionAmount, 0))}`,
+            value: Math.pow(
+              defaultTo(key === "freeze" ? freezeAmount : reductionAmount, 0),
+              0.45
+            ),
             color:
               groupedByProposerProposals[0]?.proposers?.[0].party?.color ??
               PARTY_COLORS.get(
@@ -498,13 +497,16 @@ export const transformToCategorizedData = (
             proposalType: key,
             isFrozen: key === "freeze",
           });
+
+          return;
         }
       );
     };
 
-    pushFinancialNode("freeze", freezeProposals);
-
-    pushFinancialNode("reduce", reductionProposals);
+    if (mode === "amount") {
+      pushFinancialNode("freeze", freezeProposals);
+      pushFinancialNode("reduce", reductionProposals);
+    }
 
     if (mode === "count" && mainResolutionProposals.length > 0) {
       const totalCount = mainResolutionProposals.length;
