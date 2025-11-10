@@ -30,11 +30,11 @@ type VisualizationProposal = {
 };
 
 const extractProposals = (
-  data: GetVisualizationProposalsQuery
+  data?: GetVisualizationProposalsQuery | null
 ): VisualizationProposal[] =>
   useFragment(
     VisualizationProposalWithContextFragmentDoc,
-    data.proposals ?? []
+    data?.proposals ?? []
   ).map((proposal) => {
     const base = useFragment(VisualizationProposalBaseFragmentDoc, proposal);
     return {
@@ -51,7 +51,6 @@ const extractProposals = (
 export const mapVisualizationProposals = (
   data?: GetVisualizationProposalsQuery | null
 ): VisualizationProposal[] => {
-  if (!data) return [];
   return extractProposals(data);
 };
 
@@ -83,6 +82,16 @@ export const PARTY_COLORS = new Map<string, string>([
   ["無黨籍", "#D5D5D5"],
 ]);
 export const DEFAULT_COLOR = "#D5D5D5"; // 無黨籍
+
+export type VisualizationGroupedData = Record<string, NodeDatum>;
+
+const GROUP_LABELS = {
+  freeze: "凍結",
+  reduce: "刪減",
+  other: "主決議",
+} as const;
+
+type VisualizationMode = "amount" | "count";
 
 export const formatAmountWithUnit = (value: number): string => {
   const formatted = formatNumber(value);
@@ -131,16 +140,6 @@ export const transformToCirclePackData = (
   };
 };
 
-export type VisualizationGroupedData = Record<string, NodeDatum>;
-
-const GROUP_LABELS = {
-  freeze: "凍結",
-  reduce: "刪減",
-  other: "主決議",
-} as const;
-
-type VisualizationMode = "amount" | "count";
-
 /**
  * 將提案資料依立委與類型群組，回傳 DepartmentVisualization 可迭代的資料格式。
  */
@@ -157,95 +156,80 @@ export const transformToGroupedByLegislatorData = (
 
   const legislatorNodes: NodeDatum[] = [];
 
-  Object.entries(groupedByLegislator).forEach(
-    ([proposerId, legislatorProposals]) => {
-      const mainProposer = legislatorProposals[0]?.proposers?.[0];
-      const legislatorName = mainProposer?.name ?? "未知立委";
-      const partyName = mainProposer?.party?.name ?? "無黨籍";
-      const partyColor =
-        mainProposer?.party?.color ??
-        PARTY_COLORS.get(partyName) ??
-        DEFAULT_COLOR;
+  forEach(entries(groupedByLegislator), ([proposerId, legislatorProposals]) => {
+    const mainProposer = legislatorProposals[0]?.proposers?.[0];
+    const legislatorName = mainProposer?.name ?? "未知立委";
+    const partyName = mainProposer?.party?.name ?? "未知黨派";
+    const partyColor =
+      mainProposer?.party?.color ??
+      PARTY_COLORS.get(partyName) ??
+      DEFAULT_COLOR;
+    const freezeProposals = legislatorProposals.filter(
+      (proposal) => defaultTo(proposal.freezeAmount, 0) > 0
+    );
+    const reductionProposals = legislatorProposals.filter(
+      (proposal) => defaultTo(proposal.reductionAmount, 0) > 0
+    );
+    const mainResolutionProposals = legislatorProposals.filter((proposal) =>
+      proposal.proposalTypes?.includes(ProposalProposalTypeType.Other)
+    );
 
-      const freezeProposals = legislatorProposals.filter(
-        (proposal) => (proposal.freezeAmount ?? 0) > 0
+    if (mode === "amount") {
+      const legislatorFreezeAmount = sumBy(freezeProposals, (proposal) =>
+        defaultTo(proposal.freezeAmount, 0)
       );
-      const reductionProposals = legislatorProposals.filter(
-        (proposal) => (proposal.reductionAmount ?? 0) > 0
+      const legislatorReductionAmount = sumBy(reductionProposals, (proposal) =>
+        defaultTo(proposal.reductionAmount, 0)
       );
-      const mainResolutionProposals = legislatorProposals.filter((proposal) =>
-        proposal.proposalTypes?.includes(ProposalProposalTypeType.Other)
+      const legislatorFreezeProposalIds = map(
+        freezeProposals,
+        (proposal) => proposal.id
       );
-
-      if (mode === "amount") {
-        freezeProposals.forEach((proposal) => {
-          const amount = proposal.freezeAmount ?? 0;
-          if (amount <= 0) return;
-          legislatorNodes.push({
-            id: `${proposal.id}-freeze`,
-            proposalId: proposal.id ?? undefined,
-            name: `${legislatorName}\n${GROUP_LABELS.freeze}\n${formatAmountWithUnit(amount)}`,
-            value: Math.pow(amount, 0.45),
-            color: partyColor,
-            proposerId: mainProposer?.id,
-            proposalType: "freeze",
-            isFrozen: true,
-          });
+      const legislatorReductionProposalIds = map(
+        reductionProposals,
+        (proposal) => proposal.id
+      );
+      if (legislatorFreezeAmount > 0) {
+        legislatorNodes.push({
+          id: `${legislatorFreezeProposalIds}-freeze`,
+          proposalId: `${legislatorFreezeProposalIds}`,
+          name: `${legislatorName}\n${formatAmountWithUnit(legislatorFreezeAmount)}`,
+          value: Math.pow(legislatorFreezeAmount, 0.45),
+          color: partyColor,
+          proposerId: mainProposer?.id,
+          proposalType: "freeze",
+          isFrozen: true,
         });
-
-        reductionProposals.forEach((proposal) => {
-          const amount = proposal.reductionAmount ?? 0;
-          if (amount <= 0) return;
-          legislatorNodes.push({
-            id: `${proposal.id}-reduce`,
-            proposalId: proposal.id ?? undefined,
-            name: `${legislatorName}\n${GROUP_LABELS.reduce}\n${formatAmountWithUnit(amount)}`,
-            value: Math.pow(amount, 0.45),
-            color: partyColor,
-            proposerId: mainProposer?.id,
-            proposalType: "reduce",
-          });
-        });
-      } else {
-        const pushCountNode = (
-          key: Extract<ProposalVisualizationType, "freeze" | "reduce">,
-          proposalsForKey: typeof legislatorProposals
-        ) => {
-          if (!proposalsForKey.length) return;
-          const totalCount = proposalsForKey.length;
-          legislatorNodes.push({
-            id: `${proposerId}-${key}`,
-            name: `${legislatorName}\n${GROUP_LABELS[key]}\n${totalCount}案`,
-            value: Math.pow(totalCount, 0.45),
-            color: partyColor,
-            proposerId: mainProposer?.id,
-            proposalType: key,
-            isFrozen: key === "freeze",
-          });
-        };
-
-        pushCountNode("freeze", freezeProposals);
-        pushCountNode("reduce", reductionProposals);
       }
-
-      if (mode === "count" && mainResolutionProposals.length > 0) {
-        const totalCount = mainResolutionProposals.length;
-        if (totalCount > 0) {
-          legislatorNodes.push({
-            id: `${proposerId}-main-resolution`,
-            name: `${legislatorName}\n${GROUP_LABELS.other}\n${totalCount}案`,
-            value: Math.pow(totalCount, 0.45),
-            color: partyColor,
-            proposerId: mainProposer?.id,
-            proposalType: "main-resolution",
-          });
-        }
+      if (legislatorReductionAmount > 0) {
+        legislatorNodes.push({
+          id: `${legislatorReductionProposalIds}-reduce`,
+          proposalId: `${legislatorReductionProposalIds}`,
+          name: `${legislatorName}\n${formatAmountWithUnit(legislatorReductionAmount)}`,
+          value: Math.pow(legislatorReductionAmount, 0.45),
+          color: partyColor,
+          proposerId: mainProposer?.id,
+          proposalType: "reduce",
+        });
+      }
+    } else {
+      if (mainResolutionProposals.length <= 0) return;
+      const totalCount = mainResolutionProposals.length;
+      if (totalCount > 0) {
+        legislatorNodes.push({
+          id: `${proposerId}-main-resolution`,
+          name: `${legislatorName}\n${totalCount}案`,
+          value: Math.pow(totalCount, 0.45),
+          color: partyColor,
+          proposerId: mainProposer?.id,
+          proposalType: "main-resolution",
+        });
       }
     }
-  );
+  });
 
   return {
-    立委提案彙整: {
+    "": {
       id: "legislator-summary-root",
       name: "root",
       children: legislatorNodes,
@@ -271,9 +255,7 @@ export const transformToGroupedSessionData = (
 ): NodeDatum[] => {
   const proposals = extractProposals(data);
 
-  if (proposals.length === 0) {
-    return [];
-  }
+  if (proposals.length === 0) return [];
 
   // 第一步：雙層分組（年度 -> 政府類別）
   const groupedData = mapValues(
@@ -286,18 +268,16 @@ export const transformToGroupedSessionData = (
   const result: NodeDatum[] = [];
 
   // 遍歷每個年度
-  Object.entries(groupedData).forEach(([year, categoryGroups]) => {
+  forEach(entries(groupedData), ([year, categoryGroups]) => {
     const categoryNodes: NodeDatum[] = [];
 
-    Object.entries(categoryGroups).forEach(([category, categoryProposals]) => {
+    forEach(entries(categoryGroups), ([category, categoryProposals]) => {
       if (mode === "amount") {
         const proposalsToProcess = categoryProposals.filter(
           (p) => (p.freezeAmount ?? 0) > 0 || (p.reductionAmount ?? 0) > 0
         );
 
-        if (proposalsToProcess.length === 0) {
-          return;
-        }
+        if (proposalsToProcess.length === 0) return;
 
         const proposalNodes: NodeDatum[] = proposalsToProcess.map(
           (proposal) => {
@@ -311,7 +291,10 @@ export const transformToGroupedSessionData = (
             const name = `${id}\n${
               government?.name ?? "未知部會"
             }\n${displayValue}`;
-            const color = PARTY_COLORS.get(party) || DEFAULT_COLOR;
+            const color =
+              proposer?.party?.color ||
+              PARTY_COLORS.get(party) ||
+              DEFAULT_COLOR;
 
             return {
               id,
@@ -398,8 +381,8 @@ export const transformToGroupedSessionData = (
 
   // 按年度排序（降序）
   result.sort((a, b) => {
-    const yearA = parseInt(a.id.replace("session-", ""));
-    const yearB = parseInt(b.id.replace("session-", ""));
+    const yearA = parseInt(a.id.replace("session-", ""), 10) || 0;
+    const yearB = parseInt(b.id.replace("session-", ""), 10) || 0;
     return yearB - yearA;
   });
 
@@ -455,7 +438,6 @@ export const transformToCategorizedData = (
         proposalsForKey,
         (p) => p.proposers?.[0]?.id ?? "unknown-proposer"
       );
-      console.log({ groupedByProposer });
       forEach(
         entries(groupedByProposer),
         ([proposerId, groupedByProposerProposals]) => {

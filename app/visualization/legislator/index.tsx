@@ -297,6 +297,10 @@ const VisualizationLegislator = () => {
 
   const termRange = useMemo(() => deriveTermRange(committees), [committees]);
 
+  const person = peopleData?.people;
+  const proposals = mapVisualizationProposals(proposalsData);
+  const summary = useMemo(() => computeSummaryStats(proposals), [proposals]);
+
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
   if (isLoading || isPeopleLoading) {
@@ -306,10 +310,6 @@ const VisualizationLegislator = () => {
   if (isError || isPeopleError) {
     return <div>Error fetching data</div>;
   }
-
-  const person = peopleData?.people;
-  const proposals = mapVisualizationProposals(proposalsData);
-  const summary = useMemo(() => computeSummaryStats(proposals), [proposals]);
 
   return (
     <div>

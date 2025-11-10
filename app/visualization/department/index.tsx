@@ -1,9 +1,7 @@
 import { useMemo } from "react";
 import type { GetVisualizationProposalsQuery } from "~/graphql/graphql";
 import { transformToCategorizedData, type NodeDatum } from "../helpers";
-import CirclePackChart, {
-  type CirclePackPadding,
-} from "../circle-pack-chart";
+import CirclePackChart, { type CirclePackPadding } from "../circle-pack-chart";
 
 type DepartmentVisualizationProps = {
   data: GetVisualizationProposalsQuery;
@@ -34,13 +32,10 @@ export const DepartmentVisualization = ({
 }: DepartmentVisualizationProps) => {
   const categorizedData = useMemo(
     () => transformedData ?? transformToCategorizedData(data, mode),
-    [data, mode, transformedData],
+    [data, mode, transformedData]
   );
 
-  const paddingValue = useMemo(
-    () => padding ?? DEFAULT_PADDING,
-    [padding],
-  );
+  const paddingValue = useMemo(() => padding ?? DEFAULT_PADDING, [padding]);
 
   const categories = Object.keys(categorizedData);
   console.log({ categories });
@@ -63,22 +58,17 @@ export const DepartmentVisualization = ({
           key={category}
           className="flex w-full flex-col items-center justify-center gap-y-5 font-bold"
         >
-          <p className="text-xl">{category}</p>
-          {chartData.children && chartData.children.length > 0 ? (
-            <CirclePackChart
-              data={chartData}
-              width={width}
-              height={width}
-              padding={paddingValue}
-              onNodeClick={onNodeClick}
-            />
-          ) : (
-            <div
-              className="flex h-48 items-center justify-center text-gray-400"
-              style={{ width }}
-            >
-              此類別無提案金額資料
-            </div>
+          {chartData.children && chartData.children.length > 0 && (
+            <>
+              <p className="text-xl">{category}</p>
+              <CirclePackChart
+                data={chartData}
+                width={width}
+                height={width}
+                padding={paddingValue}
+                onNodeClick={onNodeClick}
+              />
+            </>
           )}
         </div>
       ))}

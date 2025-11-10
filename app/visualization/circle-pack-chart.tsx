@@ -727,6 +727,20 @@ const CirclePackChart = ({
       // 防止在拖曳後觸發點擊
       if (event.defaultPrevented) return;
 
+      const canNavigate =
+        INTERACTION_FLAGS.enableNodeNavigation &&
+        typeof onNodeClick === "function";
+      const isLeafNode = !d.children || d.children.length === 0;
+
+      if (isLeafNode && canNavigate && onNodeClick) {
+        const result = onNodeClick(d.data);
+        if (result !== false) {
+          lastFocusedNodeIdRef.current = null;
+          event.stopPropagation();
+        }
+        return;
+      }
+
       const nodeId = d.data.id;
       const isRepeatClick = lastFocusedNodeIdRef.current === nodeId;
 
@@ -735,10 +749,6 @@ const CirclePackChart = ({
         event.stopPropagation();
         return;
       }
-
-      const canNavigate =
-        INTERACTION_FLAGS.enableNodeNavigation &&
-        typeof onNodeClick === "function";
 
       if (canNavigate && onNodeClick) {
         const result = onNodeClick(d.data);

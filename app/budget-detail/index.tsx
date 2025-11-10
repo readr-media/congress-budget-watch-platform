@@ -375,7 +375,7 @@ const BudgetDetail = () => {
     );
   return (
     <>
-      <div className="mx-2.5 flex flex-col">
+      <div className="mx-2.5 mb-4 flex flex-col">
         <NavLink to="/all-budgets" className="underline">
           {"<" + "回到列表頁"}
         </NavLink>
@@ -545,7 +545,7 @@ const BudgetDetail = () => {
               </div>
             </>
           )}
-          <section className="grid grid-cols-2 items-center justify-items-center gap-10">
+          <section className="gird-rows-auto mt-11 grid items-center justify-items-center gap-10">
             <VoteButtons key={proposalKey} proposal={proposal} />
           </section>
         </div>
