@@ -181,34 +181,28 @@ export const transformToGroupedByLegislatorData = (
       const legislatorReductionAmount = sumBy(reductionProposals, (proposal) =>
         defaultTo(proposal.reductionAmount, 0)
       );
-      const legislatorFreezeProposalIds = map(
-        freezeProposals,
-        (proposal) => proposal.id
-      );
-      const legislatorReductionProposalIds = map(
-        reductionProposals,
-        (proposal) => proposal.id
-      );
+      // 因為這些節點代表「立委」的總結，而不是單一「提案」，所以不應該有 proposalId
+      // 移除 proposalId 屬性，讓 handleNodeClick 能依據 proposerId 導航
       if (legislatorFreezeAmount > 0) {
         legislatorNodes.push({
-          id: `${legislatorFreezeProposalIds}-freeze`,
-          proposalId: `${legislatorFreezeProposalIds}`,
+          id: `${proposerId}-freeze`, // 使用 proposerId 來建立唯一的節點 ID
+          // proposalId: undefined, // 移除或設定為 undefined
           name: `${legislatorName}\n${formatAmountWithUnit(legislatorFreezeAmount)}`,
           value: Math.pow(legislatorFreezeAmount, 0.45),
           color: partyColor,
-          proposerId: mainProposer?.id,
+          proposerId: mainProposer?.id, // 立委 ID 是這裡
           proposalType: "freeze",
           isFrozen: true,
         });
       }
       if (legislatorReductionAmount > 0) {
         legislatorNodes.push({
-          id: `${legislatorReductionProposalIds}-reduce`,
-          proposalId: `${legislatorReductionProposalIds}`,
+          id: `${proposerId}-reduce`, // 使用 proposerId 來建立唯一的節點 ID
+          // proposalId: undefined, // 移除或設定為 undefined
           name: `${legislatorName}\n${formatAmountWithUnit(legislatorReductionAmount)}`,
           value: Math.pow(legislatorReductionAmount, 0.45),
           color: partyColor,
-          proposerId: mainProposer?.id,
+          proposerId: mainProposer?.id, // 立委 ID 是這裡
           proposalType: "reduce",
         });
       }
@@ -218,10 +212,11 @@ export const transformToGroupedByLegislatorData = (
       if (totalCount > 0) {
         legislatorNodes.push({
           id: `${proposerId}-main-resolution`,
+          // proposalId: undefined, // 移除或設定為 undefined
           name: `${legislatorName}\n${totalCount}案`,
           value: Math.pow(totalCount, 0.45),
           color: partyColor,
-          proposerId: mainProposer?.id,
+          proposerId: mainProposer?.id, // 立委 ID 是這裡
           proposalType: "main-resolution",
         });
       }

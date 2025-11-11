@@ -730,21 +730,11 @@ const CirclePackChart = ({
       const canNavigate =
         INTERACTION_FLAGS.enableNodeNavigation &&
         typeof onNodeClick === "function";
-      const isLeafNode = !d.children || d.children.length === 0;
 
-      if (isLeafNode && canNavigate && onNodeClick) {
-        const result = onNodeClick(d.data);
-        if (result !== false) {
-          lastFocusedNodeIdRef.current = null;
-          event.stopPropagation();
-        }
-        return;
-      }
+      const hasChildren = d.children && d.children.length > 0;
 
-      const nodeId = d.data.id;
-      const isRepeatClick = lastFocusedNodeIdRef.current === nodeId;
-
-      if (!isRepeatClick) {
+      if (hasChildren) {
+        // if hasChildren zoom in
         focusOnNode(event as unknown as MouseEvent, d);
         event.stopPropagation();
         return;
