@@ -43,17 +43,19 @@ export default function Collaboration() {
         </h1>
         <div className="text-center text-sm leading-none font-bold">
           <span>
-            <span className="text-budget-accent">{stats.recognized} 已辨識</span> /{" "}
-            {stats.unrecognized} 未辨識
+            <span className="text-budget-accent">
+              {stats.recognized} 已辨識
+            </span>{" "}
+            / {stats.unrecognized} 未辨識
           </span>
         </div>
         <div className="flex w-full items-center justify-between gap-4 md:max-w-sm">
           <img src={QRCode} alt="LINE QR Code" className="size-32" />
           <div className="flex h-24 flex-col justify-between text-sm font-bold">
-            <p className="text-left leading-tight text-success">
+            <p className="text-success text-left leading-tight">
               掃描 QR Code 成為 LINE 好友，就可以讓機器人替你協作辨識文件上傳！
             </p>
-            <p className="rounded-md border border-success bg-transparent p-2 text-center leading-none text-success">
+            <p className="border-success text-success rounded-md border bg-transparent p-2 text-center leading-none">
               教學步驟
             </p>
           </div>
@@ -80,8 +82,10 @@ export default function Collaboration() {
             type="button"
             aria-pressed={activeTab === "steps"}
             onClick={() => setActiveTab("steps")}
-            className={`rounded-sm border border-black p-2.5 text-base leading-none font-bold transition-colors ${
-              activeTab === "steps" ? "bg-success text-white" : "bg-white text-black"
+            className={`cursor-pointer rounded-sm border border-black p-2.5 text-base leading-none font-bold transition-colors ${
+              activeTab === "steps"
+                ? "bg-success text-white"
+                : "bg-white text-black"
             }`}
           >
             教學步驟
@@ -90,8 +94,10 @@ export default function Collaboration() {
             type="button"
             aria-pressed={activeTab === "qa"}
             onClick={() => setActiveTab("qa")}
-            className={`rounded-sm border border-black p-2.5 text-base leading-none font-bold transition-colors ${
-              activeTab === "qa" ? "bg-success text-white" : "bg-white text-black"
+            className={`cursor-pointer rounded-sm border border-black p-2.5 text-base leading-none font-bold transition-colors ${
+              activeTab === "qa"
+                ? "bg-success text-white"
+                : "bg-white text-black"
             }`}
           >
             Q&A 區
