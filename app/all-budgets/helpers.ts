@@ -202,6 +202,10 @@ export function proposalToBudgetTableData(
     status: () => "committeed",
     committeedDate: () => undefined,
     totalReacts: calculateTotalReacts,
+    react_angry: flow(prop("react_angry"), defaultTo(0)),
+    react_disappoint: flow(prop("react_disappoint"), defaultTo(0)),
+    react_good: flow(prop("react_good"), defaultTo(0)),
+    react_whatever: flow(prop("react_whatever"), defaultTo(0)),
   };
   return Object.keys(spec).reduce((acc, key) => {
     acc[key as keyof BudgetTableData] =

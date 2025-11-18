@@ -89,6 +89,13 @@ export const useVoteStore = create<VoteStore>()(
             set((draft) => {
               draft.state.votes[proposalId] = { ...createEmptyCounts(), ...counts };
             }),
+          refreshProposalCounts: (proposalId: string) =>
+            set((draft) => {
+              const current = draft.state.votes[proposalId];
+              if (current) {
+                draft.state.votes[proposalId] = { ...current };
+              }
+            }),
           removePendingReactions: (proposalId: string, reactions: ReactionType[]) =>
             set((draft) => {
               const pendingMap = ensurePendingMap(draft.state);

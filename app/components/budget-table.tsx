@@ -5,6 +5,7 @@ import { useOnClickOutside, useToggle } from "usehooks-ts";
 import React from "react";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { VoteButtons } from "~/components/VoteButtons";
+import { useProposalVoteCounts } from "~/stores/vote.store";
 
 const DESKTOP_GRID_COLS =
   "grid-cols-[1.2fr_1fr_1.5fr_1fr_1fr_1fr_2.5fr_1.5fr_1.5fr_1.3fr_1.2fr]";
@@ -123,6 +124,14 @@ const ProposalContent = ({ content }: { content: string; itemId: string }) => (
 );
 
 const BudgetTableRow = ({ item }: { item: BudgetTableData }) => {
+  const liveCounts = useProposalVoteCounts(item.id);
+  const displayReacts =
+    liveCounts
+      ? (liveCounts.react_good ?? 0) +
+        (liveCounts.react_angry ?? 0) +
+        (liveCounts.react_disappoint ?? 0) +
+        (liveCounts.react_whatever ?? 0)
+      : (item.totalReacts ?? 0);
   return (
     <div className="flex flex-col md:w-full md:flex-row">
       <div className="flex items-center justify-start gap-x-2 border-y-2 bg-neutral-400 py-2 md:min-w-16 md:flex-col md:border-y-0 md:bg-surface-subtle md:py-0">
@@ -180,7 +189,7 @@ const BudgetTableRow = ({ item }: { item: BudgetTableData }) => {
       <TableRow label="提案內容">
         <ProposalContent content={item.proposalContent} itemId={item.id} />
       </TableRow>
-      <TableRow label="關心數">{item.totalReacts}</TableRow>
+      <TableRow label="關心數">{displayReacts}</TableRow>
       <TableRow label="我要關心這個">
         <div className="mb-9 flex w-full flex-col items-center justify-center gap-y-4">
           <div className="flex w-full items-center justify-center rounded-3xl border-2 bg-white">
@@ -203,6 +212,19 @@ const BudgetTableRow = ({ item }: { item: BudgetTableData }) => {
 };
 
 const DesktopTableRow = ({ item }: { item: BudgetTableData }) => {
+  const liveCounts = useProposalVoteCounts(item.id);
+  const itemCountsFromFields =
+    (item.react_good ?? 0) +
+    (item.react_angry ?? 0) +
+    (item.react_disappoint ?? 0) +
+    (item.react_whatever ?? 0);
+  const displayReacts =
+    liveCounts
+      ? (liveCounts.react_good ?? 0) +
+        (liveCounts.react_angry ?? 0) +
+        (liveCounts.react_disappoint ?? 0) +
+        (liveCounts.react_whatever ?? 0)
+      : itemCountsFromFields || (item.totalReacts ?? 0);
   const voteMenuRef = useRef<HTMLDivElement>(null);
   const [, , setVoteMenuOpen] = useToggle();
 
@@ -214,7 +236,8 @@ const DesktopTableRow = ({ item }: { item: BudgetTableData }) => {
     voteMenuRef as RefObject<HTMLElement>,
     handleClickOutsideVoteMenu
   );
-  const proposalKey = `${item.id}-${item.react_good}-${item.react_angry}-${item.react_disappoint}-${item.react_whatever}`;
+  // 使用穩定的 key，避免因為反應計數更新而重新掛載 VoteButtons
+  const proposalKey = item.id;
 
   return (
     <>
@@ -296,7 +319,7 @@ const DesktopTableRow = ({ item }: { item: BudgetTableData }) => {
         {item.originalAmount}
       </div>
       <div className="flex items-start justify-center pt-3 md:text-xs lg:text-sm">
-        {item.totalReacts}
+        {displayReacts}
       </div>
       <div className="flex items-start justify-center pt-3">
         {/* <VoteButtons proposalId={item.id} /> */}
