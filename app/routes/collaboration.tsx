@@ -29,8 +29,11 @@ export default function Collaboration() {
     queryFn: () => execute(GET_RECOGNITION_STATS_QUERY),
   });
 
+  const passedRecognitions =
+    data?.recognitionImages?.filter((img) => img.result === "passed") ?? [];
+
   const stats = {
-    recognized: data?.recognitionStatusesCount ?? 0,
+    recognized: passedRecognitions.length,
     unrecognized: data?.recognitionImagesCount ?? 0,
   };
 
@@ -45,7 +48,7 @@ export default function Collaboration() {
           <span>
             <span className="text-budget-accent">
               {stats.recognized} 已辨識
-            </span>{" "}
+            </span>
             / {stats.unrecognized} 未辨識
           </span>
         </div>
