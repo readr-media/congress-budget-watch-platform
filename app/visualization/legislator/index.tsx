@@ -1,5 +1,5 @@
-import { useMemo, useState } from "react";
-import { Link, useParams } from "react-router";
+import { useMemo, useState, useCallback } from "react";
+import { Link, useNavigate, useParams } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 import { sumBy, filter } from "lodash";
 import SessionChart from "./session-chart";
@@ -19,6 +19,7 @@ import {
   transformToGroupedSessionData,
   formatAmountWithUnit,
   mapVisualizationProposals,
+  type NodeDatum,
 } from "../helpers";
 import {
   GET_PERSON_BY_ID_QUERY,
@@ -302,6 +303,17 @@ const VisualizationLegislator = () => {
   const summary = useMemo(() => computeSummaryStats(proposals), [proposals]);
 
   const isDesktop = useMediaQuery("(min-width: 768px)");
+  const navigate = useNavigate();
+  const handleNodeClick = useCallback(
+    (node: NodeDatum) => {
+      if (!node.children?.length && node.id) {
+        navigate(`/budget/${node.id}`);
+        return true;
+      }
+      return false;
+    },
+    [navigate]
+  );
 
   if (isLoading || isPeopleLoading) {
     return <VisualizationLegislatorSkeleton isDesktop={isDesktop} />;
@@ -333,6 +345,7 @@ const VisualizationLegislator = () => {
         <SessionChart
           data={sessionData}
           yearToCommitteeMap={yearToCommitteeMap}
+          onNodeClick={handleNodeClick}
         />
       </div>
     </div>

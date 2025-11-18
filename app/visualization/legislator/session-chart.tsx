@@ -12,9 +12,14 @@ const getBorderBottomClass = (index: number, totalItems: number) => {
 type SessionChartProps = {
   data: NodeDatum[];
   yearToCommitteeMap: Map<string, string>;
+  onNodeClick?: (node: NodeDatum) => void | boolean;
 };
 
-const SessionChart = ({ data, yearToCommitteeMap }: SessionChartProps) => {
+const SessionChart = ({
+  data,
+  yearToCommitteeMap,
+  onNodeClick,
+}: SessionChartProps) => {
   const CIRCLE_PACK_CHART_PADDING = 50;
   const matchTablet = useMediaQuery("(min-width: 768px)");
   const matchScreenS = useMediaQuery("(min-width: 1024px)");
@@ -60,6 +65,7 @@ const SessionChart = ({ data, yearToCommitteeMap }: SessionChartProps) => {
               }}
               width={circlePackChartWidth()}
               padding={CIRCLE_PACK_CHART_PADDING}
+              onNodeClick={onNodeClick}
             />
           </div>
         </div>
