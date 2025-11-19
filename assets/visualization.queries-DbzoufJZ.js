@@ -1,4 +1,4 @@
-import{p as l}from"./chunk-OIYGIGL5-DIb7gZ_H.js";import{t}from"./gql-DSg_pHIo.js";const u="/congress-budget-watch-platform/".replace(/\/$/,""),m=u,g=500,P=({src:e,...o})=>l.jsx("img",{src:m+e,...o});t(`
+import{p as l}from"./chunk-OIYGIGL5-DIb7gZ_H.js";import{t}from"./gql-DSg_pHIo.js";const u="/congress-budget-watch-platform/".replace(/\/$/,""),m=`${u}/`,g=500,P=({src:e,...o})=>l.jsx("img",{src:m+e,...o});t(`
   query GetBudgetsWithGovernment {
     budgets {
       id
@@ -166,14 +166,14 @@ import{p as l}from"./chunk-OIYGIGL5-DIb7gZ_H.js";import{t}from"./gql-DSg_pHIo.js
       }
     }
   }
-`),h=t(`
+`),$=t(`
   query GetProposalYears {
     budgetYears(orderBy: [{ year: desc }]) {
       id
       year
     }
   }
-`),r={all:["proposals"],lists:()=>[...r.all,"list"],list:e=>[...r.lists(),{filters:e}],paginated:(e,o,n,p,d)=>[...r.lists(),"paginated",{page:e,pageSize:o,sortBy:n,where:p,year:d}],details:()=>[...r.all,"detail"],detail:e=>[...r.details(),e],years:()=>[...r.all,"years"]},I=t(`
+`),r={all:["proposals"],lists:()=>[...r.all,"list"],list:e=>[...r.lists(),{filters:e}],paginated:(e,o,n,p,d)=>[...r.lists(),"paginated",{page:e,pageSize:o,sortBy:n,where:p,year:d}],details:()=>[...r.all,"detail"],detail:e=>[...r.details(),e],years:()=>[...r.all,"years"]},h=t(`
   query GetPaginatedProposals(
     $skip: Int!
     $take: Int!
@@ -219,7 +219,7 @@ import{p as l}from"./chunk-OIYGIGL5-DIb7gZ_H.js";import{t}from"./gql-DSg_pHIo.js
     }
     proposalsCount(where: $where)
   }
-`),S=t(`
+`),I=t(`
   mutation UPDATE_PROPOSAL_REACTS(
     $where: ProposalWhereUniqueInput!
     $data: ProposalUpdateInput!
@@ -232,7 +232,7 @@ import{p as l}from"./chunk-OIYGIGL5-DIb7gZ_H.js";import{t}from"./gql-DSg_pHIo.js
       react_whatever
     }
   }
-`),$=t(`
+`),S=t(`
   query GetLatestBudgetYear($skip: Int!, $take: Int!) {
     budgetYears(orderBy: [{ year: desc }], skip: $skip, take: $take) {
       year
@@ -277,4 +277,4 @@ import{p as l}from"./chunk-OIYGIGL5-DIb7gZ_H.js";import{t}from"./gql-DSg_pHIo.js
       }
     }
   }
-`);export{$ as G,P as I,m as S,S as U,g as a,i as b,h as c,I as d,T as e,E as f,a as g,_ as h,s as i,A as j,r as p};
+`);export{S as G,P as I,m as S,I as U,g as a,i as b,$ as c,h as d,T as e,E as f,a as g,_ as h,s as i,A as j,r as p};
