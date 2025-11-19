@@ -3,6 +3,9 @@ on:
   push:
     branches: [main]
 
+env:
+  DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -20,6 +23,10 @@ jobs:
         run: pnpm install
       - name: Build
         run: REACT_ROUTER_BASENAME=/congress-budget-watch-platform pnpm build
+      - name: Start ssh-agent
+        uses: webfactory/ssh-agent@v0.8.3
+        with:
+          ssh-private-key: ${{ env.DEPLOY_SSH_KEY }}
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v4
         with:
