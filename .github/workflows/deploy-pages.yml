@@ -6,6 +6,8 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      REACT_ROUTER_BASENAME: /congress-budget-watch-platform/
     steps:
       - uses: actions/checkout@v4
       - name: Setup Node.js
@@ -19,16 +21,15 @@ jobs:
       - name: Install deps
         run: pnpm install
       - name: Build
-        run: REACT_ROUTER_BASENAME=/congress-budget-watch-platform pnpm build
-      - name: Start ssh-agent
-        uses: webfactory/ssh-agent@v0.8.3
-        with:
-          ssh-private-key: ${{ secrets.DEPLOY_SSH_KEY }}
+        run: pnpm build
+      - name: Copy fallback
+        run: cp build/client/index.html build/client/404.html
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v4
         with:
           publish_dir: ./build/client
           publish_branch: gh-pages
           keep_files: false
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           user_name: github-actions[bot]
           user_email: github-actions[bot]@users.noreply.github.com

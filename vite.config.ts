@@ -6,9 +6,11 @@ import tsconfigPaths from "vite-tsconfig-paths";
 const PROD_BASE = "/project/3/congress-budget-watch/";
 const DEV_BASE = "/project/3/dev-congress-budget-watch/";
 
-const base =
-  process.env.REACT_ROUTER_BASENAME ??
-  (process.env.NODE_ENV === "development" ? DEV_BASE : PROD_BASE);
+const base = process.env.REACT_ROUTER_BASENAME
+  ? process.env.REACT_ROUTER_BASENAME
+  : process.env.NODE_ENV === "development"
+    ? DEV_BASE
+    : PROD_BASE;
 
 export default defineConfig({
   base,

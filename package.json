@@ -1,9 +1,11 @@
 {
-  "name": "congress",
+  "name": "congress-budget-watch-platform",
+  "homepage": "https://readr-media.github.io/congress-budget-watch-platform/",
   "private": true,
   "type": "module",
   "scripts": {
     "build": "react-router build",
+    "deploy:gh": "REACT_ROUTER_BASENAME=/congress-budget-watch-platform/ pnpm build && cp build/client/index.html build/client/404.html && gh-pages -d build/client --repo git@github.com:readr-media/congress-budget-watch-platform.git",
     "deploy:gcp:prod": "sh ./deploy-prod.sh",
     "deploy:gcp:dev": "sh ./deploy-dev.sh",
     "dev": "react-router dev",
@@ -26,6 +28,7 @@
     "@tanstack/react-query-devtools": "^5.86.0",
     "d3": "^7.9.0",
     "daisyui": "^5.1.10",
+    "gh-pages": "^6.3.0",
     "graphql": "^16.11.0",
     "graphql-request": "^7.2.0",
     "immer": "^10.1.3",
