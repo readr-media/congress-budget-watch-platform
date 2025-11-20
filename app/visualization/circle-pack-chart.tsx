@@ -540,7 +540,6 @@ const CirclePackChart = ({
     };
 
     const updateLabelVisibility = (
-      _targetFocus: d3.HierarchyCircularNode<NodeDatum> | null,
       duration = baseLabelDuration
     ) => {
       const shouldAnimate =
@@ -668,13 +667,13 @@ const CirclePackChart = ({
       setFocus(root);
       clearInertia();
       setView(root, { duration: baseFocusDuration });
-      updateLabelVisibility(root, baseLabelDuration);
+      updateLabelVisibility(baseLabelDuration);
     };
 
     // 設定初始視圖
     const initialTarget = initialFocus ?? root;
     setView(initialTarget, { duration: 0 });
-    updateLabelVisibility(initialTarget, 0);
+    updateLabelVisibility(0);
 
     if (!animationsEnabled && process.env.NODE_ENV !== "production") {
       console.warn(
