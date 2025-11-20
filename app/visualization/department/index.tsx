@@ -67,7 +67,7 @@ export const DepartmentVisualization = ({
               <CirclePackChart
                 data={chartData}
                 width={width}
-              height={height ?? width}
+                height={height ?? width}
                 padding={paddingValue}
                 onNodeClick={onNodeClick}
               />

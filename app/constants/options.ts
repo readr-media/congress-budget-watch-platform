@@ -1,4 +1,4 @@
-import { SortDirection } from '~/constants/enums';
+import { SortDirection } from "~/constants/enums";
 
 export const sortOptions = [
   {

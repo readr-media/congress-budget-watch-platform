@@ -1,9 +1,6 @@
 import Select, { type SingleValue } from "react-select";
 import { VisualizationSelector } from "~/components/visualization-selector";
-import type {
-  SelectOption,
-  VisualizationTab,
-} from "~/types/visualization";
+import type { SelectOption, VisualizationTab } from "~/types/visualization";
 
 type DesktopControlsProps = {
   activeTab: VisualizationTab;
@@ -139,7 +136,8 @@ export const MobileControls = ({
           inputId="visualization-year-mobile"
         />
       </div>
-      {!isShowingAll && activeTab === "legislator" &&
+      {!isShowingAll &&
+        activeTab === "legislator" &&
         (legislatorOptions.length > 0 ? (
           <Select
             className="w-full"
@@ -157,7 +155,8 @@ export const MobileControls = ({
         ) : (
           <p className="text-center text-sm text-gray-500">目前沒有立委資料</p>
         ))}
-      {!isShowingAll && activeTab === "department" &&
+      {!isShowingAll &&
+        activeTab === "department" &&
         (departmentOptions.length > 0 ? (
           <Select
             className="w-full"

@@ -3,10 +3,7 @@ import type { LinksFunction } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 import Image from "~/components/image";
 import { execute } from "~/graphql/execute";
-import {
-  GET_LATEST_BUDGET_YEAR_QUERY,
-  budgetYearQueryKeys,
-} from "~/queries";
+import { GET_LATEST_BUDGET_YEAR_QUERY, budgetYearQueryKeys } from "~/queries";
 import {
   calculateProgressPercentage,
   formatProgressText,
@@ -95,16 +92,16 @@ export default function Home() {
               className="h-auto w-full max-w-xl"
             />
             {isLoading ? (
-              <div className="-mt-1 flex min-h-[60px] w-full max-w-banner items-center justify-center rounded-lg bg-gray-300 p-2 text-gray-600">
+              <div className="max-w-banner -mt-1 flex min-h-[60px] w-full items-center justify-center rounded-lg bg-gray-300 p-2 text-gray-600">
                 載入審議進度中...
               </div>
             ) : isError ? (
-              <div className="-mt-1 flex min-h-[60px] w-full max-w-banner items-center justify-center rounded-lg bg-red-100 p-2 text-red-600">
+              <div className="max-w-banner -mt-1 flex min-h-[60px] w-full items-center justify-center rounded-lg bg-red-100 p-2 text-red-600">
                 審議進度載入失敗，請稍後再試
               </div>
             ) : latestBudgetYear ? (
-              <div className="-mt-1 flex min-h-[48px] w-full max-w-banner items-center justify-start rounded-lg bg-brand-primary pl-1 text-white">
-                <p className="mr-2 hidden w-[160px] rounded-lg bg-white px-3.5 py-2 text-brand-primary md:flex">
+              <div className="max-w-banner bg-brand-primary -mt-1 flex min-h-[48px] w-full items-center justify-start rounded-lg pl-1 text-white">
+                <p className="text-brand-primary mr-2 hidden w-[160px] rounded-lg bg-white px-3.5 py-2 md:flex">
                   最新審議進度
                 </p>
                 <div className="flex w-full items-center justify-between">
@@ -115,7 +112,7 @@ export default function Home() {
                 </div>
               </div>
             ) : (
-              <div className="-mt-1 flex min-h-[60px] w-full max-w-banner items-center justify-center rounded-lg bg-gray-300 p-2 text-gray-600">
+              <div className="max-w-banner -mt-1 flex min-h-[60px] w-full items-center justify-center rounded-lg bg-gray-300 p-2 text-gray-600">
                 暫無審議進度資料
               </div>
             )}
@@ -137,11 +134,11 @@ export default function Home() {
               key={button.label}
               to={button.href}
               className={({ isActive }) =>
-                `flex min-h-[72px] w-full items-center justify-center rounded-lg border-3 border-brand-accent px-6 py-4 text-center text-lg font-medium transition-colors ${
+                `border-brand-accent flex min-h-[72px] w-full items-center justify-center rounded-lg border-3 px-6 py-4 text-center text-lg font-medium transition-colors ${
                   isActive
                     ? "bg-brand-accent text-white"
-                    : "bg-white text-budget-accent hover:bg-brand-accent hover:text-white"
-                } focus:ring-2 focus:ring-brand-accent focus:ring-offset-2 focus:outline-none`
+                    : "text-budget-accent hover:bg-brand-accent bg-white hover:text-white"
+                } focus:ring-brand-accent focus:ring-2 focus:ring-offset-2 focus:outline-none`
               }
             >
               {button.label}

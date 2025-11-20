@@ -75,9 +75,9 @@ export const useVisualizationState = (): UseVisualizationStateResult => {
   const [activeTab, setActiveTab] = useState<VisualizationTab>("legislator");
   const [mode, setMode] = useState<VisualizationMode>("amount");
   const [selectedYear, setSelectedYear] = useState<SelectOption>(
-    YEAR_OPTIONS[0],
+    YEAR_OPTIONS[0]
   );
-const [selectedLegislatorOption, setSelectedLegislatorOption] =
+  const [selectedLegislatorOption, setSelectedLegislatorOption] =
     useState<SelectOption | null>(null);
   const [selectedDepartmentOption, setSelectedDepartmentOption] =
     useState<SelectOption | null>(null);
@@ -126,7 +126,7 @@ const [selectedLegislatorOption, setSelectedLegislatorOption] =
       pageSize,
       selectedSort,
       whereFilter(),
-      parseInt(selectedYear.value, 10),
+      parseInt(selectedYear.value, 10)
     ),
     queryFn: () =>
       execute(GET_VISUALIZATION_PROPOSALS_QUERY, {
@@ -149,7 +149,7 @@ const [selectedLegislatorOption, setSelectedLegislatorOption] =
         }
       }
     },
-    [isDesktop],
+    [isDesktop]
   );
 
   useEffect(() => {
@@ -164,27 +164,21 @@ const [selectedLegislatorOption, setSelectedLegislatorOption] =
     setSelectedYear(option);
   }, []);
 
-  const handleLegislatorChange = useCallback(
-    (option: SelectOption | null) => {
-      setSelectedLegislatorOption(option);
-      setShouldAutoSelectLegislator(false);
-      if (option) {
-        previousLegislatorOption.current = option;
-      }
-    },
-    [],
-  );
+  const handleLegislatorChange = useCallback((option: SelectOption | null) => {
+    setSelectedLegislatorOption(option);
+    setShouldAutoSelectLegislator(false);
+    if (option) {
+      previousLegislatorOption.current = option;
+    }
+  }, []);
 
-  const handleDepartmentChange = useCallback(
-    (option: SelectOption | null) => {
-      setSelectedDepartmentOption(option);
-      setShouldAutoSelectDepartment(false);
-      if (option) {
-        previousDepartmentOption.current = option;
-      }
-    },
-    [],
-  );
+  const handleDepartmentChange = useCallback((option: SelectOption | null) => {
+    setSelectedDepartmentOption(option);
+    setShouldAutoSelectDepartment(false);
+    if (option) {
+      previousDepartmentOption.current = option;
+    }
+  }, []);
 
   const handleToggleShowAll = useCallback(() => {
     if (activeTab === "legislator") {
@@ -206,16 +200,9 @@ const [selectedLegislatorOption, setSelectedLegislatorOption] =
         setShouldAutoSelectDepartment(false);
       }
     }
-  }, [
-    activeTab,
-    selectedLegislatorOption,
-    selectedDepartmentOption,
-  ]);
+  }, [activeTab, selectedLegislatorOption, selectedDepartmentOption]);
 
-  const allProposals = useMemo(
-    () => mapVisualizationProposals(data),
-    [data],
-  );
+  const allProposals = useMemo(() => mapVisualizationProposals(data), [data]);
 
   const legislatorOptions = useMemo<SelectOption[]>(() => {
     const unique = new Map<string, SelectOption>();
@@ -228,7 +215,7 @@ const [selectedLegislatorOption, setSelectedLegislatorOption] =
       }
     });
     return Array.from(unique.values()).sort((a, b) =>
-      a.label.localeCompare(b.label, "zh-Hant"),
+      a.label.localeCompare(b.label, "zh-Hant")
     );
   }, [allProposals]);
 
@@ -240,7 +227,7 @@ const [selectedLegislatorOption, setSelectedLegislatorOption] =
       unique.set(value, { value, label: value });
     });
     return Array.from(unique.values()).sort((a, b) =>
-      a.label.localeCompare(b.label, "zh-Hant"),
+      a.label.localeCompare(b.label, "zh-Hant")
     );
   }, [allProposals]);
 
@@ -279,7 +266,7 @@ const [selectedLegislatorOption, setSelectedLegislatorOption] =
       const hasSelection =
         selectedLegislatorOption &&
         legislatorOptions.some(
-          (option) => option.value === selectedLegislatorOption.value,
+          (option) => option.value === selectedLegislatorOption.value
         );
       if (!hasSelection) {
         if (shouldAutoSelectLegislator && legislatorOptions.length > 0) {
@@ -292,7 +279,7 @@ const [selectedLegislatorOption, setSelectedLegislatorOption] =
       const hasSelection =
         selectedDepartmentOption &&
         departmentOptions.some(
-          (option) => option.value === selectedDepartmentOption.value,
+          (option) => option.value === selectedDepartmentOption.value
         );
       if (!hasSelection) {
         if (shouldAutoSelectDepartment && departmentOptions.length > 0) {
@@ -333,11 +320,11 @@ const [selectedLegislatorOption, setSelectedLegislatorOption] =
         if (!proposal) return false;
         const proposalWithContext = useFragment(
           VisualizationProposalWithContextFragmentDoc,
-          proposal,
+          proposal
         );
         const base = useFragment(
           VisualizationProposalBaseFragmentDoc,
-          proposalWithContext,
+          proposalWithContext
         );
         const proposalId = base.id;
         return proposalId != null && filteredIds?.has(proposalId);
@@ -359,16 +346,16 @@ const [selectedLegislatorOption, setSelectedLegislatorOption] =
 
     const reductionProposals = filter(
       proposals,
-      (p) => p.reductionAmount && p.reductionAmount > 0,
+      (p) => p.reductionAmount && p.reductionAmount > 0
     );
 
     const freezeProposals = filter(
       proposals,
-      (p) => p.freezeAmount && p.freezeAmount > 0,
+      (p) => p.freezeAmount && p.freezeAmount > 0
     );
 
     const mainResolutionProposals = filter(proposals, (p) =>
-      p.proposalTypes?.includes(ProposalProposalTypeType.Other),
+      p.proposalTypes?.includes(ProposalProposalTypeType.Other)
     );
 
     return {
@@ -381,18 +368,17 @@ const [selectedLegislatorOption, setSelectedLegislatorOption] =
   }, [effectiveData]);
 
   const formattedReductionAmount = formatAmountWithUnit(
-    summaryStats.totalReductionAmount,
+    summaryStats.totalReductionAmount
   );
   const formattedFreezeAmount = formatAmountWithUnit(
-    summaryStats.totalFreezeAmount,
+    summaryStats.totalFreezeAmount
   );
 
-  const legislatorVisualizationData = useMemo<
-    VisualizationGroupedData | null
-  >(() => {
-    if (!effectiveData) return null;
-    return transformToGroupedByLegislatorData(effectiveData, mode);
-  }, [effectiveData, mode]);
+  const legislatorVisualizationData =
+    useMemo<VisualizationGroupedData | null>(() => {
+      if (!effectiveData) return null;
+      return transformToGroupedByLegislatorData(effectiveData, mode);
+    }, [effectiveData, mode]);
 
   const isShowingAll =
     (activeTab === "legislator" && !selectedLegislatorOption) ||

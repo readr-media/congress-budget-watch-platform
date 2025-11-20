@@ -29,7 +29,11 @@ function getProposalTypeDisplay(
   if (!proposalTypes || proposalTypes.length === 0) {
     return "無";
   }
-  const proposalTypeMap = new Map([["other", "主決議"], ["freeze", "凍結案"], ["reduction", "刪減案"]])
+  const proposalTypeMap = new Map([
+    ["other", "主決議"],
+    ["freeze", "凍結案"],
+    ["reduction", "刪減案"],
+  ]);
   return proposalTypes
     .filter((proposalType) => proposalType !== null)
     .map((proposalType) => proposalTypeMap.get(proposalType ?? "") ?? "")
@@ -103,7 +107,6 @@ function getLatestMeetingDate(
   })(validMeetings);
 
   if (allDates.length === 0) return "無審議日期";
-  
 
   const latestDate = allDates.reduce((latest, current) =>
     current.getTime() > latest.getTime() ? current : latest

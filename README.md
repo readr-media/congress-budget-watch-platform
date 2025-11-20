@@ -22,20 +22,20 @@ app/
 ### 核心概念
 
 1.  **路由中心化 (`routes/`)**
-    -   所有頁面級的元件都存放在 `routes/` 中，例如 `home.tsx`。
-    -   每個路由對應一個檔案，負責組織該頁面所需的元件與資料。
+    - 所有頁面級的元件都存放在 `routes/` 中，例如 `home.tsx`。
+    - 每個路由對應一個檔案，負責組織該頁面所需的元件與資料。
 
 2.  **元件化 (`components/`)**
-    -   我們遵循「原子化設計」原則，將 UI 拆分為小而可重用的元件。
-    -   複雜元件（如 `timeline`）或特定用途的元件（如 `skeleton`）會建立自己的子目錄。
+    - 我們遵循「原子化設計」原則，將 UI 拆分為小而可重用的元件。
+    - 複雜元件（如 `timeline`）或特定用途的元件（如 `skeleton`）會建立自己的子目錄。
 
 3.  **資料驅動 (`graphql/`, `queries/`)**
-    -   本專案使用 GraphQL 進行資料通訊。
-    -   `graphql/` 目錄包含由 `graphql-codegen` 自動生成的型別與客戶端設定。
-    -   `queries/` 目錄存放所有手動編寫的 GraphQL 查詢、變更與片段，方便管理與重用。
+    - 本專案使用 GraphQL 進行資料通訊。
+    - `graphql/` 目錄包含由 `graphql-codegen` 自動生成的型別與客戶端設定。
+    - `queries/` 目錄存放所有手動編寫的 GraphQL 查詢、變更與片段，方便管理與重用。
 
 4.  **狀態管理 (`stores/`)**
-    -   請參閱下方的「狀態管理 (Zustand)」章節。
+    - 請參閱下方的「狀態管理 (Zustand)」章節。
 
 ---
 
@@ -66,14 +66,15 @@ const usePaginationStore = create((set) => ({
 
 // 導出 selector hooks
 export const usePage = () => usePaginationStore((state) => state.page);
-export const usePaginationActions = () => usePaginationStore((state) => state.actions);
+export const usePaginationActions = () =>
+  usePaginationStore((state) => state.actions);
 ```
 
 ### 何時使用 Zustand？
 
--   當多個無直接父子關係的元件需要共享狀態時。
--   當需要跨頁面持久化某些狀態時。
--   對於僅在單一元件或其子元件中使用的狀態，優先使用 React 內建的 `useState` 或 `useReducer`。
+- 當多個無直接父子關係的元件需要共享狀態時。
+- 當需要跨頁面持久化某些狀態時。
+- 對於僅在單一元件或其子元件中使用的狀態，優先使用 React 內建的 `useState` 或 `useReducer`。
 
 ---
 
@@ -81,14 +82,14 @@ export const usePaginationActions = () => usePaginationStore((state) => state.ac
 
 ### 視覺化 (`visualization/`)
 
--   此目錄包含所有與 D3.js 或其他圖表庫相關的複雜視覺化元件，例如 `circle-pack-chart.tsx`。
--   目標是將視覺化邏輯與業務邏輯分離，使其成為可獨立運作的單元。
+- 此目錄包含所有與 D3.js 或其他圖表庫相關的複雜視覺化元件，例如 `circle-pack-chart.tsx`。
+- 目標是將視覺化邏輯與業務邏輯分離，使其成為可獨立運作的單元。
 
 ### 常數管理 (`constants/`)
 
--   `config.ts`: 環境變數與應用程式級別的設定。
--   `endpoints.ts`: 所有 API 的端點路徑。
--   `legends.ts`: 圖表中使用的圖例定義。
+- `config.ts`: 環境變數與應用程式級別的設定。
+- `endpoints.ts`: 所有 API 的端點路徑。
+- `legends.ts`: 圖表中使用的圖例定義。
 
 ## 深色模式設定
 

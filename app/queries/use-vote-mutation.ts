@@ -29,18 +29,21 @@ export const useVoteMutation = () => {
       // Trigger a lightweight refresh in the local vote store to re-render UI
       try {
         // If server returned updated counts, update store directly
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const dataAny: any = _data;
         if (dataAny?.updateProposal) {
           const updated = dataAny.updateProposal;
-          useVoteStore.getState().actions.setProposalCounts(variables.proposalId, {
-            react_good: updated.react_good ?? 0,
-            react_angry: updated.react_angry ?? 0,
-            react_disappoint: updated.react_disappoint ?? 0,
-            react_whatever: updated.react_whatever ?? 0,
-          });
+          useVoteStore
+            .getState()
+            .actions.setProposalCounts(variables.proposalId, {
+              react_good: updated.react_good ?? 0,
+              react_angry: updated.react_angry ?? 0,
+              react_disappoint: updated.react_disappoint ?? 0,
+              react_whatever: updated.react_whatever ?? 0,
+            });
         } else {
           // Fallback: trigger a UI refresh by re-saving current counts
-          useVoteStore.getState().actions.refreshProposalCounts(variables.proposalId);
+          // useVoteStore.getState().actions.refreshProposalCounts(variables.proposalId);
         }
       } catch {
         // swallow any errors to avoid breaking mutation flow

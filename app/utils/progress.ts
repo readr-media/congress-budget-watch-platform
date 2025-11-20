@@ -20,7 +20,7 @@ const isKnownDataProgress = (
   !!value && Object.hasOwn(DATA_PROGRESS_LABELS, value);
 
 export const getStageMeta = (
-  stage: BudgetProgressStage | null | undefined,
+  stage: BudgetProgressStage | null | undefined
 ): ProgressMeta => {
   if (!isKnownStage(stage)) {
     return {
@@ -50,7 +50,7 @@ export const getStageMeta = (
 export const buildProgressDisplay = (
   year: number | null | undefined,
   stage: BudgetProgressStage | null | undefined,
-  dataProgress: string | null | undefined,
+  dataProgress: string | null | undefined
 ) => {
   const meta = getStageMeta(stage);
 
@@ -71,20 +71,20 @@ export const buildProgressDisplay = (
 };
 
 export function calculateProgressPercentage(
-  currentStage: BudgetProgressStage | null | undefined,
+  currentStage: BudgetProgressStage | null | undefined
 ): number {
   return getStageMeta(currentStage).percentage;
 }
 
 export function formatProgressText(
   year: number | null | undefined,
-  dataProgress: string | null | undefined,
+  dataProgress: string | null | undefined
 ): string {
   return buildProgressDisplay(year, null, dataProgress).text;
 }
 
 export function getProgressStageLabel(
-  stage: BudgetProgressStage | null | undefined,
+  stage: BudgetProgressStage | null | undefined
 ): string {
   return getStageMeta(stage).label;
 }

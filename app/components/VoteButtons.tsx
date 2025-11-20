@@ -135,19 +135,14 @@ export function VoteButtons({
 
   if (displayMode === "popup") {
     return (
-      <div
-        ref={voteMenuRef}
-        className="relative"
-      >
+      <div ref={voteMenuRef} className="relative">
         <button
           onClick={(e) => {
             e.preventDefault();
             toggleIsVoteMenuOpen();
           }}
-          className={`flex h-8 min-w-[68px] cursor-pointer items-center justify-center rounded-sm bg-white text-[8px] border-2 ${
-            selectedReaction
-              ? "border-transparent"
-              : "px-2 py-1"
+          className={`flex h-8 min-w-[68px] cursor-pointer items-center justify-center rounded-sm border-2 bg-white text-[8px] ${
+            selectedReaction ? "border-transparent" : "px-2 py-1"
           }`}
         >
           {selectedReaction ? (

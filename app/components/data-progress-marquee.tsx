@@ -2,10 +2,7 @@ import { useMemo } from "react";
 import { useLocation } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 import { execute } from "~/graphql/execute";
-import {
-  GET_LATEST_BUDGET_YEAR_QUERY,
-  budgetYearQueryKeys,
-} from "~/queries";
+import { GET_LATEST_BUDGET_YEAR_QUERY, budgetYearQueryKeys } from "~/queries";
 import type { DataProgress } from "~/types/progress";
 
 const IN_PROGRESS_MESSAGE =
@@ -51,7 +48,7 @@ export const DataProgressMarquee = () => {
 
   return (
     <div className="marquee-container bg-surface-banner py-2">
-      <p className="animate-marquee px-4 text-sm font-medium text-budget-accent md:text-base">
+      <p className="animate-marquee text-budget-accent px-4 text-sm font-medium md:text-base">
         {IN_PROGRESS_MESSAGE}
       </p>
     </div>

@@ -15,7 +15,7 @@ const BudgetDetailSkeleton = ({ isDesktop }: { isDesktop: boolean }) => {
             <div className="absolute h-full w-full translate-x-3 -translate-y-3 rounded-lg border-2 bg-neutral-200" />
 
             {/* Main content box */}
-            <div className="relative flex flex-col rounded-lg border-2 bg-surface-base p-5 pb-30">
+            <div className="bg-surface-base relative flex flex-col rounded-lg border-2 p-5 pb-30">
               {/* ID section skeleton */}
               <div className="mb-4 flex gap-5 border-b-2 p-3">
                 <div className="h-6 w-16 animate-pulse rounded bg-gray-200" />
@@ -76,7 +76,7 @@ const BudgetDetailSkeleton = ({ isDesktop }: { isDesktop: boolean }) => {
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   // Mobile skeleton
@@ -104,7 +104,7 @@ const BudgetDetailSkeleton = ({ isDesktop }: { isDesktop: boolean }) => {
         ))}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default BudgetDetailSkeleton
+export default BudgetDetailSkeleton;

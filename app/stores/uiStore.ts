@@ -135,7 +135,8 @@ export const useUIStore = create<UIStore>()(
 /**
  * Hook to get header state
  */
-export const useHeaderState = () => useUIStore((store) => store.state.headerState);
+export const useHeaderState = () =>
+  useUIStore((store) => store.state.headerState);
 
 /**
  * Hook to get progress state

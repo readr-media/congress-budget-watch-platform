@@ -29,7 +29,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
   if (isDesktop)
     return (
       <div className="text-sm">
-        <section className="mb-2 flex w-full items-center justify-center gap-x-2 text-lg font-bold text-brand-primary">
+        <section className="text-brand-primary mb-2 flex w-full items-center justify-center gap-x-2 text-lg font-bold">
           <p className="relative">
             <span className="md:text-sm lg:text-xl">最新進度</span>
             <img
@@ -43,8 +43,8 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
               <div
                 className={`relative rounded-lg border-2 pr-3 md:text-xs ${
                   isFinished
-                    ? "border-white bg-brand-primary text-white"
-                    : "border-brand-primary bg-white text-brand-primary"
+                    ? "bg-brand-primary border-white text-white"
+                    : "border-brand-primary text-brand-primary bg-white"
                 } ${index > 0 ? "-ml-3 pl-5" : "pl-3"}`}
                 key={label}
                 style={{ zIndex: labels.length - index }}

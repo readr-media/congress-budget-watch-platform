@@ -1,11 +1,4 @@
-import {
-  useMemo,
-  useEffect,
-  useRef,
-  useState,
-  Suspense,
-  lazy,
-} from "react";
+import { useMemo, useEffect, useRef, useState, Suspense, lazy } from "react";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { redirect, useSearchParams } from "react-router";
 import Select, { type StylesConfig, type SingleValue } from "react-select";
@@ -386,7 +379,9 @@ export const AllBudgets = () => {
             styles={customSelectStyles}
             value={selectedOption}
             onChange={(option) =>
-              setSelectedYear((option as SingleValue<YearOptionType>)?.value ?? null)
+              setSelectedYear(
+                (option as SingleValue<YearOptionType>)?.value ?? null
+              )
             }
             options={yearOptions}
             placeholder="選擇年份"
@@ -404,7 +399,7 @@ export const AllBudgets = () => {
             alt="magnifier eye logo"
             className="bg-red absolute -top-[31.5px] z-10 h-[63px] w-[55px]"
           />
-          <div className="absolute -top-[31.5px] h-[63px] w-[55px] bg-surface-base" />
+          <div className="bg-surface-base absolute -top-[31.5px] h-[63px] w-[55px]" />
         </div>
         {/* title end */}
 
@@ -414,13 +409,15 @@ export const AllBudgets = () => {
             styles={customSelectStyles}
             value={selectedOption}
             onChange={(option) =>
-              setSelectedYear((option as SingleValue<YearOptionType>)?.value ?? null)
+              setSelectedYear(
+                (option as SingleValue<YearOptionType>)?.value ?? null
+              )
             }
             options={yearOptions}
             placeholder="選擇年份"
           />
         </div>
-        <section className="mb-2 flex w-full justify-center text-lg font-bold text-brand-primary md:hidden">
+        <section className="text-brand-primary mb-2 flex w-full justify-center text-lg font-bold md:hidden">
           <p>最新進度</p>
         </section>
         <div className="mb-5 flex h-fit w-full items-center justify-center md:hidden">
@@ -441,12 +438,19 @@ export const AllBudgets = () => {
         </Suspense>
         {/* 排序下拉（react-select） */}
         <Suspense fallback={<SortToolbarFallback />}>
-          <SortToolbar selectedValue={selectedSort} onChange={setSelectedSort} />
+          <SortToolbar
+            selectedValue={selectedSort}
+            onChange={setSelectedSort}
+          />
         </Suspense>
 
         {/* 使用新的表格組件渲染清單 */}
         <Suspense fallback={<TableFallback isDesktop={isDesktop} />}>
-          <BudgetTable isDesktop={isDesktop} data={tableData} className="mt-4" />
+          <BudgetTable
+            isDesktop={isDesktop}
+            data={tableData}
+            className="mt-4"
+          />
         </Suspense>
 
         {/* 下方分頁元件（新增，複用同一元件）*/}

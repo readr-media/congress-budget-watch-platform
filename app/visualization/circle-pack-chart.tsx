@@ -106,6 +106,15 @@ const CirclePackChart = ({
   onNodeClick,
 }: CirclePackChartProps) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const svgRef = useRef<d3.Selection<
+    SVGSVGElement,
+    undefined,
+    null,
+    undefined
+  > | null>(null);
+  const zoomRef = useRef<d3.ZoomBehavior<SVGSVGElement, undefined> | null>(
+    null
+  );
   const focusRef = useRef<d3.HierarchyCircularNode<NodeDatum> | null>(null);
   const lastFocusedNodeIdRef = useRef<string | null>(null);
   const inertiaFrameRef = useRef<number | null>(null);
@@ -194,6 +203,8 @@ const CirclePackChart = ({
         "style",
         `max-width: 100%; height: auto; display: block; cursor: default;`
       );
+
+    svgRef.current = svg;
 
     const nodesData: d3.HierarchyCircularNode<NodeDatum>[] = root
       .descendants()
@@ -323,8 +334,8 @@ const CirclePackChart = ({
         root.descendants().slice(1) as d3.HierarchyCircularNode<NodeDatum>[]
       )
       .join("text")
-      .style("fill-opacity", (d) => (d.parent === root ? "1" : "0"))
-      .style("display", (d) => (d.parent === root ? "inline" : "none"))
+      .style("fill-opacity", "1")
+      .style("display", "inline")
       .style("font-size", (d) => `${Math.max(10, Math.min(40, d.r / 5))}px`)
       .style("font-family", "sans-serif")
       .each(function (this: SVGTextElement, d) {
@@ -414,10 +425,7 @@ const CirclePackChart = ({
     setFocus(initialFocus ?? root);
 
     const baseFocusDuration = animations.focus;
-    const slowFocusDuration =
-      animations.focus > 0
-        ? animations.focus * ANIMATION_CONFIG.focus.slowMultiplier
-        : 0;
+
     const baseLabelDuration = animations.label;
 
     const viewToTransform = (v: [number, number, number]): d3.ZoomTransform => {
@@ -430,15 +438,17 @@ const CirclePackChart = ({
 
     const updateSceneForView = (v: [number, number, number]) => {
       const k = width / v[2];
-      label.attr("transform", (d) => {
-        const x = (d.x - v[0]) * k;
-        const y = (d.y - v[1]) * k;
-        if (d.children && d.children.length > 0) {
-          const offsetY = -d.r * k * LABEL_CHILDREN_OFFSET_FACTOR;
-          return `translate(${x}, ${y + offsetY})`;
-        }
-        return `translate(${x}, ${y})`;
-      });
+      label
+        .attr("transform", (d) => {
+          const x = (d.x - v[0]) * k;
+          const y = (d.y - v[1]) * k;
+          if (d.children && d.children.length > 0) {
+            const offsetY = -d.r * k * LABEL_CHILDREN_OFFSET_FACTOR;
+            return `translate(${x}, ${y + offsetY})`;
+          }
+          return `translate(${x}, ${y})`;
+        })
+        .style("font-size", (d) => `${Math.max(10, Math.min(40, (d.r * k) / 5))}px`);
       node.attr(
         "transform",
         (d) => `translate(${(d.x - v[0]) * k},${(d.y - v[1]) * k})`
@@ -530,57 +540,28 @@ const CirclePackChart = ({
     };
 
     const updateLabelVisibility = (
-      targetFocus: d3.HierarchyCircularNode<NodeDatum> | null,
+      _targetFocus: d3.HierarchyCircularNode<NodeDatum> | null,
       duration = baseLabelDuration
     ) => {
       const shouldAnimate =
         animationsEnabled && duration !== undefined && duration > 0;
-      const resolveVisibility = (
-        node: d3.HierarchyCircularNode<NodeDatum>
-      ): boolean => {
-        if (targetFocus == null) {
-          return node.parent === root;
-        }
-        return node.parent === targetFocus || node === targetFocus;
-      };
 
+      // Always show all labels
       if (shouldAnimate) {
         label
           .interrupt()
           .transition()
           .duration(duration)
           .ease(d3.easeCubicOut)
-          .style("fill-opacity", (dd) => {
-            return resolveVisibility(dd) ? "1" : "0";
-          })
+          .style("fill-opacity", "1")
           .on("start", function () {
-            const currentDatum = d3
-              .select(this as SVGTextElement)
-              .datum() as d3.HierarchyCircularNode<NodeDatum>;
-            const shouldShow = resolveVisibility(currentDatum);
-            if (shouldShow) {
-              (this as SVGTextElement).style.display = "inline";
-            }
+            (this as SVGTextElement).style.display = "inline";
           })
           .on("end", function () {
-            const currentDatum = d3
-              .select(this as SVGTextElement)
-              .datum() as d3.HierarchyCircularNode<NodeDatum>;
-            const shouldShow = resolveVisibility(currentDatum);
-            if (!shouldShow) {
-              (this as SVGTextElement).style.display = "none";
-            }
+            // No-op: stay visible
           });
       } else {
-        label
-          .interrupt()
-          .style("fill-opacity", (dd) => {
-            return resolveVisibility(dd) ? "1" : "0";
-          })
-          .style("display", (dd) => {
-            const shouldShow = resolveVisibility(dd);
-            return shouldShow ? "inline" : "none";
-          });
+        label.interrupt().style("fill-opacity", "1").style("display", "inline");
       }
     };
 
@@ -658,7 +639,7 @@ const CirclePackChart = ({
 
     // 建立 d3-zoom behavior，用於程式化縮放與使用者拖曳平移
     const zoomBehavior = d3
-      .zoom<SVGSVGElement, unknown>()
+      .zoom<SVGSVGElement, undefined>()
       .scaleExtent([0.5, 10]) // 限制縮放範圍：最小 0.5 倍，最大 10 倍
       .filter((event) => {
         if (event.type === "wheel") return false;
@@ -667,12 +648,9 @@ const CirclePackChart = ({
         }
         return true;
       })
-      .on("start", (event) => {
+      .on("start", (_) => {
         clearInertia();
-        if (event.sourceEvent && focusRef.current) {
-          setFocus(null);
-          updateLabelVisibility(null, baseLabelDuration);
-        }
+        // Note: We no longer change focus on start
       })
       .on("zoom", (event) => {
         applyZoomTransform(event.transform);
@@ -684,17 +662,7 @@ const CirclePackChart = ({
         }
       });
 
-    const focusOnNode = (
-      event: (MouseEvent & { altKey?: boolean }) | null,
-      target: d3.HierarchyCircularNode<NodeDatum>
-    ) => {
-      setFocus(target);
-      clearInertia();
-      const isSlow = Boolean(event?.altKey) && animationsEnabled;
-      const duration = isSlow ? slowFocusDuration : baseFocusDuration;
-      setView(target, { duration });
-      updateLabelVisibility(target, baseLabelDuration);
-    };
+    zoomRef.current = zoomBehavior;
 
     const resetToRoot = () => {
       setFocus(root);
@@ -737,8 +705,7 @@ const CirclePackChart = ({
       const hasChildren = d.children && d.children.length > 0;
 
       if (hasChildren) {
-        // if hasChildren zoom in
-        focusOnNode(event as unknown as MouseEvent, d);
+        // Removed focusOnNode call to disable drill-down zoom
         event.stopPropagation();
         return;
       }
@@ -777,9 +744,68 @@ const CirclePackChart = ({
     inertiaEnabled,
   ]);
 
+  const handleZoomIn = () => {
+    if (svgRef.current && zoomRef.current) {
+      svgRef.current
+        .transition()
+        .duration(300)
+        .call(zoomRef.current.scaleBy, 1.2);
+    }
+  };
+
+  const handleZoomOut = () => {
+    if (svgRef.current && zoomRef.current) {
+      svgRef.current
+        .transition()
+        .duration(300)
+        .call(zoomRef.current.scaleBy, 0.8);
+    }
+  };
+
   return (
-    <div className="flex w-full items-center justify-center">
+    <div className="relative flex w-full items-center justify-center">
       <div ref={containerRef} />
+      <div className="absolute right-4 bottom-4 flex flex-col gap-2">
+        <button
+          onClick={handleZoomIn}
+          className="focus:ring-brand-primary flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-md hover:bg-gray-100 focus:ring-2 focus:outline-none"
+          aria-label="Zoom In"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+        </button>
+        <button
+          onClick={handleZoomOut}
+          className="focus:ring-brand-primary flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-md hover:bg-gray-100 focus:ring-2 focus:outline-none"
+          aria-label="Zoom Out"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+        </button>
+      </div>
     </div>
   );
 };

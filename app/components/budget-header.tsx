@@ -11,7 +11,7 @@ const BudgetHeader = () => {
   }, []);
 
   return (
-    <div className="sticky flex items-center justify-between border-t-12 border-t-brand-primary px-3 pt-2">
+    <div className="border-t-brand-primary sticky flex items-center justify-between border-t-12 px-3 pt-2">
       <NavLink to="/">
         <Image
           src="/image/readr-header.svg"

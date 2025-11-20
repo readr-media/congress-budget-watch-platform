@@ -63,10 +63,9 @@ export const useVoteQueue = (flushDelayMs = DEFAULT_FLUSH_DELAY_MS) => {
         });
 
         if (!Object.keys(payload).length) {
-          useVoteStore.getState().actions.removePendingReactions(
-            proposalId,
-            reactions
-          );
+          useVoteStore
+            .getState()
+            .actions.removePendingReactions(proposalId, reactions);
           continue;
         }
 

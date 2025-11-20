@@ -63,12 +63,8 @@ export const useVoteStore = create<VoteStore>()(
             set((draft) => {
               const pendingMap = ensurePendingMap(draft.state);
               const pending = pendingMap[proposal.id];
-              const hasPending =
-                pending && Object.keys(pending).length > 0;
-              if (
-                !(proposal.id in draft.state.votes) ||
-                !hasPending
-              ) {
+              const hasPending = pending && Object.keys(pending).length > 0;
+              if (!(proposal.id in draft.state.votes) || !hasPending) {
                 draft.state.votes[proposal.id] = toVoteCounts(proposal);
               }
             });
@@ -87,7 +83,10 @@ export const useVoteStore = create<VoteStore>()(
             }),
           setProposalCounts: (proposalId: string, counts: VoteCounts) =>
             set((draft) => {
-              draft.state.votes[proposalId] = { ...createEmptyCounts(), ...counts };
+              draft.state.votes[proposalId] = {
+                ...createEmptyCounts(),
+                ...counts,
+              };
             }),
           refreshProposalCounts: (proposalId: string) =>
             set((draft) => {
@@ -96,7 +95,10 @@ export const useVoteStore = create<VoteStore>()(
                 draft.state.votes[proposalId] = { ...current };
               }
             }),
-          removePendingReactions: (proposalId: string, reactions: ReactionType[]) =>
+          removePendingReactions: (
+            proposalId: string,
+            reactions: ReactionType[]
+          ) =>
             set((draft) => {
               const pendingMap = ensurePendingMap(draft.state);
               const pending = pendingMap[proposalId];
@@ -132,4 +134,5 @@ export const useVoteStore = create<VoteStore>()(
 export const useVoteActions = () => useVoteStore((store) => store.actions);
 export const useProposalVoteCounts = (proposalId: string) =>
   useVoteStore((store) => store.state.votes[proposalId]);
-export const usePendingVotes = () => useVoteStore((store) => store.state.pending);
+export const usePendingVotes = () =>
+  useVoteStore((store) => store.state.pending);

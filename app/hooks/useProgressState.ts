@@ -7,7 +7,7 @@ export type ProgressCalculationParams = {
   height: number;
   gap: number;
   count: number;
-}
+};
 
 /**
  * Return type for progress calculations
@@ -15,7 +15,7 @@ export type ProgressCalculationParams = {
 export type ProgressCalculations = {
   totalHeight: number;
   baseZIndex: number;
-}
+};
 
 /**
  * Custom hook for progress bar calculations

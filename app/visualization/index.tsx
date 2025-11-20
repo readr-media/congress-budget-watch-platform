@@ -31,7 +31,7 @@ const useChartDimensions = () => {
         if (newWidth > 0) {
           setWidth(newWidth);
           // derive a height using a 16:9 aspect ratio
-          setHeight(Math.round(newWidth * 9 / 16));
+          setHeight(Math.round((newWidth * 9) / 16));
         }
       };
 
@@ -42,7 +42,7 @@ const useChartDimensions = () => {
         if (entry) {
           const w = entry.contentRect.width;
           setWidth(w);
-          setHeight(Math.round(w * 9 / 16));
+          setHeight(Math.round((w * 9) / 16));
         }
       });
 
@@ -58,7 +58,11 @@ const useChartDimensions = () => {
 };
 
 const Visualization = () => {
-  const { ref: chartContainerRef, width: chartWidth, height: chartHeight } = useChartDimensions();
+  const {
+    ref: chartContainerRef,
+    width: chartWidth,
+    height: chartHeight,
+  } = useChartDimensions();
   const navigate = useNavigate();
 
   const {
@@ -115,7 +119,7 @@ const Visualization = () => {
       }
       return false;
     },
-    [navigate],
+    [navigate]
   );
 
   if (isLoading) {
@@ -169,7 +173,7 @@ const Visualization = () => {
                 value="amount"
                 checked={mode === "amount"}
                 onChange={() => setMode("amount")}
-                className="h-4 w-4 accent-brand-primary"
+                className="accent-brand-primary h-4 w-4"
               />
               <span>依金額（刪減/凍結）</span>
             </label>
@@ -180,14 +184,14 @@ const Visualization = () => {
                 value="count"
                 checked={mode === "count"}
                 onChange={() => setMode("count")}
-                className="h-4 w-4 accent-brand-primary"
+                className="accent-brand-primary h-4 w-4"
               />
               <span>依數量（凍結案/刪減案/建議案）</span>
             </label>
           </div>
         </div>
 
-        <div className="flex flex-col items-center justify-center rounded-lg border-2 bg-surface-notice p-2.5 md:mx-auto md:max-w-visualization-card">
+        <div className="bg-surface-notice md:max-w-visualization-card flex flex-col items-center justify-center rounded-lg border-2 p-2.5 md:mx-auto">
           <div>
             <p>
               總共刪減{" "}
@@ -206,7 +210,9 @@ const Visualization = () => {
                 {formattedFreezeAmount}
               </span>
               （
-              <span className="text-budget-accent">{summaryStats.freezeCount}</span>
+              <span className="text-budget-accent">
+                {summaryStats.freezeCount}
+              </span>
               個提案）
             </p>
             <p>

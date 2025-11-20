@@ -69,7 +69,7 @@ const Pagination: React.FC<PaginationProps> = ({ className = "" }) => {
       "ellipsis-end",
       totalPages
     );
-    
+
     return pages;
   };
 
@@ -119,7 +119,7 @@ const Pagination: React.FC<PaginationProps> = ({ className = "" }) => {
               disabled={isActive}
               className={`min-w-[36px] rounded-full border-2 px-2 py-1 text-sm font-bold transition-colors ${
                 isActive
-                  ? "cursor-default border-black bg-brand-primary text-white"
+                  ? "bg-brand-primary cursor-default border-black text-white"
                   : "border-black bg-transparent hover:bg-gray-100 active:bg-gray-200"
               }`}
               aria-label={`第 ${page} 頁`}
@@ -144,7 +144,6 @@ const Pagination: React.FC<PaginationProps> = ({ className = "" }) => {
       >
         <Image src="/icon/icon-right-chevron.svg" alt="下一頁" />
       </button>
-
     </nav>
   );
 };

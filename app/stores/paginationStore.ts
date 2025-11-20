@@ -50,7 +50,7 @@ const getDefaultState = (): PaginationStoreState => ({
 
 /**
  * 分頁 Store
- * 
+ *
  * 管理 /all-budgets 頁面的分頁狀態
  * 遵循專案的 Zustand 最佳實踐模式
  */
@@ -85,7 +85,10 @@ export const usePaginationStore = create<PaginationStore>()(
         prevPage: () =>
           set(
             (draft) => {
-              const newPage = Math.max(draft.state.pagination.currentPage - 1, 1);
+              const newPage = Math.max(
+                draft.state.pagination.currentPage - 1,
+                1
+              );
               draft.state.pagination.currentPage = newPage;
             },
             false,

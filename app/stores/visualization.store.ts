@@ -71,7 +71,10 @@ export const useVisualizationStore = create<VisualizationStore>()(
           ),
       },
     })),
-    { name: "visualization-store", enabled: process.env.NODE_ENV === "development" }
+    {
+      name: "visualization-store",
+      enabled: process.env.NODE_ENV === "development",
+    }
   )
 );
 

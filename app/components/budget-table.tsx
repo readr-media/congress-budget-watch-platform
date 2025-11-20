@@ -110,7 +110,7 @@ const ProposalContent = ({ content }: { content: string; itemId: string }) => (
               </div>
               <div className="mt-4 flex justify-center">
                 <Dialog.Close asChild>
-                  <button className="rounded bg-brand-primary px-3 py-1 text-white">
+                  <button className="bg-brand-primary rounded px-3 py-1 text-white">
                     關閉
                   </button>
                 </Dialog.Close>
@@ -125,25 +125,24 @@ const ProposalContent = ({ content }: { content: string; itemId: string }) => (
 
 const BudgetTableRow = ({ item }: { item: BudgetTableData }) => {
   const liveCounts = useProposalVoteCounts(item.id);
-  const displayReacts =
-    liveCounts
-      ? (liveCounts.react_good ?? 0) +
-        (liveCounts.react_angry ?? 0) +
-        (liveCounts.react_disappoint ?? 0) +
-        (liveCounts.react_whatever ?? 0)
-      : (item.totalReacts ?? 0);
+  const displayReacts = liveCounts
+    ? (liveCounts.react_good ?? 0) +
+      (liveCounts.react_angry ?? 0) +
+      (liveCounts.react_disappoint ?? 0) +
+      (liveCounts.react_whatever ?? 0)
+    : (item.totalReacts ?? 0);
   return (
     <div className="flex flex-col md:w-full md:flex-row">
-      <div className="flex items-center justify-start gap-x-2 border-y-2 bg-neutral-400 py-2 md:min-w-16 md:flex-col md:border-y-0 md:bg-surface-subtle md:py-0">
+      <div className="md:bg-surface-subtle flex items-center justify-start gap-x-2 border-y-2 bg-neutral-400 py-2 md:min-w-16 md:flex-col md:border-y-0 md:py-0">
         <span className="flex items-center font-bold md:flex md:h-[76px] md:border-y-2 md:bg-neutral-400 md:px-4 md:py-5">
           編號
         </span>
-        <span className="md:text-md font-bold text-[#d18081] md:mt-4 md:bg-surface-subtle">
+        <span className="md:text-md md:bg-surface-subtle font-bold text-[#d18081] md:mt-4">
           {item.id}
         </span>
         <NavLink
           to={`/budget/${item.id}`}
-          className="ml-2 text-xs text-brand-primary md:ml-0 md:bg-surface-subtle"
+          className="text-brand-primary md:bg-surface-subtle ml-2 text-xs md:ml-0"
         >
           [查看單頁]
         </NavLink>
@@ -218,13 +217,12 @@ const DesktopTableRow = ({ item }: { item: BudgetTableData }) => {
     (item.react_angry ?? 0) +
     (item.react_disappoint ?? 0) +
     (item.react_whatever ?? 0);
-  const displayReacts =
-    liveCounts
-      ? (liveCounts.react_good ?? 0) +
-        (liveCounts.react_angry ?? 0) +
-        (liveCounts.react_disappoint ?? 0) +
-        (liveCounts.react_whatever ?? 0)
-      : itemCountsFromFields || (item.totalReacts ?? 0);
+  const displayReacts = liveCounts
+    ? (liveCounts.react_good ?? 0) +
+      (liveCounts.react_angry ?? 0) +
+      (liveCounts.react_disappoint ?? 0) +
+      (liveCounts.react_whatever ?? 0)
+    : itemCountsFromFields || (item.totalReacts ?? 0);
   const voteMenuRef = useRef<HTMLDivElement>(null);
   const [, , setVoteMenuOpen] = useToggle();
 
@@ -278,14 +276,14 @@ const DesktopTableRow = ({ item }: { item: BudgetTableData }) => {
         <div className="relative w-full">
           <p className="line-clamp-4">{item.proposalContent}</p>
           <Dialog.Root>
-          <Dialog.Trigger asChild>
-            <button
-              type="button"
-              className="cursor-pointer text-xs text-blue-600 hover:underline"
-            >
-              [更多]
-            </button>
-          </Dialog.Trigger>
+            <Dialog.Trigger asChild>
+              <button
+                type="button"
+                className="cursor-pointer text-xs text-blue-600 hover:underline"
+              >
+                [更多]
+              </button>
+            </Dialog.Trigger>
             <Dialog.Portal>
               <Dialog.Overlay className="fixed inset-0 bg-black/40" />
               <Dialog.Content className="fixed top-1/2 left-1/2 max-h-[80vh] w-[90vw] max-w-[720px] -translate-x-1/2 -translate-y-1/2 overflow-auto rounded-md bg-white p-4 shadow-lg">
@@ -294,7 +292,7 @@ const DesktopTableRow = ({ item }: { item: BudgetTableData }) => {
                 </div>
                 <div className="mt-4 flex justify-center">
                   <Dialog.Close asChild>
-                    <button className="rounded bg-brand-primary px-3 py-1 text-white">
+                    <button className="bg-brand-primary rounded px-3 py-1 text-white">
                       關閉
                     </button>
                   </Dialog.Close>
