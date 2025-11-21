@@ -1,6 +1,7 @@
 import * as d3 from "d3";
-import { useEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { NodeDatum } from "./helpers";
+import { GestureHintOverlay } from "../components/gesture-hint-overlay";
 
 const ANIMATION_CONFIG = {
   focus: {
@@ -44,6 +45,7 @@ type CirclePackChartProps = {
 };
 
 const MOBILE_BREAKPOINT = 768;
+const GESTURE_HINT_AUTO_HIDE_MS = 3000;
 
 const findLargestChild = (
   node: d3.HierarchyCircularNode<NodeDatum>
@@ -121,6 +123,31 @@ const CirclePackChart = ({
   const transformHistoryRef = useRef<
     Array<{ transform: d3.ZoomTransform; timestamp: number }>
   >([]);
+  const [gestureHintVisible, setGestureHintVisible] = useState(false);
+  const gestureHintTimeoutRef =
+    useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const clearGestureHintTimeout = useCallback(() => {
+    if (gestureHintTimeoutRef.current) {
+      clearTimeout(gestureHintTimeoutRef.current);
+      gestureHintTimeoutRef.current = null;
+    }
+  }, []);
+
+  const dismissGestureHint = useCallback(() => {
+    clearGestureHintTimeout();
+    setGestureHintVisible(false);
+  }, [clearGestureHintTimeout]);
+
+  const showGestureHint = useCallback(() => {
+    setGestureHintVisible(true);
+    clearGestureHintTimeout();
+    gestureHintTimeoutRef.current = setTimeout(() => {
+      setGestureHintVisible(false);
+      gestureHintTimeoutRef.current = null;
+    }, GESTURE_HINT_AUTO_HIDE_MS);
+  }, [clearGestureHintTimeout]);
+
   const DEFAULT_CHART_WIDTH = 720;
   const LABEL_CHILDREN_OFFSET_FACTOR = 0.88;
   const HOVER_STROKE_WIDTH = 2;
@@ -190,6 +217,28 @@ const CirclePackChart = ({
       inertiaEnabled,
     };
   }, [data, customWidth, customHeight, padding]);
+
+  useEffect(() => {
+    return () => {
+      clearGestureHintTimeout();
+    };
+  }, [clearGestureHintTimeout]);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const handleWheel = (_event: WheelEvent) => {
+      showGestureHint();
+    };
+
+    container.addEventListener("wheel", handleWheel, { passive: false });
+    return () => container.removeEventListener("wheel", handleWheel);
+  }, [showGestureHint]);
+
+  useEffect(() => {
+    showGestureHint();
+  }, [showGestureHint]);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -430,29 +479,30 @@ const CirclePackChart = ({
 
     const viewToTransform = (v: [number, number, number]): d3.ZoomTransform => {
       const k = width / v[2];
-      return d3.zoomIdentity
-        .translate(width / 2, height / 2)
-        .scale(k)
-        .translate(-v[0], -v[1]);
+      return d3.zoomIdentity.scale(k).translate(-v[0], -v[1]);
     };
 
-    const updateSceneForView = (v: [number, number, number]) => {
-      const k = width / v[2];
+    const renderWithTransform = (transform: d3.ZoomTransform) => {
+      const k = transform.k;
+
       label
         .attr("transform", (d) => {
-          const x = (d.x - v[0]) * k;
-          const y = (d.y - v[1]) * k;
-          if (d.children && d.children.length > 0) {
-            const offsetY = -d.r * k * LABEL_CHILDREN_OFFSET_FACTOR;
-            return `translate(${x}, ${y + offsetY})`;
-          }
+          const anchorY =
+            d.children && d.children.length > 0
+              ? d.y - d.r * LABEL_CHILDREN_OFFSET_FACTOR
+              : d.y;
+          const [x, y] = transform.apply([d.x, anchorY]);
           return `translate(${x}, ${y})`;
         })
-        .style("font-size", (d) => `${Math.max(10, Math.min(40, (d.r * k) / 5))}px`);
-      node.attr(
-        "transform",
-        (d) => `translate(${(d.x - v[0]) * k},${(d.y - v[1]) * k})`
-      );
+        .style(
+          "font-size",
+          (d) => `${Math.max(10, Math.min(40, (d.r * k) / 5))}px`
+        );
+
+      node.attr("transform", (d) => {
+        const [x, y] = transform.apply([d.x, d.y]);
+        return `translate(${x},${y})`;
+      });
 
       node
         .selectAll<SVGCircleElement, d3.HierarchyCircularNode<NodeDatum>>(
@@ -483,14 +533,6 @@ const CirclePackChart = ({
         )
         .attr("d", (d) => createScallopedPath(d.r * k))
         .attr("stroke-width", WAVE_STROKE_WIDTH);
-    };
-
-    const applyZoomTransform = (transform: d3.ZoomTransform) => {
-      const k = transform.k;
-      const x = (width / 2 - transform.x) / k;
-      const y = (height / 2 - transform.y) / k;
-      const newView: [number, number, number] = [x, y, width / k];
-      updateSceneForView(newView);
     };
 
     const setView = (
@@ -641,18 +683,22 @@ const CirclePackChart = ({
       .zoom<SVGSVGElement, undefined>()
       .scaleExtent([0.5, 10]) // 限制縮放範圍：最小 0.5 倍，最大 10 倍
       .filter((event) => {
-        if (event.type === "wheel") return false;
         if ("touches" in event && event.touches && event.touches.length > 1) {
           return false;
         }
         return true;
       })
       .on("start", (_) => {
+        dismissGestureHint();
         clearInertia();
         // Note: We no longer change focus on start
       })
       .on("zoom", (event) => {
-        applyZoomTransform(event.transform);
+        if (event.sourceEvent?.type === "wheel") {
+          event.sourceEvent.preventDefault();
+          dismissGestureHint();
+        }
+        renderWithTransform(event.transform);
         addTransformHistory(event.transform);
       })
       .on("end", (event) => {
@@ -690,12 +736,14 @@ const CirclePackChart = ({
     svg.on("click", (event) => {
       // 防止在拖曳後觸發點擊
       if (event.defaultPrevented) return;
+      dismissGestureHint();
       resetToRoot();
     });
 
     node.on("click", (event, d) => {
       // 防止在拖曳後觸發點擊
       if (event.defaultPrevented) return;
+      dismissGestureHint();
 
       const canNavigate =
         INTERACTION_FLAGS.enableNodeNavigation &&
@@ -741,9 +789,11 @@ const CirclePackChart = ({
     animations.label,
     animationsEnabled,
     inertiaEnabled,
+    dismissGestureHint,
   ]);
 
   const handleZoomIn = () => {
+    dismissGestureHint();
     if (svgRef.current && zoomRef.current) {
       svgRef.current
         .transition()
@@ -753,6 +803,7 @@ const CirclePackChart = ({
   };
 
   const handleZoomOut = () => {
+    dismissGestureHint();
     if (svgRef.current && zoomRef.current) {
       svgRef.current
         .transition()
@@ -764,6 +815,11 @@ const CirclePackChart = ({
   return (
     <div className="relative flex w-full items-center justify-center">
       <div ref={containerRef} />
+      <GestureHintOverlay
+        visible={gestureHintVisible}
+        message="Use ⌘ + Scroll to zoom"
+        onDismiss={dismissGestureHint}
+      />
       <div className="absolute right-4 bottom-4 flex flex-col gap-2">
         <button
           onClick={handleZoomIn}
