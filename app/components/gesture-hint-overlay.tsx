@@ -95,7 +95,7 @@ export function GestureHintOverlay({
       } ${className}`}
     >
       <div className="rounded-lg bg-white/90 px-6 py-4 shadow-lg backdrop-blur-sm">
-        <p className="select-none text-lg font-medium text-gray-900">
+        <p className="text-lg font-medium text-gray-900 select-none">
           {message}
         </p>
       </div>

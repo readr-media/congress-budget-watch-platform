@@ -45,7 +45,7 @@ type CirclePackChartProps = {
 };
 
 const MOBILE_BREAKPOINT = 768;
-const GESTURE_HINT_AUTO_HIDE_MS = 3000;
+const GESTURE_HINT_AUTO_HIDE_MS = 2000;
 
 const findLargestChild = (
   node: d3.HierarchyCircularNode<NodeDatum>
@@ -124,8 +124,9 @@ const CirclePackChart = ({
     Array<{ transform: d3.ZoomTransform; timestamp: number }>
   >([]);
   const [gestureHintVisible, setGestureHintVisible] = useState(false);
-  const gestureHintTimeoutRef =
-    useRef<ReturnType<typeof setTimeout> | null>(null);
+  const gestureHintTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null
+  );
 
   const clearGestureHintTimeout = useCallback(() => {
     if (gestureHintTimeoutRef.current) {
@@ -581,9 +582,7 @@ const CirclePackChart = ({
       }
     };
 
-    const updateLabelVisibility = (
-      duration = baseLabelDuration
-    ) => {
+    const updateLabelVisibility = (duration = baseLabelDuration) => {
       const shouldAnimate =
         animationsEnabled && duration !== undefined && duration > 0;
 
@@ -689,14 +688,12 @@ const CirclePackChart = ({
         return true;
       })
       .on("start", (_) => {
-        dismissGestureHint();
         clearInertia();
         // Note: We no longer change focus on start
       })
       .on("zoom", (event) => {
         if (event.sourceEvent?.type === "wheel") {
           event.sourceEvent.preventDefault();
-          dismissGestureHint();
         }
         renderWithTransform(event.transform);
         addTransformHistory(event.transform);
@@ -817,7 +814,8 @@ const CirclePackChart = ({
       <div ref={containerRef} />
       <GestureHintOverlay
         visible={gestureHintVisible}
-        message="Use ⌘ + Scroll to zoom"
+        message="點擊後移動可以拖曳視野
+滑鼠滑動可以放大或縮小"
         onDismiss={dismissGestureHint}
       />
       <div className="absolute right-4 bottom-4 flex flex-col gap-2">
