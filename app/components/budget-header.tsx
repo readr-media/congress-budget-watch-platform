@@ -66,7 +66,7 @@ const BudgetHeader = () => {
                   className={`rounded-lg border px-1.5 ${
                     isActive
                       ? "border-[#E9808E] text-[#E9808E]"
-                      : "text-white border-[#B3B3B3]"
+                      : "border-[#B3B3B3] text-white"
                   }`}
                 >
                   {item.label}

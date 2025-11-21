@@ -156,7 +156,7 @@ export function VoteButtons({
           )}
         </button>
         {isVoteMenuOpen && (
-          <div className="md:absolute right-0 bottom-0 z-10 w-[69px] rounded-[24px] border-2 bg-white p-2.5 text-[9px] md:translate-x-8 md:translate-y-[10.5rem] lg:translate-x-11 lg:translate-y-[10.5rem]">
+          <div className="right-0 bottom-0 z-10 w-[69px] rounded-[24px] border-2 bg-white p-2.5 text-[9px] md:absolute md:translate-x-8 md:translate-y-[10.5rem] lg:translate-x-11 lg:translate-y-[10.5rem]">
             {VOTE_OPTIONS.map(({ type, label }) => (
               <div
                 key={type}

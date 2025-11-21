@@ -235,11 +235,13 @@ const CirclePackChart = ({
   }, [data, customWidth, customHeight, padding]);
 
   const randomizedSmallNodePositions = useMemo(() => {
-    const leaves = root.descendants().filter(
-      (node) =>
-        (!node.children || node.children.length === 0) &&
-        node.r <= SMALL_NODE_RADIUS_THRESHOLD
-    );
+    const leaves = root
+      .descendants()
+      .filter(
+        (node) =>
+          (!node.children || node.children.length === 0) &&
+          node.r <= SMALL_NODE_RADIUS_THRESHOLD
+      );
 
     if (leaves.length === 0) {
       return new Map<string, { x: number; y: number }>();
