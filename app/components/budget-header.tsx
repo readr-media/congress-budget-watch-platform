@@ -63,11 +63,10 @@ const BudgetHeader = () => {
                 <NavLink
                   to={item.to}
                   onClick={() => setHamburgerShowValue(false)}
-                  className={`rounded-lg border px-1.5 ${
-                    isActive
-                      ? "border-[#E9808E] text-[#E9808E]"
-                      : "border-[#B3B3B3] text-white"
-                  }`}
+                  className={`rounded-lg border px-1.5 ${isActive
+                    ? "border-[#E9808E] text-[#E9808E]"
+                    : "border-[#B3B3B3] text-white"
+                    }`}
                 >
                   {item.label}
                 </NavLink>
@@ -80,14 +79,40 @@ const BudgetHeader = () => {
 
   return (
     <div className="border-t-brand-primary sticky flex items-center justify-between border-t-12 px-3 pt-2">
-      <NavLink to="/">
-        <Image
-          src="/image/readr-header.svg"
-          alt="Readr logo"
-          className="h-[28px] w-[92px]"
-        />
-      </NavLink>
+      <div className="flex items-center gap-x-4">
+        <NavLink to="/">
+          <Image
+            src="/image/readr-header.svg"
+            alt="Readr logo"
+            className="h-[34px] w-[206px]"
+          />
+        </NavLink>
+        <ul className="hidden items-center gap-x-2 md:flex">
+          {NAV_ITEMS.map((item) => {
+            const isActive = item.isActive
+              ? item.isActive(location)
+              : location.pathname.startsWith(item.to);
+
+            return (
+              <li key={item.to}>
+                <NavLink
+                  to={item.to}
+                  className={`block rounded-lg border px-5 py-1 ${isActive
+                    ? "border-[#E9808E] bg-white text-[#E9808E]"
+                    : "border-[#B3B3B3] bg-[#E3E3E3] text-[#828282]"
+                    }`}
+                >
+                  {item.label}
+                </NavLink>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
       <div className="flex h-10 w-[134px] items-center justify-end gap-x-3.5">
+        <NavLink to="" className="cursor-pointer pt-2 underline">
+          製作團隊
+        </NavLink>
         {isMounted ? (
           <ShareButton
             className="share-button-header max-h-[21px] w-full"
@@ -104,7 +129,7 @@ const BudgetHeader = () => {
             ))}
           </div>
         )}
-        <button onClick={toggleHamburger}>
+        <button onClick={toggleHamburger} className="block md:hidden">
           <Image
             src="/icon/header-hamburger.svg"
             alt="hamburger logo"

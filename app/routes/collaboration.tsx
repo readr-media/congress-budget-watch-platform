@@ -38,7 +38,7 @@ export default function Collaboration() {
   };
 
   return (
-    <main className="font-noto-sans-tc flex flex-col items-center bg-white px-5 py-6 md:px-8">
+    <main className="font-noto-sans-tc flex flex-col items-center px-5 py-6 md:px-8 bg-surface-base">
       <div className="flex w-full max-w-[680px] flex-col items-center gap-6">
         <img src={Banner} alt="協作區橫幅" />
         <h1 className="text-center text-2xl leading-none font-bold md:text-4xl">
@@ -85,11 +85,10 @@ export default function Collaboration() {
             type="button"
             aria-pressed={activeTab === "steps"}
             onClick={() => setActiveTab("steps")}
-            className={`cursor-pointer rounded-sm border border-black p-2.5 text-base leading-none font-bold transition-colors ${
-              activeTab === "steps"
-                ? "bg-success text-white"
-                : "bg-white text-black"
-            }`}
+            className={`cursor-pointer rounded-sm border border-black p-2.5 text-base leading-none font-bold transition-colors ${activeTab === "steps"
+              ? "bg-success text-white"
+              : "bg-white text-black"
+              }`}
           >
             教學步驟
           </button>
@@ -97,11 +96,10 @@ export default function Collaboration() {
             type="button"
             aria-pressed={activeTab === "qa"}
             onClick={() => setActiveTab("qa")}
-            className={`cursor-pointer rounded-sm border border-black p-2.5 text-base leading-none font-bold transition-colors ${
-              activeTab === "qa"
-                ? "bg-success text-white"
-                : "bg-white text-black"
-            }`}
+            className={`cursor-pointer rounded-sm border border-black p-2.5 text-base leading-none font-bold transition-colors ${activeTab === "qa"
+              ? "bg-success text-white"
+              : "bg-white text-black"
+              }`}
           >
             Q&A 區
           </button>
