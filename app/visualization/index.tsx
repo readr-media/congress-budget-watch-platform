@@ -16,6 +16,11 @@ import type { CirclePackPadding } from "./circle-pack-chart";
 import BudgetDetailSkeleton from "~/components/skeleton/budget-detail-skeleton";
 import VisualizationSkeleton from "~/components/skeleton/visualization-skeleton";
 import Image from "~/components/image";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "~/components/ui/tooltip";
 
 const useChartDimensions = () => {
   const [height, setHeight] = useState<number>(0);
@@ -204,11 +209,20 @@ const Visualization = () => {
                 {summaryStats.reductionCount}
               </span>
               個提案）
-              <Image
-                src="/icon/icon-explain.svg"
-                alt="說明"
-                className="ml-1 inline h-4 w-4"
-              />
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span className="ml-1 inline-flex">
+                    <Image
+                      src="/icon/icon-explain.svg"
+                      alt="說明"
+                      className="h-4 w-4"
+                    />
+                  </span>
+                </TooltipTrigger>
+                <TooltipContent className="bg-black text-white">
+                  刪減案相關說明
+                </TooltipContent>
+              </Tooltip>
             </p>
             <p>
               凍結{" "}
@@ -220,11 +234,20 @@ const Visualization = () => {
                 {summaryStats.freezeCount}
               </span>
               個提案）
-              <Image
-                src="/icon/icon-explain.svg"
-                alt="說明"
-                className="ml-1 inline h-4 w-4"
-              />
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span className="ml-1 inline-flex">
+                    <Image
+                      src="/icon/icon-explain.svg"
+                      alt="說明"
+                      className="h-4 w-4"
+                    />
+                  </span>
+                </TooltipTrigger>
+                <TooltipContent className="bg-black text-white">
+                  凍結案相關說明
+                </TooltipContent>
+              </Tooltip>
             </p>
             <p>
               主決議提案數：
@@ -232,11 +255,20 @@ const Visualization = () => {
                 {summaryStats.mainResolutionCount}
               </span>
               個
-              <Image
-                src="/icon/icon-explain.svg"
-                alt="說明"
-                className="ml-1 inline h-4 w-4"
-              />
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span className="ml-1 inline-flex">
+                    <Image
+                      src="/icon/icon-explain.svg"
+                      alt="說明"
+                      className="h-4 w-4"
+                    />
+                  </span>
+                </TooltipTrigger>
+                <TooltipContent className="bg-black text-white">
+                  主決議提案相關說明
+                </TooltipContent>
+              </Tooltip>
             </p>
           </div>
         </div>

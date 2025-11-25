@@ -30,10 +30,8 @@ const SessionChart = ({
     if (matchScreenM) return 1400;
     if (matchScreenS) return 1000;
     if (matchTablet) return 720;
+    return 720;
   };
-  useEffect(() => {
-    circlePackChartWidth();
-  });
   if (!data || data.length === 0) {
     return (
       <div className="flex w-full items-center justify-center py-8">
@@ -41,6 +39,11 @@ const SessionChart = ({
       </div>
     );
   }
+
+  const chartWidthValue = circlePackChartWidth();
+  const chartContainerStyle = {
+    maxWidth: `${chartWidthValue}px`,
+  };
 
   return (
     <>
@@ -50,20 +53,21 @@ const SessionChart = ({
           className={`mb-2 flex w-full flex-col items-start justify-center ${getBorderBottomClass(
             index,
             data.length
-          )}`}
+          )} mx-auto`}
+          style={chartContainerStyle}
         >
-          <div className="flex flex-col items-start justify-center">
+          <div className="flex flex-col items-start justify-center w-full">
             <p>{session.name}</p>
             <p>{yearToCommitteeMap.get(session.name) ?? "委員會"}</p>
           </div>
-          <div className="md:mx-auto">
+          <div className="w-full md:mx-auto">
             <CirclePackChart
               data={{
                 id: session.id,
                 name: "root",
                 children: session.children,
               }}
-              width={circlePackChartWidth()}
+              width={chartWidthValue}
               padding={CIRCLE_PACK_CHART_PADDING}
               onNodeClick={onNodeClick}
             />

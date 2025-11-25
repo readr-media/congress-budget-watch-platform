@@ -4,6 +4,12 @@ import { useQuery } from "@tanstack/react-query";
 import { sumBy, filter } from "lodash";
 import SessionChart from "./session-chart";
 import BudgetTypeLegend from "~/components/budget-type-legend";
+import Image from "~/components/image";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "~/components/ui/tooltip";
 import { BUDGET_TYPE_LEGEND_ITEMS } from "~/constants/legends";
 import {
   GET_VISUALIZATION_PROPOSALS_QUERY,
@@ -231,6 +237,20 @@ const SummaryPanel = ({ summary }: { summary: SummaryStats }) => (
         {summary.reductionProposalsCount}
       </span>
       個提案）
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <span className="ml-1 inline-flex">
+            <Image
+              src="/icon/icon-explain.svg"
+              alt="說明"
+              className="h-4 w-4"
+            />
+          </span>
+        </TooltipTrigger>
+        <TooltipContent className="bg-black text-white">
+          刪減案相關說明
+        </TooltipContent>
+      </Tooltip>
     </p>
     <p>
       凍結
@@ -238,10 +258,38 @@ const SummaryPanel = ({ summary }: { summary: SummaryStats }) => (
       （
       <span className="text-brand-accent">{summary.freezeProposalsCount}</span>
       個提案）
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <span className="ml-1 inline-flex">
+            <Image
+              src="/icon/icon-explain.svg"
+              alt="說明"
+              className="h-4 w-4"
+            />
+          </span>
+        </TooltipTrigger>
+        <TooltipContent className="bg-black text-white">
+          凍結案相關說明
+        </TooltipContent>
+      </Tooltip>
     </p>
     <p>
       主決議提案數：
       <span className="text-brand-accent">{summary.mainResolutionCount}</span>個
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <span className="ml-1 inline-flex">
+            <Image
+              src="/icon/icon-explain.svg"
+              alt="說明"
+              className="h-4 w-4"
+            />
+          </span>
+        </TooltipTrigger>
+        <TooltipContent className="bg-black text-white">
+          主決議提案相關說明
+        </TooltipContent>
+      </Tooltip>
     </p>
   </div>
 );
