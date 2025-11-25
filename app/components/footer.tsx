@@ -43,10 +43,20 @@ const Footer = () => {
       {/* Links */}
       <div className="text-info-accent flex items-center justify-center gap-2 text-xs md:text-sm">
         <a
+          // TODO:這裡暫時使用假資料
+          href="https://www.readr.tw/about"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-info-accent underline"
+        >
+          關於我們
+        </a>
+        <span className="text-neutral-200">|</span>
+        <a
           href="https://data.gov.tw"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-info-accent hover:underline"
+          className="text-info-accent underline"
         >
           開放資料
         </a>
@@ -55,7 +65,7 @@ const Footer = () => {
           href="https://github.com/readr-media/congress-budget"
           target="_blank"
           rel="noopener noreferrer"
-          className="hover:underline"
+          className="underline"
         >
           開放原始碼
         </a>

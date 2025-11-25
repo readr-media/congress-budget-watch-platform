@@ -134,11 +134,10 @@ export default function Home() {
               key={button.label}
               to={button.href}
               className={({ isActive }) =>
-                `border-brand-accent flex min-h-[72px] w-full items-center justify-center rounded-lg border-3 px-6 py-4 text-center text-lg font-medium transition-colors ${
-                  isActive
-                    ? "bg-brand-accent text-white"
-                    : "text-budget-accent hover:bg-brand-accent bg-white hover:text-white"
-                } focus:ring-brand-accent focus:ring-2 focus:ring-offset-2 focus:outline-none`
+                `border-brand-accent flex min-h-[72px] w-full items-center justify-center rounded-lg border-3 px-6 py-4 text-center text-lg font-medium transition-colors ${isActive
+                  ? "bg-brand-accent"
+                  : "hover:bg-brand-accent bg-white hover:text-black"
+                } focus:ring-brand-accent focus:ring-2 focus:ring-offset-2 focus:outline-none text-budget-accent`
               }
             >
               {button.label}
