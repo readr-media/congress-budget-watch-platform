@@ -151,6 +151,12 @@ export default function Home() {
       </div>
       <div className="mt-15 flex items-center justify-center gap-x-2 md:mt-25 md:gap-x-3">
         <Image
+          src="/image/readr-logo.svg"
+          alt="Readr logo"
+          width={110}
+          height={48}
+        />
+        <Image
           src="/image/Friedrich-Naumann-Foundation-logo.svg"
           alt="Friedrich-Naumann-Foundation-logo"
           width={130}
