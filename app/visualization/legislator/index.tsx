@@ -28,6 +28,11 @@ import {
   GET_PERSON_BY_ID_QUERY,
   peopleQueryKeys,
 } from "~/queries/people.queries";
+import { BUDGET_BY_LEGISLATOR_URL } from "~/config/budget-endpoints";
+import {
+  budgetByLegislatorSchema,
+  type BudgetByLegislatorPayload,
+} from "~/types/budget-by-legislator.schema";
 import VisualizationLegislatorSkeleton from "~/components/skeleton/visualization-legislator-skeleton";
 import { useMediaQuery } from "usehooks-ts";
 
@@ -312,15 +317,61 @@ const VisualizationLegislator = () => {
   );
   const proposals = mapVisualizationProposals(proposalsData);
   const summary = useMemo(() => computeSummaryStats(proposals), [proposals]);
+
+  const { data: legislatorBudgetSummaryData } = useQuery({
+    queryKey: ["budget", "legislators", proposerId ?? "all"],
+    queryFn: async (): Promise<BudgetByLegislatorPayload> => {
+      const response = await fetch(BUDGET_BY_LEGISLATOR_URL);
+      if (!response.ok) {
+        throw new Error("無法載入立委預算資料");
+      }
+      return budgetByLegislatorSchema.parse(await response.json());
+    },
+    enabled: !!proposerId,
+  });
+
+  const budgetSummaryForPanel = useMemo<SummaryPanelSummary | undefined>(() => {
+    if (!legislatorBudgetSummaryData) return undefined;
+    const record = legislatorBudgetSummaryData[0];
+    if (!record) return undefined;
+
+    const legislatorEntry =
+      record.legislators?.find((legislator) => legislator.peopleId === proposerId) ??
+      record.legislators?.[0];
+
+    const summarySource =
+      selectedType === "proposal-cosign"
+        ? legislatorEntry?.allInvolved ??
+          legislatorEntry?.proposerOnly ??
+          record.overall
+        : legislatorEntry?.proposerOnly ??
+          legislatorEntry?.allInvolved ??
+          record.overall;
+
+    if (!summarySource) return undefined;
+
+    const reductionAmount = summarySource.reductionAmount ?? 0;
+    const freezeAmount = summarySource.freezeAmount ?? 0;
+
+    return {
+      formattedReductionAmount: formatAmountWithUnit(reductionAmount),
+      formattedFreezeAmount: formatAmountWithUnit(freezeAmount),
+      reductionCount: summarySource.reductionCount ?? 0,
+      freezeCount: summarySource.freezeCount ?? 0,
+      mainResolutionCount: summarySource.otherCount ?? 0,
+    };
+  }, [legislatorBudgetSummaryData, proposerId, selectedType]);
+
   const summaryForPanel = useMemo<SummaryPanelSummary>(
-    () => ({
-      formattedReductionAmount: summary.formattedReductionAmount,
-      formattedFreezeAmount: summary.formattedFreezeAmount,
-      reductionCount: summary.reductionProposalsCount,
-      freezeCount: summary.freezeProposalsCount,
-      mainResolutionCount: summary.mainResolutionCount,
-    }),
-    [summary]
+    () =>
+      budgetSummaryForPanel ?? {
+        formattedReductionAmount: summary.formattedReductionAmount,
+        formattedFreezeAmount: summary.formattedFreezeAmount,
+        reductionCount: summary.reductionProposalsCount,
+        freezeCount: summary.freezeProposalsCount,
+        mainResolutionCount: summary.mainResolutionCount,
+      },
+    [budgetSummaryForPanel, summary]
   );
 
   const isDesktop = useMediaQuery("(min-width: 768px)");

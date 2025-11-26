@@ -11,7 +11,7 @@ import { DepartmentVisualization } from "./department";
 import BudgetTypeLegend from "~/components/budget-type-legend";
 import { BUDGET_TYPE_LEGEND_ITEMS } from "~/constants/legends";
 import { useVisualizationState } from "./use-visualization-state";
-import { type NodeDatum } from "./helpers";
+import { formatAmountWithUnit, type NodeDatum } from "./helpers";
 import type { CirclePackPadding } from "./circle-pack-chart";
 import BudgetDetailSkeleton from "~/components/skeleton/budget-detail-skeleton";
 import VisualizationSkeleton from "~/components/skeleton/visualization-skeleton";
@@ -19,7 +19,11 @@ import SummaryPanel, {
   type SummaryPanelSummary,
 } from "./components/SummaryPanel";
 import { useQuery } from "@tanstack/react-query";
-import { BUDGET_BY_LEGISLATOR_URL } from "~/config/budget-endpoints";
+import {
+  BUDGET_BY_DEPARTMENT_URL,
+  BUDGET_BY_LEGISLATOR_URL,
+} from "~/config/budget-endpoints";
+import { budgetByDepartmentSchema } from "~/types/budget-by-department.schema";
 import { budgetByLegislatorSchema } from "~/types/budget-by-legislator.schema";
 
 const useChartDimensions = () => {
@@ -92,9 +96,6 @@ const Visualization = () => {
     isError,
     visualizationData,
     legislatorVisualizationData,
-    summaryStats,
-    formattedReductionAmount,
-    formattedFreezeAmount,
   } = useVisualizationState();
 
   const legislatorBudgetQueryKey = [
@@ -104,34 +105,55 @@ const Visualization = () => {
   ];
   const fetchLegislatorBudget = async () => {
     const response = await fetch(BUDGET_BY_LEGISLATOR_URL);
-    // const response = await fetch('/api/budget/legislators');
     if (!response.ok) {
       throw new Error("無法載入立委預算資料");
     }
     return budgetByLegislatorSchema.parse(await response.json());
   };
+
+  const fetchDepartmentBudget = async () => {
+    const response = await fetch(BUDGET_BY_DEPARTMENT_URL);
+    if (!response.ok) {
+      throw new Error("無法載入部會預算資料");
+    }
+    return budgetByDepartmentSchema.parse(await response.json());
+  };
   const { data: legislatorBudgetSummaryData } = useQuery({
     queryKey: legislatorBudgetQueryKey,
     queryFn: fetchLegislatorBudget,
-    enabled: Boolean(selectedLegislatorOption),
+    enabled: activeTab === "legislator",
   });
-  console.log({ legislatorBudgetSummaryData });
-  const summaryForPanel = useMemo<SummaryPanelSummary>(
-    () => ({
-      formattedReductionAmount,
-      formattedFreezeAmount,
-      reductionCount: summaryStats.reductionCount,
-      freezeCount: summaryStats.freezeCount,
-      mainResolutionCount: summaryStats.mainResolutionCount,
-    }),
-    [
-      formattedReductionAmount,
-      formattedFreezeAmount,
-      summaryStats.reductionCount,
-      summaryStats.freezeCount,
-      summaryStats.mainResolutionCount,
-    ]
-  );
+  const departmentBudgetQueryKey = ["budget", "departments"];
+  const { data: departmentBudgetSummaryData } = useQuery({
+    queryKey: departmentBudgetQueryKey,
+    queryFn: fetchDepartmentBudget,
+    enabled: activeTab === "department",
+  });
+  const legislatorSummary = useMemo<SummaryPanelSummary>(() => {
+    const overall = legislatorBudgetSummaryData?.[0]?.overall;
+    const reductionAmount = overall?.reductionAmount ?? 0;
+    const freezeAmount = overall?.freezeAmount ?? 0;
+    return {
+      formattedReductionAmount: formatAmountWithUnit(reductionAmount),
+      formattedFreezeAmount: formatAmountWithUnit(freezeAmount),
+      reductionCount: overall?.reductionCount ?? 0,
+      freezeCount: overall?.freezeCount ?? 0,
+      mainResolutionCount: overall?.otherCount ?? 0,
+    };
+  }, [legislatorBudgetSummaryData]);
+
+  const departmentSummary = useMemo<SummaryPanelSummary>(() => {
+    const overall = departmentBudgetSummaryData?.[0]?.overall;
+    const reductionAmount = overall?.reductionAmount ?? 0;
+    const freezeAmount = overall?.freezeAmount ?? 0;
+    return {
+      formattedReductionAmount: formatAmountWithUnit(reductionAmount),
+      formattedFreezeAmount: formatAmountWithUnit(freezeAmount),
+      reductionCount: overall?.reductionCount ?? 0,
+      freezeCount: overall?.freezeCount ?? 0,
+      mainResolutionCount: overall?.otherCount ?? 0,
+    };
+  }, [departmentBudgetSummaryData]);
 
   const legislatorPadding = useMemo<CirclePackPadding | undefined>(() => {
     if (mode !== "amount") return undefined;
@@ -233,7 +255,11 @@ const Visualization = () => {
           </div>
         </div>
 
-        <SummaryPanel summary={summaryForPanel} />
+        <SummaryPanel
+          summary={
+            activeTab === "legislator" ? legislatorSummary : departmentSummary
+          }
+        />
 
         <BudgetTypeLegend items={BUDGET_TYPE_LEGEND_ITEMS} />
 
