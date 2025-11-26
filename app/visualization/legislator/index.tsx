@@ -172,7 +172,7 @@ const LegislatorHeader = ({
 }: HeaderProps) => {
   const termLabel = termNumbers.length ? `第${termNumbers.join("、")}屆` : "";
   return (
-    <div className="mt-4 flex flex-col items-center justify-center gap-y-2 lg:flex-row lg:items-end lg:gap-x-5 lg:border-b-2 lg:border-black lg:pb-3">
+    <div className="mt-4 flex flex-col items-center justify-center gap-y-2 border-b-2 border-black pb-3 lg:flex-row lg:items-end lg:gap-x-5 min-w-[254px]">
       <p className="text-[36px] md:text-[32px]">{personName}</p>
       <p>{partyName}</p>
       {termLabel ? (
