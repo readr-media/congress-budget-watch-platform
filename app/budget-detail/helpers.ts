@@ -195,7 +195,5 @@ export function hasMergedProposals(proposal?: Proposal | null): boolean {
 export function hasHistoricalProposals(proposal?: Proposal | null): boolean {
   if (!proposal) return false;
 
-  const historicalCount = proposal.historicalProposals?.length || 0;
-
-  return historicalCount > 0;
+  return Boolean(proposal.historicalParentProposals?.id);
 }

@@ -14,8 +14,8 @@ import {
   formatMergedProposals,
   formatNumber,
   getProposalTypeDisplay,
+  hasHistoricalProposals,
   getResultDisplay,
-  hasMergedProposals,
   meetingsToTimeline,
 } from "./helpers";
 import type { Proposal } from "~/graphql/graphql";
@@ -45,7 +45,9 @@ const BudgetDetail = () => {
   );
   const mergedProposalsData = formatMergedProposals(proposal.mergedProposals);
   console.log({ proposal });
-  const hasMerged = hasMergedProposals(proposal);
+  const hasMerged = hasHistoricalProposals(proposal);
+  const parentProposalId =
+    proposal.historicalParentProposals?.id ?? proposal.mergedParentProposals?.id;
   const hasImage = !!proposal.budgetImageUrl;
 
   // Prepare display values
@@ -185,6 +187,17 @@ const BudgetDetail = () => {
                     </p>
                     <div className="flex flex-col gap-y-4 border-t pt-4">
                       <p>{hasMerged ? "是" : "否"}</p>
+                    {parentProposalId && (
+                      <div className="flex flex-col gap-y-1 text-sm text-neutral-500">
+                        <p>請至主提案單確認結果</p>
+                        <NavLink
+                          to={`/budget/${parentProposalId}`}
+                          className="text-brand-primary underline"
+                        >
+                          查看主提案單
+                        </NavLink>
+                      </div>
+                    )}
                       {hasMerged && mergedProposalsData.length > 0 && (
                         <div className="grid-rows-auto grid grid-cols-3 gap-4.5">
                           {mergedProposalsData.map((merged) => (
@@ -407,6 +420,14 @@ const BudgetDetail = () => {
           <div className="mt-3 flex flex-col gap-y-3">
             <p className="font-bold">是否併案</p>
             <p>{hasMerged ? "是" : "否"}</p>
+            {parentProposalId && (
+              <NavLink
+                to={`/budget/${parentProposalId}`}
+                className="text-brand-primary underline text-sm"
+              >
+                請至主提案單確認結果
+              </NavLink>
+            )}
           </div>
           <ul className="timeline timeline-vertical timeline-compact text-neutral-500">
             {mergedProposalsData.map((merged) => (
