@@ -71,6 +71,9 @@ export const GET_PROPOSAL_BY_ID_QUERY = graphql(`
       mergedParentProposals {
         id
       }
+      historicalProposals {
+        id
+      }
       government {
         id
         name
