@@ -1,4 +1,4 @@
-import{p as l}from"./chunk-4WY6JWTD-2Cr-QbDP.js";import{t}from"./gql-HYPlJro8.js";const u="/congress-budget-watch-platform/".replace(/\/$/,""),m=`${u}/`,g=500,P=({src:e,...o})=>l.jsx("img",{src:m+e,...o});t(`
+import{p as l}from"./chunk-4WY6JWTD-2Cr-QbDP.js";import{t}from"./gql-B1HC4FQa.js";const u="/congress-budget-watch-platform/".replace(/\/$/,""),m=`${u}/`,g=500,P=({src:e,...o})=>l.jsx("img",{src:m+e,...o});t(`
   query GetBudgetsWithGovernment {
     budgets {
       id
@@ -104,11 +104,11 @@ import{p as l}from"./chunk-4WY6JWTD-2Cr-QbDP.js";import{t}from"./gql-HYPlJro8.js
       react_good
       react_whatever
       budgetImageUrl
-      historicalProposals {
+      historicalParentProposals {
         id
-        meetings {
-          id
-        }
+      }
+      mergedParentProposals {
+        id
       }
       government {
         id
@@ -159,6 +159,9 @@ import{p as l}from"./chunk-4WY6JWTD-2Cr-QbDP.js";import{t}from"./gql-HYPlJro8.js
       }
       historicalProposals {
         id
+        meetings {
+          id
+        }
         proposers {
           id
           name
