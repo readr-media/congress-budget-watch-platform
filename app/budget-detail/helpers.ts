@@ -23,6 +23,7 @@ export type MergedProposalInfo = {
   id: string;
   date: string;
   proposers: string;
+  isParent?: boolean;
 };
 
 /**
@@ -141,25 +142,43 @@ export function meetingsToTimeline(
   }));
 }
 
+type MergedProposalLike = {
+  id: string;
+  proposers?: Array<{ name?: string | null }> | null;
+} | null;
+
 /**
- * 將 mergedProposals 轉換為顯示格式
+ * 將 mergedProposals / mergedParentProposals 轉換為顯示格式
  */
 export function formatMergedProposals(
-  mergedProposals?: Array<{
-    id: string;
-    proposers?: Array<{ name?: string | null }> | null;
-  }> | null
+  mergedProposals?: Array<MergedProposalLike> | null,
+  mergedParentProposal?: MergedProposalLike
 ): MergedProposalInfo[] {
-  if (!mergedProposals || mergedProposals.length === 0) return [];
+  const normalized: Array<{ raw: MergedProposalLike; isParent: boolean }> = [];
 
-  return mergedProposals.map((proposal) => ({
-    id: proposal.id,
+  if (mergedParentProposal?.id) {
+    normalized.push({ raw: mergedParentProposal, isParent: true });
+  }
+
+  if (mergedProposals && mergedProposals.length > 0) {
+    mergedProposals.forEach((proposal) => {
+      if (proposal?.id) {
+        normalized.push({ raw: proposal, isParent: false });
+      }
+    });
+  }
+
+  if (normalized.length === 0) return [];
+
+  return normalized.map(({ raw, isParent }, index) => ({
+    id: raw?.id ?? `unknown-${index}`,
     date: "2025/08/01", // TODO: 如果 API 有提供日期，使用實際日期
     proposers:
-      proposal.proposers
-        ?.map((p) => p.name)
+      raw?.proposers
+        ?.map((p) => p?.name)
         .filter(Boolean)
         .join("、") || "未知",
+    isParent,
   }));
 }
 
@@ -179,15 +198,15 @@ export function formatBudgetCategory(
 }
 
 /**
- * 判斷是否有併案
+ * 判斷是否有併案：只要 併案子提案單mergedProposals、併案母提案單mergedParentProposals 任一個有值，就是
  */
 export function hasMergedProposals(proposal?: Proposal | null): boolean {
   if (!proposal) return false;
 
-  const mergedCount = proposal.mergedProposals?.length || 0;
-  const historicalCount = proposal.historicalProposals?.length || 0;
+  const hasParent = Boolean(proposal.mergedParentProposals?.id);
+  const hasChildren = (proposal.mergedProposals?.length ?? 0) > 0;
 
-  return mergedCount + historicalCount > 0;
+  return hasParent || hasChildren;
 }
 /**
  * 判斷是否有併案

@@ -70,6 +70,10 @@ export const GET_PROPOSAL_BY_ID_QUERY = graphql(`
       }
       mergedParentProposals {
         id
+        proposers {
+          id
+          name
+        }
       }
       historicalProposals {
         id

@@ -14,9 +14,9 @@ import {
   formatMergedProposals,
   formatNumber,
   getProposalTypeDisplay,
-  hasHistoricalProposals,
   getResultDisplay,
   meetingsToTimeline,
+  hasMergedProposals,
 } from "./helpers";
 import type { Proposal } from "~/graphql/graphql";
 
@@ -43,11 +43,12 @@ const BudgetDetail = () => {
     proposal.meetings,
     proposal.historicalProposals
   );
-  const mergedProposalsData = formatMergedProposals(proposal.mergedProposals);
-  const hasMerged = hasHistoricalProposals(proposal);
-  const parentProposalId =
-    proposal.historicalParentProposals?.id ??
-    proposal.mergedParentProposals?.id;
+  const mergedProposalsData = formatMergedProposals(
+    proposal.mergedProposals,
+    proposal.mergedParentProposals
+  );
+  const hasMerged = hasMergedProposals(proposal);
+
   const hasImage = !!proposal.budgetImageUrl;
 
   // Prepare display values
@@ -187,27 +188,28 @@ const BudgetDetail = () => {
                     </p>
                     <div className="flex flex-col gap-y-4 border-t pt-4">
                       <p>{hasMerged ? "是" : "否"}</p>
-                      {parentProposalId && (
-                        <div className="flex flex-col gap-y-1 text-sm text-neutral-500">
-                          <p>請至主提案單確認結果</p>
-                          <NavLink
-                            to={`/budget/${parentProposalId}`}
-                            className="text-brand-primary underline"
-                          >
-                            查看主提案單
-                          </NavLink>
-                        </div>
-                      )}
                       {hasMerged && mergedProposalsData.length > 0 && (
                         <div className="grid-rows-auto grid grid-cols-3 gap-4.5">
                           {mergedProposalsData.map((merged) => (
-                            <div key={merged.id} className="flex gap-x-2">
-                              <div className="mt-2 size-2 rounded-full bg-black" />
-                              <div className="text-neutral-500">
+                            <NavLink
+                              key={merged.id}
+                              to={`/budget/${merged.id}`}
+                              className="hover:text-brand-primary flex gap-x-2 text-neutral-500"
+                            >
+                              <div
+                                className={`mt-2 size-2 rounded-full ${
+                                  merged.isParent
+                                    ? "bg-brand-primary"
+                                    : "bg-black"
+                                }`}
+                              >
+                                主
+                              </div>
+                              <div>
                                 <p className="underline">{merged.date}</p>
                                 <p>{merged.proposers}</p>
                               </div>
-                            </div>
+                            </NavLink>
                           ))}
                         </div>
                       )}
@@ -420,25 +422,26 @@ const BudgetDetail = () => {
           <div className="mt-3 flex flex-col gap-y-3">
             <p className="font-bold">是否併案</p>
             <p>{hasMerged ? "是" : "否"}</p>
-            {parentProposalId && (
-              <NavLink
-                to={`/budget/${parentProposalId}`}
-                className="text-brand-primary text-sm underline"
-              >
-                請至主提案單確認結果
-              </NavLink>
-            )}
           </div>
           <ul className="timeline timeline-vertical timeline-compact text-neutral-500">
             {mergedProposalsData.map((merged) => (
               <li key={merged.id}>
                 <div className="timeline-middle">
-                  <div className="h-3 w-3 rounded-full bg-gray-900"></div>
+                  {merged.isParent ? (
+                    <div className="bg-brand-primary flex size-5 items-center justify-center rounded-full text-xs text-white">
+                      主
+                    </div>
+                  ) : (
+                    <div className="size-2 rounded-full bg-black" />
+                  )}
                 </div>
-                <div className="timeline-end rounded-xl bg-transparent px-6">
+                <NavLink
+                  to={`/budget/${merged.id}`}
+                  className="timeline-end hover:text-brand-primary rounded-xl bg-transparent px-6 text-neutral-500"
+                >
                   <p>{merged.date}</p>
                   <p>{merged.proposers}</p>
-                </div>
+                </NavLink>
               </li>
             ))}
           </ul>
