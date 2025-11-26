@@ -185,7 +185,6 @@ export function VoteButtons({
     );
   }
 
-  console.log({ singleButtonStyle });
   return (
     <div className="flex justify-center gap-4 px-3 py-2.5">
       {VOTE_OPTIONS.map(({ type, label }) => (

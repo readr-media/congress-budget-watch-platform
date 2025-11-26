@@ -44,10 +44,10 @@ const BudgetDetail = () => {
     proposal.historicalProposals
   );
   const mergedProposalsData = formatMergedProposals(proposal.mergedProposals);
-  console.log({ proposal });
   const hasMerged = hasHistoricalProposals(proposal);
   const parentProposalId =
-    proposal.historicalParentProposals?.id ?? proposal.mergedParentProposals?.id;
+    proposal.historicalParentProposals?.id ??
+    proposal.mergedParentProposals?.id;
   const hasImage = !!proposal.budgetImageUrl;
 
   // Prepare display values
@@ -187,17 +187,17 @@ const BudgetDetail = () => {
                     </p>
                     <div className="flex flex-col gap-y-4 border-t pt-4">
                       <p>{hasMerged ? "是" : "否"}</p>
-                    {parentProposalId && (
-                      <div className="flex flex-col gap-y-1 text-sm text-neutral-500">
-                        <p>請至主提案單確認結果</p>
-                        <NavLink
-                          to={`/budget/${parentProposalId}`}
-                          className="text-brand-primary underline"
-                        >
-                          查看主提案單
-                        </NavLink>
-                      </div>
-                    )}
+                      {parentProposalId && (
+                        <div className="flex flex-col gap-y-1 text-sm text-neutral-500">
+                          <p>請至主提案單確認結果</p>
+                          <NavLink
+                            to={`/budget/${parentProposalId}`}
+                            className="text-brand-primary underline"
+                          >
+                            查看主提案單
+                          </NavLink>
+                        </div>
+                      )}
                       {hasMerged && mergedProposalsData.length > 0 && (
                         <div className="grid-rows-auto grid grid-cols-3 gap-4.5">
                           {mergedProposalsData.map((merged) => (
@@ -393,11 +393,11 @@ const BudgetDetail = () => {
           {"<" + "回到列表頁"}
         </NavLink>
         <div className="mt-2 border-2 px-2 py-3">
-          <section className="flex gap-6 pb-2 border-b border-neutral-250">
+          <section className="border-neutral-250 flex gap-6 border-b pb-2">
             <p>編號</p>
             <p className="text-budget-warning">{proposal.id}</p>
           </section>
-          <section className="flex gap-10 pb-4 border-b border-neutral-250 mt-3">
+          <section className="border-neutral-250 mt-3 flex gap-10 border-b pb-4">
             <div className="flex flex-col gap-y-4 font-bold">
               <p>分類</p>
               <p>{proposal.government?.category || "暫無分類"}</p>
@@ -408,7 +408,7 @@ const BudgetDetail = () => {
             </div>
           </section>
           <section>
-            <p className="text-lg font-bold mt-3">審議階段</p>
+            <p className="mt-3 text-lg font-bold">審議階段</p>
             <div>
               {timelineData.length > 0 ? (
                 <Timeline items={timelineData} />
@@ -423,7 +423,7 @@ const BudgetDetail = () => {
             {parentProposalId && (
               <NavLink
                 to={`/budget/${parentProposalId}`}
-                className="text-brand-primary underline text-sm"
+                className="text-brand-primary text-sm underline"
               >
                 請至主提案單確認結果
               </NavLink>
