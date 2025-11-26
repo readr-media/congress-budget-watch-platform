@@ -101,6 +101,8 @@ export const useVisualizationState = (): UseVisualizationStateResult => {
       year: {
         year: { equals: parseInt(selectedYear.value, 10) },
       },
+      mergedParentProposals: null,
+      historicalParentProposals: null,
     };
   }, [selectedYear.value]);
 

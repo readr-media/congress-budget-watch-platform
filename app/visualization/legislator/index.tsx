@@ -60,8 +60,14 @@ const buildWhereFilter = (
   selectedType: ProposalKind,
   proposerId: string | undefined
 ): ProposalWhereInput => {
+  const baseFilter: ProposalWhereInput = {
+    mergedParentProposals: null,
+    historicalParentProposals: null,
+  };
+
   if (selectedType === "proposal-cosign") {
     return {
+      ...baseFilter,
       OR: [
         {
           proposers: {
@@ -82,6 +88,7 @@ const buildWhereFilter = (
   }
 
   return {
+    ...baseFilter,
     proposers: {
       some: {
         id: { equals: proposerId },
@@ -171,8 +178,9 @@ const LegislatorHeader = ({
   termNumbers,
 }: HeaderProps) => {
   const termLabel = termNumbers.length ? `第${termNumbers.join("、")}屆` : "";
+
   return (
-    <div className="mt-4 flex flex-col items-center justify-center gap-y-2 border-b-2 border-black pb-3 lg:flex-row lg:items-end lg:gap-x-5 min-w-[254px]">
+    <div className="mt-4 flex min-w-[254px] flex-col items-center justify-center gap-y-2 border-b-2 border-black pb-3 lg:flex-row lg:items-end lg:gap-x-5">
       <p className="text-[36px] md:text-[32px]">{personName}</p>
       <p>{partyName}</p>
       {termLabel ? (
@@ -357,6 +365,7 @@ const VisualizationLegislator = () => {
         {/* session chart */}
         <SessionChart
           data={sessionData}
+          presenterDescription={person?.description}
           yearToCommitteeMap={yearToCommitteeMap}
           onNodeClick={handleNodeClick}
         />
