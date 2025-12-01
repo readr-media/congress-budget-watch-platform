@@ -97,19 +97,19 @@ const BudgetDetail = () => {
     hasLastYearSettlement ||
     hasLastYearLegalBudget ||
     hasLastYearComparison;
-  const budgetCategoryDisplay = hasBudgetCategory ? budgetCategory : "N/A";
+  const budgetCategoryDisplay = hasBudgetCategory ? budgetCategory : "";
   const projectDescriptionDisplay = hasProjectDescription
     ? projectDescription
-    : "N/A";
+    : "";
   const lastYearSettlementDisplay = hasLastYearSettlement
     ? formatNumber(lastYearSettlementValue)
-    : "N/A";
+    : "";
   const lastYearLegalBudgetDisplay = hasLastYearLegalBudget
     ? formatNumber(lastYearLegalBudgetValue)
-    : "N/A";
+    : "";
   const lastYearComparisonDisplay = hasLastYearComparison
     ? formatNumber(lastYearComparisonValue)
-    : "N/A";
+    : "";
   const showLastYearSection = ShowLastYearData && shouldShowBudgetInfo;
   const proposalKey = `${proposal.id}-${proposal.react_good}-${proposal.react_angry}-${proposal.react_disappoint}-${proposal.react_whatever}`;
 
