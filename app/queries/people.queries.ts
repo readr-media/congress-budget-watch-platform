@@ -5,6 +5,7 @@ export const GET_PERSON_BY_ID_QUERY = graphql(`
     people(where: $where) {
       id
       name
+      description
       party {
         id
         color

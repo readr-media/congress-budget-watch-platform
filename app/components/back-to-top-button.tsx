@@ -25,7 +25,7 @@ const BackToTopButton = ({
       type="button"
       aria-label="回到頂端"
       onClick={handleClick}
-      className="fixed right-6 bottom-6 z-50 flex h-[60px] w-[60px] items-center justify-center rounded-full bg-black text-xs font-medium tracking-wide text-white uppercase shadow-lg shadow-black/30 transition-opacity duration-200"
+      className="fixed right-6 bottom-6 z-50 flex h-[60px] w-[60px] items-center justify-center rounded-full bg-black text-xs font-medium tracking-wide text-white uppercase shadow-lg shadow-black/30 transition-opacity duration-200 cursor-pointer"
     >
       回到頂端
     </button>

@@ -4,13 +4,10 @@ import { useQuery } from "@tanstack/react-query";
 import { sumBy, filter } from "lodash";
 import SessionChart from "./session-chart";
 import BudgetTypeLegend from "~/components/budget-type-legend";
-import Image from "~/components/image";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "~/components/ui/tooltip";
 import { BUDGET_TYPE_LEGEND_ITEMS } from "~/constants/legends";
+import SummaryPanel, {
+  type SummaryPanelSummary,
+} from "../components/SummaryPanel";
 import {
   GET_VISUALIZATION_PROPOSALS_QUERY,
   proposalQueryKeys,
@@ -31,17 +28,18 @@ import {
   GET_PERSON_BY_ID_QUERY,
   peopleQueryKeys,
 } from "~/queries/people.queries";
-import { formatTermRange } from "~/utils/format";
+import { BUDGET_BY_LEGISLATOR_URL } from "~/config/budget-endpoints";
+import {
+  budgetByLegislatorSchema,
+  type BudgetByLegislatorPayload,
+} from "~/types/budget-by-legislator.schema";
 import VisualizationLegislatorSkeleton from "~/components/skeleton/visualization-legislator-skeleton";
 import { useMediaQuery } from "usehooks-ts";
 
 type ProposalKind = "proposal" | "proposal-cosign";
 type VisualizationModeType = "amount" | "count";
 
-type TermRange = {
-  first: number | null;
-  last: number | null;
-};
+type TermNumbers = number[];
 
 type SummaryStats = {
   formattedReductionAmount: string;
@@ -49,6 +47,10 @@ type SummaryStats = {
   reductionProposalsCount: number;
   freezeProposalsCount: number;
   mainResolutionCount: number;
+};
+
+type TermEntry = {
+  termNumber?: number | null;
 };
 
 type Committee = {
@@ -63,8 +65,14 @@ const buildWhereFilter = (
   selectedType: ProposalKind,
   proposerId: string | undefined
 ): ProposalWhereInput => {
+  const baseFilter: ProposalWhereInput = {
+    mergedParentProposals: null,
+    historicalParentProposals: null,
+  };
+
   if (selectedType === "proposal-cosign") {
     return {
+      ...baseFilter,
       OR: [
         {
           proposers: {
@@ -85,6 +93,7 @@ const buildWhereFilter = (
   }
 
   return {
+    ...baseFilter,
     proposers: {
       some: {
         id: { equals: proposerId },
@@ -107,20 +116,35 @@ const deriveYearToCommitteeMap = (committees?: Committee[] | null) => {
   return map;
 };
 
-const deriveTermRange = (committees?: Committee[] | null): TermRange => {
-  if (!committees) return { first: null, last: null };
+const extractTermNumbers = (
+  entries?: Array<TermEntry | null | undefined> | null
+): number[] => {
+  if (!entries) return [];
 
-  const termNumbers = committees
-    .map((c) => c.term?.termNumber)
-    .filter((t): t is number => t !== null && t !== undefined);
+  return entries
+    .map((entry) => entry?.termNumber)
+    .filter(
+      (termNumber): termNumber is number =>
+        termNumber !== null && termNumber !== undefined
+    );
+};
 
-  if (termNumbers.length === 0) return { first: null, last: null };
+const deriveTermNumbers = (
+  committees?: Committee[] | null,
+  personTerms?: Array<TermEntry | null> | null
+): TermNumbers => {
+  if (!committees && !personTerms) return [];
 
-  const uniqueSortedTerms = [...new Set(termNumbers)].sort((a, b) => a - b);
-  return {
-    first: uniqueSortedTerms[0],
-    last: uniqueSortedTerms[uniqueSortedTerms.length - 1],
-  };
+  const committeeTermNumbers = extractTermNumbers(
+    committees?.map((c) => c.term) ?? []
+  );
+  const personTermNumbers = extractTermNumbers(personTerms);
+
+  const allTermNumbers = [
+    ...new Set([...committeeTermNumbers, ...personTermNumbers]),
+  ];
+
+  return allTermNumbers.sort((a, b) => a - b);
 };
 
 const computeSummaryStats = (
@@ -150,20 +174,31 @@ const computeSummaryStats = (
 type HeaderProps = {
   personName?: string | null;
   partyName?: string | null;
-  termRange: TermRange;
+  termNumbers: TermNumbers;
 };
 
 const LegislatorHeader = ({
   personName,
   partyName,
-  termRange,
-}: HeaderProps) => (
-  <div className="mt-4 flex flex-col items-center justify-center gap-y-2">
-    <p>{personName}</p>
-    <p>{partyName}</p>
-    <p>第{formatTermRange(termRange)}屆立法委員</p>
-  </div>
-);
+  termNumbers,
+}: HeaderProps) => {
+  const termLabel = termNumbers.length ? `第${termNumbers.join("、")}屆` : "";
+
+  return (
+    <div className="mt-4 flex min-w-[254px] flex-col items-center justify-center gap-y-2 border-b-2 border-black pb-3 lg:flex-row lg:items-end lg:gap-x-5">
+      <p className="text-[36px] md:text-[32px]">{personName}</p>
+      <p>{partyName}</p>
+      {termLabel ? (
+        <p className="flex flex-wrap justify-center gap-x-2">
+          <span className="whitespace-nowrap">{termLabel}</span>
+          <span>立法委員</span>
+        </p>
+      ) : (
+        <p>立法委員</p>
+      )}
+    </div>
+  );
+};
 
 type TypeToggleProps = {
   selectedType: ProposalKind;
@@ -198,7 +233,7 @@ const ProposalTypeToggle = ({ selectedType, onChange }: TypeToggleProps) => (
 
 const ModeSelector = ({ mode, onChange }: ModeSelectorProps) => (
   <div>
-    <div className="flex flex-col items-center justify-center gap-4">
+    <div className="mt-4 flex flex-col items-center justify-center gap-4 lg:flex-row lg:gap-6 lg:text-left">
       <label className="inline-flex items-center gap-2">
         <input
           type="radio"
@@ -222,75 +257,6 @@ const ModeSelector = ({ mode, onChange }: ModeSelectorProps) => (
         <span>依數量（凍結案/刪減案/建議案）</span>
       </label>
     </div>
-  </div>
-);
-
-const SummaryPanel = ({ summary }: { summary: SummaryStats }) => (
-  <div className="mt-4 flex flex-col items-center justify-center rounded-lg border-2 p-2.5">
-    <p>
-      總共刪減
-      <span className="text-brand-accent">
-        {summary.formattedReductionAmount}
-      </span>
-      （
-      <span className="text-brand-accent">
-        {summary.reductionProposalsCount}
-      </span>
-      個提案）
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <span className="ml-1 inline-flex">
-            <Image
-              src="/icon/icon-explain.svg"
-              alt="說明"
-              className="h-4 w-4"
-            />
-          </span>
-        </TooltipTrigger>
-        <TooltipContent className="bg-black text-white">
-          刪減案相關說明
-        </TooltipContent>
-      </Tooltip>
-    </p>
-    <p>
-      凍結
-      <span className="text-brand-accent">{summary.formattedFreezeAmount}</span>
-      （
-      <span className="text-brand-accent">{summary.freezeProposalsCount}</span>
-      個提案）
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <span className="ml-1 inline-flex">
-            <Image
-              src="/icon/icon-explain.svg"
-              alt="說明"
-              className="h-4 w-4"
-            />
-          </span>
-        </TooltipTrigger>
-        <TooltipContent className="bg-black text-white">
-          凍結案相關說明
-        </TooltipContent>
-      </Tooltip>
-    </p>
-    <p>
-      主決議提案數：
-      <span className="text-brand-accent">{summary.mainResolutionCount}</span>個
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <span className="ml-1 inline-flex">
-            <Image
-              src="/icon/icon-explain.svg"
-              alt="說明"
-              className="h-4 w-4"
-            />
-          </span>
-        </TooltipTrigger>
-        <TooltipContent className="bg-black text-white">
-          主決議提案相關說明
-        </TooltipContent>
-      </Tooltip>
-    </p>
   </div>
 );
 
@@ -337,18 +303,76 @@ const VisualizationLegislator = () => {
     enabled: !!proposerId,
   });
 
-  const committees = peopleData?.people?.committees;
+  const person = peopleData?.people;
+  const committees = person?.committees;
 
   const yearToCommitteeMap = useMemo(
     () => deriveYearToCommitteeMap(committees),
     [committees]
   );
 
-  const termRange = useMemo(() => deriveTermRange(committees), [committees]);
-
-  const person = peopleData?.people;
+  const termNumbers = useMemo(
+    () => deriveTermNumbers(committees, person?.term),
+    [committees, person?.term]
+  );
   const proposals = mapVisualizationProposals(proposalsData);
   const summary = useMemo(() => computeSummaryStats(proposals), [proposals]);
+
+  const { data: legislatorBudgetSummaryData } = useQuery({
+    queryKey: ["budget", "legislators", proposerId ?? "all"],
+    queryFn: async (): Promise<BudgetByLegislatorPayload> => {
+      const response = await fetch(BUDGET_BY_LEGISLATOR_URL);
+      if (!response.ok) {
+        throw new Error("無法載入立委預算資料");
+      }
+      return budgetByLegislatorSchema.parse(await response.json());
+    },
+    enabled: !!proposerId,
+  });
+
+  const budgetSummaryForPanel = useMemo<SummaryPanelSummary | undefined>(() => {
+    if (!legislatorBudgetSummaryData) return undefined;
+    const record = legislatorBudgetSummaryData[0];
+    if (!record) return undefined;
+
+    const legislatorEntry =
+      record.legislators?.find((legislator) => legislator.peopleId === proposerId) ??
+      record.legislators?.[0];
+
+    const summarySource =
+      selectedType === "proposal-cosign"
+        ? legislatorEntry?.allInvolved ??
+          legislatorEntry?.proposerOnly ??
+          record.overall
+        : legislatorEntry?.proposerOnly ??
+          legislatorEntry?.allInvolved ??
+          record.overall;
+
+    if (!summarySource) return undefined;
+
+    const reductionAmount = summarySource.reductionAmount ?? 0;
+    const freezeAmount = summarySource.freezeAmount ?? 0;
+
+    return {
+      formattedReductionAmount: formatAmountWithUnit(reductionAmount),
+      formattedFreezeAmount: formatAmountWithUnit(freezeAmount),
+      reductionCount: summarySource.reductionCount ?? 0,
+      freezeCount: summarySource.freezeCount ?? 0,
+      mainResolutionCount: summarySource.otherCount ?? 0,
+    };
+  }, [legislatorBudgetSummaryData, proposerId, selectedType]);
+
+  const summaryForPanel = useMemo<SummaryPanelSummary>(
+    () =>
+      budgetSummaryForPanel ?? {
+        formattedReductionAmount: summary.formattedReductionAmount,
+        formattedFreezeAmount: summary.formattedFreezeAmount,
+        reductionCount: summary.reductionProposalsCount,
+        freezeCount: summary.freezeProposalsCount,
+        mainResolutionCount: summary.mainResolutionCount,
+      },
+    [budgetSummaryForPanel, summary]
+  );
 
   const isDesktop = useMediaQuery("(min-width: 768px)");
   const navigate = useNavigate();
@@ -378,20 +402,21 @@ const VisualizationLegislator = () => {
         <LegislatorHeader
           personName={person?.name}
           partyName={person?.party?.name}
-          termRange={termRange}
+          termNumbers={termNumbers}
         />
         <ProposalTypeToggle
           selectedType={selectedType}
           onChange={setSelectedType}
         />
         <ModeSelector mode={mode} onChange={setMode} />
-        <SummaryPanel summary={summary} />
+        <SummaryPanel summary={summaryForPanel} />
         <div className="mt-6">
           <BudgetTypeLegend items={BUDGET_TYPE_LEGEND_ITEMS} />
         </div>
         {/* session chart */}
         <SessionChart
           data={sessionData}
+          presenterDescription={person?.description}
           yearToCommitteeMap={yearToCommitteeMap}
           onNodeClick={handleNodeClick}
         />

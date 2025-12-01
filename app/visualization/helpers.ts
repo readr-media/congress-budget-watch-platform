@@ -396,7 +396,6 @@ export const transformToCategorizedData = (
           (p) => (p.freezeAmount ?? 0) + (p.reductionAmount ?? 0) > 0
         )
       : proposals;
-  console.log({ proposalsToProcess });
   // 第一層：按 government.category 分組
   const groupedByDepartment = groupBy(
     proposalsToProcess,

@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect } from "react";
+import React, { useMemo } from "react";
 import { useStore } from "zustand";
 import { useQuery } from "@tanstack/react-query";
 import { execute } from "~/graphql/execute";
@@ -84,9 +84,7 @@ const ByDepartmentSelector = ({ value }: { value: string }) => {
     queryFn: () => execute(GET_GOVERNMENTS_QUERY),
     enabled: value === "by-department", // 只在選中時 fetch
   });
-  useEffect(() => {
-    console.log("governmentsData", governmentsData);
-  });
+
 
   // 計算 unique categories
   const categoryOptions = useMemo(() => {
@@ -122,14 +120,6 @@ const ByDepartmentSelector = ({ value }: { value: string }) => {
 
     return filtered;
   }, [governmentsData?.governments, departmentFilter.category]);
-
-  useEffect(() => {
-    console.log("Department filter state:", {
-      departmentFilter,
-      categoryOptions,
-      departmentOptions,
-    });
-  }, [departmentFilter, categoryOptions, departmentOptions]);
 
   // 當前選擇的值（用於 react-select）
   const selectedCategoryValue = departmentFilter.category
@@ -233,13 +223,6 @@ const ByPeopleSelector = ({ value }: { value: string }) => {
       .sort((a, b) => a.label.localeCompare(b.label));
   }, [peopleData?.peopleList]);
 
-  useEffect(() => {
-    console.log("People filter state:", {
-      personId,
-      peopleOptions,
-    });
-  }, [personId, peopleOptions]);
-
   // 當前選擇的值（用於 react-select）
   const selectedPersonValue = useMemo(() => {
     if (!personId || !peopleData?.peopleList) {
@@ -311,13 +294,6 @@ const BudgetsSelector: React.FC<BudgetsSelectorProps> = ({
     useBudgetSelectStore,
     (state) => state.actions.clearPeopleFilter
   );
-
-  useEffect(() => {
-    console.log("BudgetsSelector state:", {
-      selectedValue,
-      searchedValue,
-    });
-  }, [selectedValue, searchedValue]);
 
   const handleSelectionChange = (value: string) => {
     setSelectedValue(value);

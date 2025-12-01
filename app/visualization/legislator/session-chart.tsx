@@ -1,7 +1,6 @@
 import { useMediaQuery } from "usehooks-ts";
 import CirclePackChart from "../circle-pack-chart";
 import type { NodeDatum } from "../helpers";
-import { useEffect } from "react";
 
 const getBorderBottomClass = (index: number, totalItems: number) => {
   return totalItems > 1 && index < totalItems - 1
@@ -11,12 +10,14 @@ const getBorderBottomClass = (index: number, totalItems: number) => {
 
 type SessionChartProps = {
   data: NodeDatum[];
+  presenterDescription?: string | null;
   yearToCommitteeMap: Map<string, string>;
   onNodeClick?: (node: NodeDatum) => void | boolean;
 };
 
 const SessionChart = ({
   data,
+  presenterDescription = "",
   yearToCommitteeMap,
   onNodeClick,
 }: SessionChartProps) => {
@@ -56,9 +57,16 @@ const SessionChart = ({
           )} mx-auto`}
           style={chartContainerStyle}
         >
-          <div className="flex flex-col items-start justify-center w-full">
+          <div className="flex w-full flex-col items-start justify-center">
             <p>{session.name}</p>
             <p>{yearToCommitteeMap.get(session.name) ?? "委員會"}</p>
+            {presenterDescription ? (
+              <div className="flex w-full flex-col items-start justify-center mb-5 lg:mb-8">
+                <p className="text-sm leading-relaxed text-black/80">
+                  {presenterDescription}
+                </p>
+              </div>
+            ) : null}
           </div>
           <div className="w-full md:mx-auto">
             <CirclePackChart

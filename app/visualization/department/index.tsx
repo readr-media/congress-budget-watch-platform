@@ -41,7 +41,6 @@ export const DepartmentVisualization = ({
   const paddingValue = useMemo(() => padding ?? DEFAULT_PADDING, [padding]);
 
   const categories = Object.keys(categorizedData);
-  console.log({ categories });
 
   if (categories.length === 0) {
     return (

@@ -1,7 +1,7 @@
-import { useMemo, useEffect, useRef, useState, Suspense, lazy } from "react";
+import { useMemo, useEffect, useRef, useState, useCallback } from "react";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { redirect, useSearchParams } from "react-router";
-import Select, { type StylesConfig, type SingleValue } from "react-select";
+import type { SingleValue } from "react-select";
 import { ERROR_REDIRECT_ROUTE } from "~/constants/endpoints";
 import { execute } from "~/graphql/execute";
 import {
@@ -10,7 +10,6 @@ import {
   proposalQueryKeys,
 } from "~/queries";
 import content from "./page-content";
-import ProgressBar from "~/components/progress-bar";
 import {
   useSelectedSort,
   useSetSelectedSort,
@@ -20,7 +19,6 @@ import {
   useSelectedYear,
   useSetSelectedYear,
 } from "~/stores/budget-selector";
-import Image from "~/components/image";
 import { useMediaQuery } from "usehooks-ts";
 import type {
   ProposalOrderByInput,
@@ -37,44 +35,8 @@ import useDebounce from "~/hooks/useDebounce";
 import { SEARCH_DEBOUNCE_DELAY } from "~/constants/config";
 import { sortOptions } from "~/constants/options";
 import { find } from "lodash";
-import {
-  BRAND_ACCENT,
-  SURFACE_BASE,
-  SURFACE_ROSE_SOFT,
-} from "~/constants/colors";
+import AllBudgetsView, { type YearOption } from "./AllBudgetsView";
 
-type YearOptionType = { value: number | null; label: string };
-
-const BudgetsSelector = lazy(() => import("~/components/budgets-selector"));
-const SortToolbar = lazy(() => import("~/components/sort-toolbar"));
-const BudgetTable = lazy(() => import("~/components/budget-table"));
-const Pagination = lazy(() => import("~/components/pagination"));
-
-const BudgetsSelectorFallback = () => (
-  <div className="flex justify-center py-4">
-    <div className="h-[92px] w-full max-w-[640px] animate-pulse rounded border-2 border-dashed border-neutral-300 bg-white" />
-  </div>
-);
-
-const SortToolbarFallback = () => (
-  <div className="flex items-center justify-end pt-3">
-    <div className="h-8 w-40 animate-pulse rounded bg-gray-200" />
-  </div>
-);
-
-const TableFallback = ({ isDesktop }: { isDesktop: boolean }) => (
-  <div
-    className={`mt-4 w-full animate-pulse rounded border-2 border-dashed border-neutral-300 bg-white ${
-      isDesktop ? "min-h-[620px]" : "min-h-[680px]"
-    }`}
-  />
-);
-
-const PaginationFallback = ({ className = "" }: { className?: string }) => (
-  <div className={`flex justify-center ${className}`}>
-    <div className="h-10 w-64 animate-pulse rounded-full border border-dashed border-neutral-300" />
-  </div>
-);
 
 export function meta() {
   return [
@@ -141,7 +103,7 @@ export const AllBudgets = () => {
     enabled: yearsQueryEnabled,
   });
 
-  const yearOptions: YearOptionType[] = useMemo(() => {
+  const yearOptions: YearOption[] = useMemo(() => {
     const typedYearsData = yearsData as GetProposalYearsQuery | undefined;
     if (!typedYearsData?.budgetYears) return [];
     const years = typedYearsData.budgetYears
@@ -154,79 +116,16 @@ export const AllBudgets = () => {
     ];
   }, [yearsData]);
 
-  const selectedOption: SingleValue<YearOptionType> = useMemo(
+  const selectedOption: SingleValue<YearOption> = useMemo(
     () => yearOptions.find((option) => option.value === selectedYear) ?? null,
     [yearOptions, selectedYear]
   );
 
-  const customSelectStyles: StylesConfig<YearOptionType> = useMemo(
-    () => ({
-      control: (provided) => ({
-        ...provided,
-        backgroundColor: BRAND_ACCENT,
-        border: "2px solid black",
-        borderBottom: "0",
-        borderRadius: "0.375rem 0.375rem 0 0", // rounded-t-md
-        boxShadow: "none",
-        cursor: "pointer",
-        minHeight: "38px",
-        height: "38px",
-        "&:hover": {
-          borderColor: "black",
-        },
-      }),
-      valueContainer: (provided) => ({
-        ...provided,
-        height: "38px",
-        padding: "0 8px",
-      }),
-      input: (provided) => ({
-        ...provided,
-        margin: "0px",
-      }),
-      indicatorSeparator: () => ({
-        display: "none",
-      }),
-      dropdownIndicator: (provided) => ({
-        ...provided,
-        color: SURFACE_BASE,
-        padding: "8px",
-        "&:hover": {
-          color: SURFACE_BASE,
-        },
-      }),
-      singleValue: (provided) => ({
-        ...provided,
-        color: SURFACE_BASE,
-        fontWeight: "bold",
-        fontSize: "16px",
-      }),
-      placeholder: (provided) => ({
-        ...provided,
-        color: SURFACE_BASE,
-        fontWeight: "bold",
-        fontSize: "16px",
-      }),
-      menu: (provided) => ({
-        ...provided,
-        backgroundColor: "white",
-        border: "2px solid black",
-        borderRadius: "0",
-        boxShadow: "none",
-      }),
-      option: (provided, state) => ({
-        ...provided,
-        backgroundColor: state.isSelected
-          ? BRAND_ACCENT
-          : state.isFocused
-            ? SURFACE_ROSE_SOFT
-            : "white",
-        color: state.isSelected ? "white" : "black",
-        fontWeight: "bold",
-        cursor: "pointer",
-      }),
-    }),
-    []
+  const handleYearChange = useCallback(
+    (option: SingleValue<YearOption>) => {
+      setSelectedYear(option?.value ?? null);
+    },
+    [setSelectedYear]
   );
 
   // 計算 GraphQL 參數
@@ -360,112 +259,18 @@ export const AllBudgets = () => {
   if (isError) return redirect(ERROR_REDIRECT_ROUTE);
 
   return (
-    <>
-      <div className="p-5 md:mx-auto md:max-w-[720px] md:p-0 md:pt-8 lg:max-w-[960px]">
-        {/* title start */}
-        <p className="mb-3 w-full text-center text-xl font-bold">
-          {content.title}
-        </p>
-        {/* desktop progress start */}
-        <div className="mb-5 hidden h-fit w-full items-center justify-center md:flex">
-          <ProgressBar
-            isDesktop={isDesktop}
-            className="w-[165px]"
-            labels={content.progressLabels}
-          />
-        </div>
-        <div className="relative mb-5 hidden items-center justify-start border-b-[2px] border-black md:flex">
-          <Select
-            styles={customSelectStyles}
-            value={selectedOption}
-            onChange={(option) =>
-              setSelectedYear(
-                (option as SingleValue<YearOptionType>)?.value ?? null
-              )
-            }
-            options={yearOptions}
-            placeholder="選擇年份"
-          />
-          <img
-            src={`${import.meta.env.BASE_URL}image/eye.svg`}
-            alt="eye icon"
-            className="absolute top-[14px] right-16 z-99"
-          />
-        </div>
-        {/* desktop progress end */}
-        <div className="relative mb-3 h-0.5 w-full bg-black md:hidden">
-          <Image
-            src="/image/magnifier-eye.svg"
-            alt="magnifier eye logo"
-            className="bg-red absolute -top-[31.5px] z-10 h-[63px] w-[55px]"
-          />
-          <div className="bg-surface-base absolute -top-[31.5px] h-[63px] w-[55px]" />
-        </div>
-        {/* title end */}
-
-        {/* mobile progress start */}
-        <div className="mb-5 flex items-center justify-center border-b-[2px] border-black md:hidden">
-          <Select
-            styles={customSelectStyles}
-            value={selectedOption}
-            onChange={(option) =>
-              setSelectedYear(
-                (option as SingleValue<YearOptionType>)?.value ?? null
-              )
-            }
-            options={yearOptions}
-            placeholder="選擇年份"
-          />
-        </div>
-        <section className="text-brand-primary mb-2 flex w-full justify-center text-lg font-bold md:hidden">
-          <p>最新進度</p>
-        </section>
-        <div className="mb-5 flex h-fit w-full items-center justify-center md:hidden">
-          <ProgressBar className="w-[165px]" labels={content.progressLabels} />
-        </div>
-        {/* mobile progress end */}
-
-        {/* budgets selector start */}
-        <div className="h-0.5 w-full bg-black md:hidden" />
-        <Suspense fallback={<BudgetsSelectorFallback />}>
-          <BudgetsSelector />
-        </Suspense>
-        <div className="h-0.5 w-full bg-black md:hidden" />
-
-        {/* 上方分頁元件（新增）*/}
-        <Suspense fallback={<PaginationFallback className="mt-4" />}>
-          <Pagination className="mt-4" />
-        </Suspense>
-        {/* 排序下拉（react-select） */}
-        <Suspense fallback={<SortToolbarFallback />}>
-          <SortToolbar
-            selectedValue={selectedSort}
-            onChange={setSelectedSort}
-          />
-        </Suspense>
-
-        {/* 使用新的表格組件渲染清單 */}
-        <Suspense fallback={<TableFallback isDesktop={isDesktop} />}>
-          <BudgetTable
-            isDesktop={isDesktop}
-            data={tableData}
-            className="mt-4"
-          />
-        </Suspense>
-
-        {/* 下方分頁元件（新增，複用同一元件）*/}
-        <Suspense fallback={<PaginationFallback className="mt-4 mb-8" />}>
-          <Pagination className="mt-4 mb-8" />
-        </Suspense>
-
-        {/* Placeholder data 載入提示（可選）*/}
-        {isPlaceholderData && (
-          <div className="fixed right-4 bottom-4 rounded bg-blue-100 px-4 py-2 text-sm text-blue-800 shadow-lg">
-            正在載入新頁面...
-          </div>
-        )}
-      </div>
-    </>
+    <AllBudgetsView
+      title={content.title}
+      progressLabels={content.progressLabels}
+      yearOptions={yearOptions}
+      selectedYearOption={selectedOption}
+      onYearChange={handleYearChange}
+      selectedSort={selectedSort}
+      onSortChange={setSelectedSort}
+      tableData={tableData}
+      isDesktop={isDesktop}
+      isPlaceholderData={Boolean(isPlaceholderData)}
+    />
   );
 };
 

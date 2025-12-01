@@ -6,6 +6,7 @@ import React from "react";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { VoteButtons } from "~/components/VoteButtons";
 import { useProposalVoteCounts } from "~/stores/vote.store";
+import { getResultDisplay } from "~/budget-detail/helpers";
 
 const DESKTOP_GRID_COLS =
   "grid-cols-[1.2fr_1fr_1.5fr_1fr_1fr_1fr_2.5fr_1.5fr_1.5fr_1.3fr_1.2fr]";
@@ -172,7 +173,7 @@ const BudgetTableRow = ({ item }: { item: BudgetTableData }) => {
           減列/凍結金額
         </p>
         <p className="w-full py-2">{item.proposalType}</p>
-        <p className="w-full py-2">{item.proposalResult}</p>
+        <p className="w-full py-2">{getResultDisplay(item.proposalResult)}</p>
         <p className="w-full py-2">{item.originalAmount}</p>
         <div className="w-full py-2">
           {item.reducedAmount?.split(" / ").map((line, index, arr) => (

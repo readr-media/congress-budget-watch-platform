@@ -37,7 +37,7 @@ export const TimelineItem = ({
         <div className="flex items-center justify-between md:w-[200px] md:max-w-[200px]">
           <div className="min-w-0 text-gray-900">
             <div className="md:text-md text-base leading-7 font-normal md:leading-8">
-              <time className="font-inherit leading-inherit align-middle text-inherit underline">
+              <time className="font-inherit leading-inherit align-middle text-inherit lg:underline">
                 {date}
               </time>
               <span className="align-middle">{title}</span>

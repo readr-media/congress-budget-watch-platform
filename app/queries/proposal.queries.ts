@@ -65,11 +65,18 @@ export const GET_PROPOSAL_BY_ID_QUERY = graphql(`
       react_good
       react_whatever
       budgetImageUrl
+      historicalParentProposals {
+        id
+      }
+      mergedParentProposals {
+        id
+        proposers {
+          id
+          name
+        }
+      }
       historicalProposals {
         id
-        meetings {
-          id
-        }
       }
       government {
         id
@@ -120,6 +127,9 @@ export const GET_PROPOSAL_BY_ID_QUERY = graphql(`
       }
       historicalProposals {
         id
+        meetings {
+          id
+        }
         proposers {
           id
           name

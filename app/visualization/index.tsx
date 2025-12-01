@@ -11,16 +11,30 @@ import { DepartmentVisualization } from "./department";
 import BudgetTypeLegend from "~/components/budget-type-legend";
 import { BUDGET_TYPE_LEGEND_ITEMS } from "~/constants/legends";
 import { useVisualizationState } from "./use-visualization-state";
-import { type NodeDatum } from "./helpers";
+import {
+  formatAmountWithUnit,
+  type NodeDatum,
+  type VisualizationGroupedData,
+} from "./helpers";
 import type { CirclePackPadding } from "./circle-pack-chart";
 import BudgetDetailSkeleton from "~/components/skeleton/budget-detail-skeleton";
 import VisualizationSkeleton from "~/components/skeleton/visualization-skeleton";
-import Image from "~/components/image";
+import SummaryPanel, {
+  type SummaryPanelSummary,
+} from "./components/SummaryPanel";
+import { useQuery } from "@tanstack/react-query";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "~/components/ui/tooltip";
+  BUDGET_BY_DEPARTMENT_URL,
+  BUDGET_BY_LEGISLATOR_URL,
+} from "~/config/budget-endpoints";
+import { budgetByDepartmentSchema } from "~/types/budget-by-department.schema";
+import { budgetByLegislatorSchema } from "~/types/budget-by-legislator.schema";
+import type { GetVisualizationProposalsQuery } from "~/graphql/graphql";
+import type {
+  SelectOption,
+  VisualizationMode,
+  VisualizationTab,
+} from "~/types/visualization";
 
 const useChartDimensions = () => {
   const [height, setHeight] = useState<number>(0);
@@ -63,7 +77,156 @@ const useChartDimensions = () => {
   return { ref, width, height };
 };
 
-const Visualization = () => {
+type VisualizationViewProps = {
+  activeTab: VisualizationTab;
+  onTabChange: (tab: VisualizationTab) => void;
+  yearOptions: SelectOption[];
+  selectedYear: SelectOption;
+  onYearChange: (option: SelectOption) => void;
+  mode: VisualizationMode;
+  onModeChange: (mode: VisualizationMode) => void;
+  isShowingAll: boolean;
+  onToggleShowAll: () => void;
+  legislatorOptions: SelectOption[];
+  selectedLegislatorOption: SelectOption | null;
+  onLegislatorChange: (option: SelectOption | null) => void;
+  departmentOptions: SelectOption[];
+  selectedDepartmentOption: SelectOption | null;
+  onDepartmentChange: (option: SelectOption | null) => void;
+  isDesktop: boolean;
+  isLoading: boolean;
+  chartContainerRef: RefCallback<HTMLDivElement>;
+  chartWidth: number;
+  chartHeight: number;
+  visualizationData: GetVisualizationProposalsQuery;
+  legislatorVisualizationData: VisualizationGroupedData | null;
+  legislatorSummary: SummaryPanelSummary;
+  departmentSummary: SummaryPanelSummary;
+  legislatorPadding?: CirclePackPadding;
+  onNodeClick: (node: NodeDatum) => void;
+};
+
+const VisualizationView = ({
+  activeTab,
+  onTabChange,
+  yearOptions,
+  selectedYear,
+  onYearChange,
+  mode,
+  onModeChange,
+  isShowingAll,
+  onToggleShowAll,
+  legislatorOptions,
+  selectedLegislatorOption,
+  onLegislatorChange,
+  departmentOptions,
+  selectedDepartmentOption,
+  onDepartmentChange,
+  isDesktop,
+  isLoading,
+  chartContainerRef,
+  chartWidth,
+  chartHeight,
+  visualizationData,
+  legislatorVisualizationData,
+  legislatorSummary,
+  departmentSummary,
+  legislatorPadding,
+  onNodeClick,
+}: VisualizationViewProps) => {
+  return (
+    <div>
+      <div className="flex flex-col gap-y-3 p-4">
+        <DesktopControls
+          activeTab={activeTab}
+          onTabChange={onTabChange}
+          yearOptions={yearOptions}
+          selectedYear={selectedYear}
+          onYearChange={onYearChange}
+        />
+        <MobileControls
+          activeTab={activeTab}
+          onTabChange={onTabChange}
+          yearOptions={yearOptions}
+          selectedYear={selectedYear}
+          onYearChange={onYearChange}
+          isShowingAll={isShowingAll}
+          onToggleShowAll={onToggleShowAll}
+          legislatorOptions={legislatorOptions}
+          selectedLegislator={selectedLegislatorOption}
+          onLegislatorChange={onLegislatorChange}
+          departmentOptions={departmentOptions}
+          selectedDepartment={selectedDepartmentOption}
+          onDepartmentChange={onDepartmentChange}
+        />
+
+        <div>
+          <div className="flex flex-col items-center justify-center gap-4 md:flex-row md:gap-x-6">
+            <label className="inline-flex items-center gap-2">
+              <input
+                type="radio"
+                name="viz-mode"
+                value="amount"
+                checked={mode === "amount"}
+                onChange={() => onModeChange("amount")}
+                className="accent-brand-primary h-4 w-4"
+              />
+              <span>依金額（刪減/凍結）</span>
+            </label>
+            <label className="inline-flex items-center gap-2">
+              <input
+                type="radio"
+                name="viz-mode"
+                value="count"
+                checked={mode === "count"}
+                onChange={() => onModeChange("count")}
+                className="accent-brand-primary h-4 w-4"
+              />
+              <span>依數量（凍結案/刪減案/建議案）</span>
+            </label>
+          </div>
+        </div>
+
+        <SummaryPanel
+          summary={activeTab === "legislator" ? legislatorSummary : departmentSummary}
+        />
+
+        <BudgetTypeLegend items={BUDGET_TYPE_LEGEND_ITEMS} />
+
+        {isLoading && <BudgetDetailSkeleton isDesktop={isDesktop} />}
+
+        <div ref={chartContainerRef} className="chart-container">
+          {activeTab === "legislator" && legislatorVisualizationData && (
+            <DepartmentVisualization
+              data={visualizationData}
+              transformedData={legislatorVisualizationData}
+              padding={legislatorPadding}
+              onNodeClick={onNodeClick}
+              width={chartWidth}
+              height={chartHeight}
+              mode={mode}
+            />
+          )}
+          {activeTab === "department" && (
+            <div className="w-full">
+              <div className="aspect-video md:aspect-video lg:aspect-video">
+                <DepartmentVisualization
+                  data={visualizationData}
+                  onNodeClick={onNodeClick}
+                  width={chartWidth}
+                  height={chartHeight}
+                  mode={mode}
+                />
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const VisualizationContainer = () => {
   const {
     ref: chartContainerRef,
     width: chartWidth,
@@ -92,10 +255,64 @@ const Visualization = () => {
     isError,
     visualizationData,
     legislatorVisualizationData,
-    summaryStats,
-    formattedReductionAmount,
-    formattedFreezeAmount,
   } = useVisualizationState();
+
+  const legislatorBudgetQueryKey = [
+    "budget",
+    "legislators",
+    selectedLegislatorOption?.value ?? "all",
+  ];
+  const fetchLegislatorBudget = async () => {
+    const response = await fetch(BUDGET_BY_LEGISLATOR_URL);
+    if (!response.ok) {
+      throw new Error("無法載入立委預算資料");
+    }
+    return budgetByLegislatorSchema.parse(await response.json());
+  };
+
+  const fetchDepartmentBudget = async () => {
+    const response = await fetch(BUDGET_BY_DEPARTMENT_URL);
+    if (!response.ok) {
+      throw new Error("無法載入部會預算資料");
+    }
+    return budgetByDepartmentSchema.parse(await response.json());
+  };
+  const { data: legislatorBudgetSummaryData } = useQuery({
+    queryKey: legislatorBudgetQueryKey,
+    queryFn: fetchLegislatorBudget,
+    enabled: activeTab === "legislator",
+  });
+  const departmentBudgetQueryKey = ["budget", "departments"];
+  const { data: departmentBudgetSummaryData } = useQuery({
+    queryKey: departmentBudgetQueryKey,
+    queryFn: fetchDepartmentBudget,
+    enabled: activeTab === "department",
+  });
+  const legislatorSummary = useMemo<SummaryPanelSummary>(() => {
+    const overall = legislatorBudgetSummaryData?.[0]?.overall;
+    const reductionAmount = overall?.reductionAmount ?? 0;
+    const freezeAmount = overall?.freezeAmount ?? 0;
+    return {
+      formattedReductionAmount: formatAmountWithUnit(reductionAmount),
+      formattedFreezeAmount: formatAmountWithUnit(freezeAmount),
+      reductionCount: overall?.reductionCount ?? 0,
+      freezeCount: overall?.freezeCount ?? 0,
+      mainResolutionCount: overall?.otherCount ?? 0,
+    };
+  }, [legislatorBudgetSummaryData]);
+
+  const departmentSummary = useMemo<SummaryPanelSummary>(() => {
+    const overall = departmentBudgetSummaryData?.[0]?.overall;
+    const reductionAmount = overall?.reductionAmount ?? 0;
+    const freezeAmount = overall?.freezeAmount ?? 0;
+    return {
+      formattedReductionAmount: formatAmountWithUnit(reductionAmount),
+      formattedFreezeAmount: formatAmountWithUnit(freezeAmount),
+      reductionCount: overall?.reductionCount ?? 0,
+      freezeCount: overall?.freezeCount ?? 0,
+      mainResolutionCount: overall?.otherCount ?? 0,
+    };
+  }, [departmentBudgetSummaryData]);
 
   const legislatorPadding = useMemo<CirclePackPadding | undefined>(() => {
     if (mode !== "amount") return undefined;
@@ -145,168 +362,35 @@ const Visualization = () => {
   }
 
   return (
-    <div>
-      <div className="flex flex-col gap-y-3 p-4">
-        <DesktopControls
-          activeTab={activeTab}
-          onTabChange={handleTabChange}
-          yearOptions={yearOptions}
-          selectedYear={selectedYear}
-          onYearChange={handleYearChange}
-        />
-        <MobileControls
-          activeTab={activeTab}
-          onTabChange={handleTabChange}
-          yearOptions={yearOptions}
-          selectedYear={selectedYear}
-          onYearChange={handleYearChange}
-          isShowingAll={isShowingAll}
-          onToggleShowAll={handleToggleShowAll}
-          legislatorOptions={legislatorOptions}
-          selectedLegislator={selectedLegislatorOption}
-          onLegislatorChange={handleLegislatorChange}
-          departmentOptions={departmentOptions}
-          selectedDepartment={selectedDepartmentOption}
-          onDepartmentChange={handleDepartmentChange}
-        />
-
-        <div>
-          <div className="flex flex-col items-center justify-center gap-4 md:flex-row md:gap-x-6">
-            <label className="inline-flex items-center gap-2">
-              <input
-                type="radio"
-                name="viz-mode"
-                value="amount"
-                checked={mode === "amount"}
-                onChange={() => setMode("amount")}
-                className="accent-brand-primary h-4 w-4"
-              />
-              <span>依金額（刪減/凍結）</span>
-            </label>
-            <label className="inline-flex items-center gap-2">
-              <input
-                type="radio"
-                name="viz-mode"
-                value="count"
-                checked={mode === "count"}
-                onChange={() => setMode("count")}
-                className="accent-brand-primary h-4 w-4"
-              />
-              <span>依數量（凍結案/刪減案/建議案）</span>
-            </label>
-          </div>
-        </div>
-
-        <div className="bg-surface-notice md:max-w-visualization-card flex flex-col items-center justify-center rounded-lg border-2 p-2.5 md:mx-auto">
-          <div>
-            <p>
-              總共刪減{" "}
-              <span className="text-budget-accent">
-                {formattedReductionAmount}
-              </span>
-              （
-              <span className="text-budget-accent">
-                {summaryStats.reductionCount}
-              </span>
-              個提案）
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <span className="ml-1 inline-flex">
-                    <Image
-                      src="/icon/icon-explain.svg"
-                      alt="說明"
-                      className="h-4 w-4"
-                    />
-                  </span>
-                </TooltipTrigger>
-                <TooltipContent className="bg-black text-white">
-                  刪減案相關說明
-                </TooltipContent>
-              </Tooltip>
-            </p>
-            <p>
-              凍結{" "}
-              <span className="text-budget-accent">
-                {formattedFreezeAmount}
-              </span>
-              （
-              <span className="text-budget-accent">
-                {summaryStats.freezeCount}
-              </span>
-              個提案）
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <span className="ml-1 inline-flex">
-                    <Image
-                      src="/icon/icon-explain.svg"
-                      alt="說明"
-                      className="h-4 w-4"
-                    />
-                  </span>
-                </TooltipTrigger>
-                <TooltipContent className="bg-black text-white">
-                  凍結案相關說明
-                </TooltipContent>
-              </Tooltip>
-            </p>
-            <p>
-              主決議提案數：
-              <span className="text-budget-accent">
-                {summaryStats.mainResolutionCount}
-              </span>
-              個
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <span className="ml-1 inline-flex">
-                    <Image
-                      src="/icon/icon-explain.svg"
-                      alt="說明"
-                      className="h-4 w-4"
-                    />
-                  </span>
-                </TooltipTrigger>
-                <TooltipContent className="bg-black text-white">
-                  主決議提案相關說明
-                </TooltipContent>
-              </Tooltip>
-            </p>
-          </div>
-        </div>
-
-        <BudgetTypeLegend items={BUDGET_TYPE_LEGEND_ITEMS} />
-
-        {isLoading && <BudgetDetailSkeleton isDesktop={isDesktop} />}
-
-        <div ref={chartContainerRef} className="chart-container">
-          {activeTab === "legislator" && legislatorVisualizationData && (
-            <DepartmentVisualization
-              data={visualizationData}
-              transformedData={legislatorVisualizationData}
-              padding={legislatorPadding}
-              onNodeClick={handleNodeClick}
-              width={chartWidth}
-              height={chartHeight}
-              mode={mode}
-            />
-          )}
-          {activeTab === "department" && (
-            // Tailwind CSS: full-width visual with responsive aspect ratio
-            <div className="w-full">
-              <div className="aspect-video md:aspect-video lg:aspect-video">
-                <DepartmentVisualization
-                  data={visualizationData}
-                  onNodeClick={handleNodeClick}
-                  width={chartWidth}
-                  height={chartHeight}
-                  mode={mode}
-                />
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
+    <VisualizationView
+      activeTab={activeTab}
+      onTabChange={handleTabChange}
+      yearOptions={yearOptions}
+      selectedYear={selectedYear}
+      onYearChange={handleYearChange}
+      mode={mode}
+      onModeChange={setMode}
+      isShowingAll={isShowingAll}
+      onToggleShowAll={handleToggleShowAll}
+      legislatorOptions={legislatorOptions}
+      selectedLegislatorOption={selectedLegislatorOption}
+      onLegislatorChange={handleLegislatorChange}
+      departmentOptions={departmentOptions}
+      selectedDepartmentOption={selectedDepartmentOption}
+      onDepartmentChange={handleDepartmentChange}
+      isDesktop={isDesktop}
+      isLoading={isLoading}
+      chartContainerRef={chartContainerRef}
+      chartWidth={chartWidth}
+      chartHeight={chartHeight}
+      visualizationData={visualizationData}
+      legislatorVisualizationData={legislatorVisualizationData}
+      legislatorSummary={legislatorSummary}
+      departmentSummary={departmentSummary}
+      legislatorPadding={legislatorPadding}
+      onNodeClick={handleNodeClick}
+    />
   );
 };
 
-export default Visualization;
+export default VisualizationContainer;
