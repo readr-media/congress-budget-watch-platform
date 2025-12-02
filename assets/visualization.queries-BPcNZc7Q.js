@@ -1,4 +1,4 @@
-import{p as l}from"./chunk-4WY6JWTD-2Cr-QbDP.js";import{t}from"./gql-lnTnoR53.js";const u="/congress-budget-watch-platform/".replace(/\/$/,""),m=`${u}/`,g=500,P=({src:e,...o})=>l.jsx("img",{src:m+e,...o});t(`
+import{p as l}from"./chunk-4WY6JWTD-BhhSccj7.js";import{t}from"./gql-J0UfXxmj.js";const u="/congress-budget-watch-platform/".replace(/\/$/,""),m=`${u}/`,g=500,P=({src:e,...o})=>l.jsx("img",{src:m+e,...o});t(`
   query GetBudgetsWithGovernment {
     budgets {
       id
