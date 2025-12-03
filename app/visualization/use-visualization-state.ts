@@ -20,8 +20,10 @@ import { sortOptions } from "~/constants/options";
 import {
   formatAmountWithUnit,
   mapVisualizationProposals,
+  transformToCategorizedData,
   transformToGroupedByLegislatorData,
   type VisualizationGroupedData,
+  type NodeDatum,
 } from "./helpers";
 import { useFragment } from "~/graphql";
 import type {
@@ -69,6 +71,7 @@ type UseVisualizationStateResult = {
   summaryStats: SummaryStats;
   formattedReductionAmount: string;
   formattedFreezeAmount: string;
+  selectedDepartmentCategorizedData: Record<string, NodeDatum> | null;
 };
 
 const useVisualizationState = (): UseVisualizationStateResult => {
@@ -232,6 +235,11 @@ const useVisualizationState = (): UseVisualizationStateResult => {
     );
   }, [allProposals]);
 
+  const normalizeDepartmentCategory = useCallback((category?: string | null) => {
+    const trimmed = category?.trim();
+    return trimmed && trimmed.length > 0 ? trimmed : "未分類";
+  }, []);
+
   const filteredLegislatorProposalIds = useMemo(() => {
     if (isDesktop) return null;
     if (activeTab !== "legislator" || !selectedLegislatorOption) return null;
@@ -259,6 +267,47 @@ const useVisualizationState = (): UseVisualizationStateResult => {
       .filter((id): id is string => Boolean(id));
     return new Set(ids);
   }, [activeTab, allProposals, isDesktop, selectedDepartmentOption]);
+
+  const selectedDepartmentCategorizedData = useMemo<
+    Record<string, NodeDatum> | null
+  >(() => {
+    if (
+      isDesktop ||
+      !data ||
+      activeTab !== "department" ||
+      !selectedDepartmentOption ||
+      !selectedDepartmentOption.value
+    ) {
+      return null;
+    }
+
+    const filteredProposals =
+      data.proposals?.filter((proposal) => {
+        if (!proposal) return false;
+        const category = normalizeDepartmentCategory(
+          proposal.government?.category ?? null
+        );
+        return category === selectedDepartmentOption.value;
+      }) ?? [];
+
+    if (!filteredProposals.length) {
+      return null;
+    }
+
+    const filteredData: GetVisualizationProposalsQuery = {
+      ...data,
+      proposals: filteredProposals,
+    };
+
+    return transformToCategorizedData(filteredData, mode);
+  }, [
+    activeTab,
+    data,
+    isDesktop,
+    mode,
+    normalizeDepartmentCategory,
+    selectedDepartmentOption,
+  ]);
 
   useEffect(() => {
     if (!isMobile) return;
@@ -411,6 +460,7 @@ const useVisualizationState = (): UseVisualizationStateResult => {
     summaryStats,
     formattedReductionAmount,
     formattedFreezeAmount,
+    selectedDepartmentCategorizedData,
   };
 };
 

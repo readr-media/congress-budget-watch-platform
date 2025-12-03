@@ -103,6 +103,9 @@ type VisualizationViewProps = {
   legislatorSummary: SummaryPanelSummary;
   departmentSummary: SummaryPanelSummary;
   legislatorPadding?: CirclePackPadding;
+  selectedDepartmentCategorizedData: Record<string, NodeDatum> | null;
+  selectedDepartmentTitle?: string | null;
+  showSelectedDepartmentChart: boolean;
   onNodeClick: (node: NodeDatum) => void;
 };
 
@@ -132,6 +135,9 @@ const VisualizationView = ({
   legislatorSummary,
   departmentSummary,
   legislatorPadding,
+  selectedDepartmentCategorizedData,
+  selectedDepartmentTitle,
+  showSelectedDepartmentChart,
   onNodeClick,
 }: VisualizationViewProps) => {
   return (
@@ -216,6 +222,11 @@ const VisualizationView = ({
                   width={chartWidth}
                   height={chartHeight}
                   mode={mode}
+                  selectedDepartmentCategorizedData={
+                    selectedDepartmentCategorizedData
+                  }
+                  selectedDepartmentTitle={selectedDepartmentTitle ?? null}
+                  showSelectedDepartmentChart={showSelectedDepartmentChart}
                 />
               </div>
             </div>
@@ -255,6 +266,7 @@ const VisualizationContainer = () => {
     isError,
     visualizationData,
     legislatorVisualizationData,
+    selectedDepartmentCategorizedData,
   } = useVisualizationState();
 
   const legislatorBudgetQueryKey = [
@@ -388,6 +400,11 @@ const VisualizationContainer = () => {
       legislatorSummary={legislatorSummary}
       departmentSummary={departmentSummary}
       legislatorPadding={legislatorPadding}
+      selectedDepartmentCategorizedData={selectedDepartmentCategorizedData}
+      selectedDepartmentTitle={selectedDepartmentOption?.label ?? null}
+      showSelectedDepartmentChart={
+        !isDesktop && Boolean(selectedDepartmentCategorizedData)
+      }
       onNodeClick={handleNodeClick}
     />
   );

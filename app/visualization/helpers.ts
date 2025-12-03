@@ -84,7 +84,7 @@ export const DEFAULT_COLOR = "#D5D5D5"; // 無黨籍
 
 export type VisualizationGroupedData = Record<string, NodeDatum>;
 
-const GROUP_LABELS = {
+export const GROUP_LABELS = {
   freeze: "凍結",
   reduce: "刪減",
   other: "主決議",
@@ -140,7 +140,7 @@ export const transformToCirclePackData = (
 };
 
 /**
- * 將提案資料依立委與類型群組，回傳 DepartmentVisualization 可迭代的資料格式。
+ * 將提案資料依立委與類型群組
  */
 export const transformToGroupedByLegislatorData = (
   data: GetVisualizationProposalsQuery,
@@ -452,21 +452,29 @@ export const transformToCategorizedData = (
           );
 
           if (freezeAmount <= 0 && reductionAmount <= 0) return;
+          const primaryProposer =
+            groupedByProposerProposals[0]?.proposers?.[0];
+          const proposerDisplayName =
+            primaryProposer?.name ?? "未知提案者";
+          const proposerPartyName =
+            primaryProposer?.party?.name ?? "無黨籍";
+          const proposerPartyColor =
+            primaryProposer?.party?.color ??
+            PARTY_COLORS.get(proposerPartyName) ??
+            DEFAULT_COLOR;
+
           proposerNodes.push({
             id: `proposer-${categoryName}-${proposerId}-${key}`, // 更新 ID，使其更清晰地表示立委節點
             proposalId: undefined, // 將 proposalId 設定為 undefined
-            name: `${groupedByProposerProposals[0]?.proposers?.[0].name}\n${GROUP_LABELS[key]}\n${formatAmountWithUnit(defaultTo(key === "freeze" ? freezeAmount : reductionAmount, 0))}`,
+            name: `${proposerDisplayName}\n${GROUP_LABELS[key]}\n${formatAmountWithUnit(
+              defaultTo(key === "freeze" ? freezeAmount : reductionAmount, 0)
+            )}`,
             value: Math.pow(
               defaultTo(key === "freeze" ? freezeAmount : reductionAmount, 0),
               0.45
             ),
             color:
-              groupedByProposerProposals[0]?.proposers?.[0].party?.color ??
-              PARTY_COLORS.get(
-                groupedByProposerProposals[0]?.proposers?.[0].party?.name ??
-                  "無黨籍"
-              ) ??
-              DEFAULT_COLOR,
+              proposerPartyColor,
             proposerId,
             proposalType: key,
             isFrozen: key === "freeze",
@@ -504,3 +512,4 @@ export const transformToCategorizedData = (
     };
   });
 };
+
