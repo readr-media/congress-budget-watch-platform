@@ -1,3 +1,4 @@
+import Select, { type SingleValue } from "react-select";
 import {
   useMemo,
   useRef,
@@ -196,6 +197,28 @@ const VisualizationView = ({
         <SummaryPanel
           summary={activeTab === "legislator" ? legislatorSummary : departmentSummary}
         />
+
+        {isDesktop && activeTab === "department" && (
+          <div className="mt-4 flex w-full justify-center">
+            {departmentOptions.length > 0 ? (
+              <Select
+                className="w-full md:max-w-xl"
+                value={selectedDepartmentOption}
+                options={departmentOptions}
+                onChange={(option) => {
+                  const singleValue = option as SingleValue<SelectOption>;
+                  onDepartmentChange(singleValue ?? null);
+                }}
+                placeholder="選擇部會"
+                isSearchable
+                aria-label="選擇部會"
+                inputId="visualization-department-desktop"
+              />
+            ) : (
+              <p className="text-center text-sm text-gray-500">目前沒有部會資料</p>
+            )}
+          </div>
+        )}
 
         <BudgetTypeLegend items={BUDGET_TYPE_LEGEND_ITEMS} />
 
@@ -403,7 +426,7 @@ const VisualizationContainer = () => {
       selectedDepartmentCategorizedData={selectedDepartmentCategorizedData}
       selectedDepartmentTitle={selectedDepartmentOption?.label ?? null}
       showSelectedDepartmentChart={
-        !isDesktop && Boolean(selectedDepartmentCategorizedData)
+        Boolean(selectedDepartmentCategorizedData)
       }
       onNodeClick={handleNodeClick}
     />

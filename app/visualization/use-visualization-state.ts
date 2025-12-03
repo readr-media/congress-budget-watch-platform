@@ -184,28 +184,6 @@ const useVisualizationState = (): UseVisualizationStateResult => {
     }
   }, []);
 
-  const handleToggleShowAll = useCallback(() => {
-    if (activeTab === "legislator") {
-      if (selectedLegislatorOption) {
-        previousLegislatorOption.current = selectedLegislatorOption;
-        setSelectedLegislatorOption(null);
-        setShouldAutoSelectLegislator(false);
-      } else if (previousLegislatorOption.current) {
-        setSelectedLegislatorOption(previousLegislatorOption.current);
-        setShouldAutoSelectLegislator(false);
-      }
-    } else if (activeTab === "department") {
-      if (selectedDepartmentOption) {
-        previousDepartmentOption.current = selectedDepartmentOption;
-        setSelectedDepartmentOption(null);
-        setShouldAutoSelectDepartment(false);
-      } else if (previousDepartmentOption.current) {
-        setSelectedDepartmentOption(previousDepartmentOption.current);
-        setShouldAutoSelectDepartment(false);
-      }
-    }
-  }, [activeTab, selectedLegislatorOption, selectedDepartmentOption]);
-
   const allProposals = useMemo(() => mapVisualizationProposals(data), [data]);
 
   const legislatorOptions = useMemo<SelectOption[]>(() => {
@@ -235,6 +213,40 @@ const useVisualizationState = (): UseVisualizationStateResult => {
     );
   }, [allProposals]);
 
+  const handleToggleShowAll = useCallback(() => {
+    if (activeTab === "legislator") {
+      if (selectedLegislatorOption) {
+        previousLegislatorOption.current = selectedLegislatorOption;
+        setSelectedLegislatorOption(null);
+        setShouldAutoSelectLegislator(false);
+      } else if (previousLegislatorOption.current) {
+        setSelectedLegislatorOption(previousLegislatorOption.current);
+        setShouldAutoSelectLegislator(false);
+      } else if (legislatorOptions.length > 0) {
+        setSelectedLegislatorOption(legislatorOptions[0]);
+        setShouldAutoSelectLegislator(false);
+      }
+    } else if (activeTab === "department") {
+      if (selectedDepartmentOption) {
+        previousDepartmentOption.current = selectedDepartmentOption;
+        setSelectedDepartmentOption(null);
+        setShouldAutoSelectDepartment(false);
+      } else if (previousDepartmentOption.current) {
+        setSelectedDepartmentOption(previousDepartmentOption.current);
+        setShouldAutoSelectDepartment(false);
+      } else if (departmentOptions.length > 0) {
+        setSelectedDepartmentOption(departmentOptions[0]);
+        setShouldAutoSelectDepartment(false);
+      }
+    }
+  }, [
+    activeTab,
+    selectedLegislatorOption,
+    selectedDepartmentOption,
+    legislatorOptions,
+    departmentOptions,
+  ]);
+
   const normalizeDepartmentCategory = useCallback((category?: string | null) => {
     const trimmed = category?.trim();
     return trimmed && trimmed.length > 0 ? trimmed : "未分類";
@@ -255,7 +267,6 @@ const useVisualizationState = (): UseVisualizationStateResult => {
   }, [activeTab, allProposals, isDesktop, selectedLegislatorOption]);
 
   const filteredDepartmentProposalIds = useMemo(() => {
-    if (isDesktop) return null;
     if (activeTab !== "department" || !selectedDepartmentOption) return null;
     const ids = allProposals
       .filter((proposal) => {
@@ -266,13 +277,12 @@ const useVisualizationState = (): UseVisualizationStateResult => {
       .map((proposal) => proposal.id)
       .filter((id): id is string => Boolean(id));
     return new Set(ids);
-  }, [activeTab, allProposals, isDesktop, selectedDepartmentOption]);
+  }, [activeTab, allProposals, selectedDepartmentOption]);
 
   const selectedDepartmentCategorizedData = useMemo<
     Record<string, NodeDatum> | null
   >(() => {
     if (
-      isDesktop ||
       !data ||
       activeTab !== "department" ||
       !selectedDepartmentOption ||
@@ -303,7 +313,6 @@ const useVisualizationState = (): UseVisualizationStateResult => {
   }, [
     activeTab,
     data,
-    isDesktop,
     mode,
     normalizeDepartmentCategory,
     selectedDepartmentOption,
@@ -350,9 +359,27 @@ const useVisualizationState = (): UseVisualizationStateResult => {
     shouldAutoSelectLegislator,
   ]);
 
+  useEffect(() => {
+    if (!isDesktop) return;
+    if (activeTab !== "department") return;
+    const hasSelection =
+      selectedDepartmentOption &&
+      departmentOptions.some(
+        (option) => option.value === selectedDepartmentOption.value
+      );
+    if (!hasSelection && departmentOptions.length > 0) {
+      setSelectedDepartmentOption(departmentOptions[0]);
+      setShouldAutoSelectDepartment(false);
+    }
+  }, [
+    activeTab,
+    departmentOptions,
+    isDesktop,
+    selectedDepartmentOption,
+  ]);
+
   const effectiveData = useMemo(() => {
     if (!data) return null;
-    if (isDesktop) return data;
 
     let filteredIds: Set<string> | null = null;
     if (activeTab === "legislator" && filteredLegislatorProposalIds) {
@@ -381,13 +408,7 @@ const useVisualizationState = (): UseVisualizationStateResult => {
       }) ?? [];
 
     return { ...data, proposals: filteredProposals };
-  }, [
-    activeTab,
-    data,
-    filteredDepartmentProposalIds,
-    filteredLegislatorProposalIds,
-    isDesktop,
-  ]);
+  }, [activeTab, data, filteredDepartmentProposalIds, filteredLegislatorProposalIds]);
 
   const visualizationData = effectiveData ?? data ?? null;
 
