@@ -205,7 +205,7 @@ export function VoteButtons({
           <button
             type="button"
             onClick={() => handleVote(type)}
-            className={`mt-3 flex w-full items-center justify-center rounded-lg bg-transparent transition-opacity ${
+            className={`mt-3 flex w-full cursor-pointer items-center justify-center rounded-lg bg-transparent transition-opacity ${
               selectedReaction === type ? "opacity-100" : "opacity-80"
             }`}
           >
