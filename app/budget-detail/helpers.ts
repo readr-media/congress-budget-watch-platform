@@ -54,6 +54,7 @@ export function getResultDisplay(result?: string | null): string {
     passed: "通過",
     rejected: "不通過",
     pending: "待審議",
+    reserved: "保留",
   };
 
   return resultMap[result] || result;
