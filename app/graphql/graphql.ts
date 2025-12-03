@@ -1387,7 +1387,14 @@ export type PeopleWhereUniqueInput = {
 export type Proposal = {
   __typename?: 'Proposal';
   budget?: Maybe<Budget>;
+  budgetAmount?: Maybe<Scalars['Float']['output']>;
   budgetImageUrl?: Maybe<Scalars['String']['output']>;
+  budgetMajorCategory?: Maybe<Scalars['String']['output']>;
+  budgetMediumCategory?: Maybe<Scalars['String']['output']>;
+  budgetMinorCategory?: Maybe<Scalars['String']['output']>;
+  budgetProjectName?: Maybe<Scalars['String']['output']>;
+  budgetType?: Maybe<Scalars['String']['output']>;
+  budgetYear?: Maybe<Scalars['Int']['output']>;
   coSigners?: Maybe<Array<People>>;
   coSignersCount?: Maybe<Scalars['Int']['output']>;
   description?: Maybe<Scalars['String']['output']>;
@@ -2397,7 +2404,6 @@ export type Update_Proposal_ReactsMutation = { __typename?: 'Mutation', updatePr
 
 export type GetVisualizationProposalsQueryVariables = Exact<{
   skip: Scalars['Int']['input'];
-  take: Scalars['Int']['input'];
   orderBy: Array<ProposalOrderByInput> | ProposalOrderByInput;
   where: ProposalWhereInput;
 }>;
@@ -2765,8 +2771,8 @@ export const Update_Proposal_ReactsDocument = new TypedDocumentString(`
 }
     `) as unknown as TypedDocumentString<Update_Proposal_ReactsMutation, Update_Proposal_ReactsMutationVariables>;
 export const GetVisualizationProposalsDocument = new TypedDocumentString(`
-    query GetVisualizationProposals($skip: Int!, $take: Int!, $orderBy: [ProposalOrderByInput!]!, $where: ProposalWhereInput!) {
-  proposals(skip: $skip, take: $take, orderBy: $orderBy, where: $where) {
+    query GetVisualizationProposals($skip: Int!, $orderBy: [ProposalOrderByInput!]!, $where: ProposalWhereInput!) {
+  proposals(skip: $skip, orderBy: $orderBy, where: $where) {
     ...VisualizationProposalWithContext
   }
 }

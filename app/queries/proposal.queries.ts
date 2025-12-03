@@ -162,7 +162,6 @@ export const proposalQueryKeys = {
   // 新增: 分頁查詢 keys
   paginated: (
     page: number,
-    pageSize: number,
     sortBy: string,
     where?: Record<string, unknown>,
     year?: number | string | null // 新增 year 參數
@@ -170,7 +169,7 @@ export const proposalQueryKeys = {
     [
       ...proposalQueryKeys.lists(),
       "paginated",
-      { page, pageSize, sortBy, where, year }, // 將 year 加入 key
+      { page, sortBy, where, year }, // 將 year 加入 key
     ] as const,
   details: () => [...proposalQueryKeys.all, "detail"] as const,
   detail: (id: string) => [...proposalQueryKeys.details(), id] as const,

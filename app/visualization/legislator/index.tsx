@@ -279,7 +279,6 @@ const VisualizationLegislator = () => {
     queryFn: () =>
       execute(GET_VISUALIZATION_PROPOSALS_QUERY, {
         skip: 0,
-        take: 1000, // Assuming we want to fetch all proposals for this view
         orderBy: [{ id: OrderDirection.Desc }],
         where: whereFilter,
       }),

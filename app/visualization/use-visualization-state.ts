@@ -71,7 +71,7 @@ type UseVisualizationStateResult = {
   formattedFreezeAmount: string;
 };
 
-export const useVisualizationState = (): UseVisualizationStateResult => {
+const useVisualizationState = (): UseVisualizationStateResult => {
   const [activeTab, setActiveTab] = useState<VisualizationTab>("legislator");
   const [mode, setMode] = useState<VisualizationMode>("amount");
   const [selectedYear, setSelectedYear] = useState<SelectOption>(
@@ -94,7 +94,6 @@ export const useVisualizationState = (): UseVisualizationStateResult => {
 
   const selectedSort = "id-asc";
   const currentPage = 1;
-  const pageSize = 1000;
 
   const whereFilter = useCallback((): ProposalWhereInput => {
     return {
@@ -103,6 +102,9 @@ export const useVisualizationState = (): UseVisualizationStateResult => {
       },
       mergedParentProposals: null,
       historicalParentProposals: null,
+      result: {
+        equals: "passed",
+      },
     };
   }, [selectedYear.value]);
 
@@ -125,7 +127,6 @@ export const useVisualizationState = (): UseVisualizationStateResult => {
   const { data, isLoading, isError } = useQuery({
     queryKey: proposalQueryKeys.paginated(
       currentPage,
-      pageSize,
       selectedSort,
       whereFilter(),
       parseInt(selectedYear.value, 10)
@@ -133,7 +134,6 @@ export const useVisualizationState = (): UseVisualizationStateResult => {
     queryFn: () =>
       execute(GET_VISUALIZATION_PROPOSALS_QUERY, {
         skip: 0,
-        take: pageSize,
         orderBy,
         where: whereFilter(),
       }),
@@ -143,13 +143,12 @@ export const useVisualizationState = (): UseVisualizationStateResult => {
   const handleTabChange = useCallback(
     (tab: VisualizationTab) => {
       setActiveTab(tab);
-      if (!isDesktop) {
-        if (tab === "legislator") {
-          setShouldAutoSelectLegislator(true);
-        } else {
-          setShouldAutoSelectDepartment(true);
-        }
+      if (isDesktop) return;
+      if (tab === "legislator") {
+        setShouldAutoSelectLegislator(true);
+        return;
       }
+      setShouldAutoSelectDepartment(true);
     },
     [isDesktop]
   );
@@ -415,4 +414,4 @@ export const useVisualizationState = (): UseVisualizationStateResult => {
   };
 };
 
-export { YEAR_OPTIONS };
+export { YEAR_OPTIONS, useVisualizationState };
