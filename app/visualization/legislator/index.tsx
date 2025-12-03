@@ -2,7 +2,7 @@ import { useMemo, useState, useCallback } from "react";
 import { Link, useNavigate, useParams } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 import { sumBy, filter } from "lodash";
-import SessionChart from "./session-chart";
+import SessionChart, { type YearCommitteeInfo } from "./session-chart";
 import BudgetTypeLegend from "~/components/budget-type-legend";
 import { BUDGET_TYPE_LEGEND_ITEMS } from "~/constants/legends";
 import SummaryPanel, {
@@ -55,6 +55,7 @@ type TermEntry = {
 
 type Committee = {
   name?: string | null;
+  session?: string | null;
   term?: {
     startDate?: string | null;
     termNumber?: number | null;
@@ -102,16 +103,52 @@ const buildWhereFilter = (
   };
 };
 
-const deriveYearToCommitteeMap = (committees?: Committee[] | null) => {
-  if (!committees) return new Map<string, string>();
+const SESSION_YEAR_REGEX = /(\d+)\s*年度/;
+const SESSION_TERM_REGEX = /第(\d+)屆/;
 
-  const map = new Map<string, string>();
+const deriveBudgetYearKey = (committee: Committee): string | undefined => {
+  if (committee.term?.startDate) {
+    const year = new Date(committee.term.startDate).getFullYear();
+    const budgetYear = year - 1911 + 1;
+    return `${budgetYear}年度`;
+  }
+
+  const sessionYearMatch = committee.session?.match(SESSION_YEAR_REGEX);
+  if (sessionYearMatch?.[1]) {
+    return `${sessionYearMatch[1]}年度`;
+  }
+
+  return undefined;
+};
+
+const deriveTermNumberValue = (committee: Committee): number | undefined => {
+  if (typeof committee.term?.termNumber === "number") {
+    return committee.term.termNumber;
+  }
+
+  const sessionTermMatch = committee.session?.match(SESSION_TERM_REGEX);
+  if (sessionTermMatch?.[1]) {
+    const parsed = Number(sessionTermMatch[1]);
+    return Number.isNaN(parsed) ? undefined : parsed;
+  }
+
+  return undefined;
+};
+
+const deriveYearToCommitteeMap = (
+  committees?: Committee[] | null
+): Map<string, YearCommitteeInfo> => {
+  if (!committees) return new Map<string, YearCommitteeInfo>();
+
+  const map = new Map<string, YearCommitteeInfo>();
   committees.forEach((committee) => {
-    if (committee.term?.startDate) {
-      const year = new Date(committee.term.startDate).getFullYear();
-      const budgetYear = year - 1911 + 1;
-      map.set(`${budgetYear}年度`, committee.name ?? "委員會");
-    }
+    const key = deriveBudgetYearKey(committee);
+    if (!key) return;
+
+    map.set(key, {
+      committeeName: committee.name ?? "委員會",
+      termNumber: deriveTermNumberValue(committee),
+    });
   });
   return map;
 };

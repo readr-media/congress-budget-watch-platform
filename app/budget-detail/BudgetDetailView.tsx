@@ -137,7 +137,7 @@ const BudgetDetailView = ({
                 </section>
                 {/* row 2 */}
                 <section className="flex">
-                  <div>
+                  <div className="min-w-fit">
                     <p className="bg-brand-accent w-fit rounded-t-lg border-2 border-black px-2.5 py-1 text-white">
                       審議階段
                     </p>
@@ -164,13 +164,17 @@ const BudgetDetailView = ({
                               className="hover:text-brand-primary flex gap-x-2 text-neutral-500"
                             >
                               <div
-                                className={`mt-2 size-2 rounded-full ${
+                                className={`mt-2 flex items-center justify-center rounded-full ${
                                   merged.isParent
-                                    ? "bg-brand-primary"
-                                    : "bg-black"
+                                    ? "bg-brand-primary size-5 min-w-5"
+                                    : "size-2 bg-black"
                                 }`}
                               >
-                                主
+                                <span
+                                  className={`${merged.isParent ? "text-white" : "hidden"}`}
+                                >
+                                  主
+                                </span>
                               </div>
                               <div>
                                 <p className="underline">{merged.date}</p>
@@ -514,7 +518,7 @@ const BudgetDetailView = ({
                       src="/icon/explain-term.svg"
                       alt="explain-term"
                       className="size-5"
-                      />
+                    />
                   </button>
                 </div>
                 <p className="whitespace-pre-wrap">
@@ -549,4 +553,3 @@ const BudgetDetailView = ({
 };
 
 export default BudgetDetailView;
-

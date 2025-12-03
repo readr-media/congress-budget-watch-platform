@@ -2,6 +2,11 @@ import { useMediaQuery } from "usehooks-ts";
 import CirclePackChart from "../circle-pack-chart";
 import type { NodeDatum } from "../helpers";
 
+export type YearCommitteeInfo = {
+  committeeName: string;
+  termNumber?: number | null;
+};
+
 const getBorderBottomClass = (index: number, totalItems: number) => {
   return totalItems > 1 && index < totalItems - 1
     ? "border-b border-gray-200"
@@ -11,7 +16,7 @@ const getBorderBottomClass = (index: number, totalItems: number) => {
 type SessionChartProps = {
   data: NodeDatum[];
   presenterDescription?: string | null;
-  yearToCommitteeMap: Map<string, string>;
+  yearToCommitteeMap: Map<string, YearCommitteeInfo>;
   onNodeClick?: (node: NodeDatum) => void | boolean;
 };
 
@@ -45,21 +50,27 @@ const SessionChart = ({
   const chartContainerStyle = {
     maxWidth: `${chartWidthValue}px`,
   };
-
   return (
     <>
-      {data.map((session, index) => (
-        <div
-          key={session.id}
-          className={`mb-2 flex w-full flex-col items-start justify-center ${getBorderBottomClass(
-            index,
-            data.length
-          )} mx-auto`}
-          style={chartContainerStyle}
-        >
-          <div className="flex w-full flex-col items-start justify-center">
-            <p>{session.name}</p>
-            <p>{yearToCommitteeMap.get(session.name) ?? "委員會"}</p>
+      {data.map((session, index) => {
+        const sessionMetadata = yearToCommitteeMap.get(session.name);
+        const termLabel = sessionMetadata?.termNumber
+          ? `第${sessionMetadata.termNumber}屆`
+          : session.name;
+        const committeeLabel = sessionMetadata?.committeeName ?? "委員會";
+
+        return (
+          <div
+            key={session.id}
+            className={`mb-2 flex w-full flex-col items-start justify-center ${getBorderBottomClass(
+              index,
+              data.length
+            )} mx-auto`}
+            style={chartContainerStyle}
+          >
+            <div className="flex w-full flex-col items-start justify-center">
+              <p>{termLabel}</p>
+              <p>{committeeLabel}</p>
             {presenterDescription ? (
               <div className="flex w-full flex-col items-start justify-center mb-5 lg:mb-8">
                 <p className="text-sm leading-relaxed text-black/80">
@@ -80,8 +91,9 @@ const SessionChart = ({
               onNodeClick={onNodeClick}
             />
           </div>
-        </div>
-      ))}
+          </div>
+        );
+      })}
     </>
   );
 };
