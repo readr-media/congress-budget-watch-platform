@@ -133,18 +133,19 @@ const deriveTermNumbers = (
   committees?: Committee[] | null,
   personTerms?: Array<TermEntry | null> | null
 ): TermNumbers => {
-  if (!committees && !personTerms) return [];
+  const personTermNumbers = extractTermNumbers(personTerms);
 
+  // If person has term data, use it as the primary source
+  if (personTermNumbers.length > 0) {
+    return [...new Set(personTermNumbers)].sort((a, b) => a - b);
+  }
+
+  // Fallback to committee terms if person terms are missing
   const committeeTermNumbers = extractTermNumbers(
     committees?.map((c) => c.term) ?? []
   );
-  const personTermNumbers = extractTermNumbers(personTerms);
 
-  const allTermNumbers = [
-    ...new Set([...committeeTermNumbers, ...personTermNumbers]),
-  ];
-
-  return allTermNumbers.sort((a, b) => a - b);
+  return [...new Set(committeeTermNumbers)].sort((a, b) => a - b);
 };
 
 const computeSummaryStats = (

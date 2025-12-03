@@ -511,6 +511,12 @@ export const useCirclePackChart = ({
     const zoomBehavior = d3
       .zoom<SVGSVGElement, undefined>()
       .scaleExtent([0.5, 10])
+      .filter((event) => {
+        if (event.type === "wheel") {
+          return event.ctrlKey || event.metaKey;
+        }
+        return true;
+      })
       .on("zoom", (event) => {
         if (
           event.sourceEvent?.type === "wheel" ||

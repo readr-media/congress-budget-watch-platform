@@ -7,4 +7,5 @@ export default [
   route("/collaboration", "routes/collaboration.tsx"),
   route("/budget/:id", "budget-detail/index.tsx"),
   route("/visualization/legislator/:id", "visualization/legislator/index.tsx"),
+  route("/about", "about/index.tsx"),
 ] satisfies RouteConfig;

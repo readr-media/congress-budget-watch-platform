@@ -22,7 +22,7 @@ export const DEFAULT_CHART_WIDTH = 720;
 export const MOBILE_BREAKPOINT = 768;
 export const GESTURE_HINT_AUTO_HIDE_MS = 2000;
 export const GESTURE_HINT_MESSAGE =
-  "捏合或滑動即可縮放，點擊後拖曳可以平移";
+  "使用 Cmd/Ctrl + 滾輪縮放，點擊後拖曳可以平移";
 
 export const LABEL_CHILDREN_OFFSET_FACTOR = 0.88;
 export const HOVER_STROKE_WIDTH = 2;
