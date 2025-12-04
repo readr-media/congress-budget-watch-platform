@@ -16,7 +16,7 @@ import {
   type ProposalWhereInput,
   type GetVisualizationProposalsQuery,
 } from "~/graphql/graphql";
-import { sortOptions } from "~/constants/options";
+import { sortOptions, YEAR_OPTIONS } from "~/constants/options";
 import {
   formatAmountWithUnit,
   mapVisualizationProposals,
@@ -26,57 +26,18 @@ import {
   type NodeDatum,
 } from "./helpers";
 import { useFragment } from "~/graphql";
-import type {
-  SelectOption,
+import {
+  type SelectOption,
   VisualizationMode,
   VisualizationTab,
 } from "~/types/visualization";
-
-const YEAR_OPTIONS: SelectOption[] = [
-  { value: "114", label: "114年度 (2025)" },
-  { value: "113", label: "113年度 (2024)" },
-];
-
-type SummaryStats = {
-  totalReductionAmount: number;
-  reductionCount: number;
-  totalFreezeAmount: number;
-  freezeCount: number;
-  mainResolutionCount: number;
-};
-
-type UseVisualizationStateResult = {
-  activeTab: VisualizationTab;
-  handleTabChange: (tab: VisualizationTab) => void;
-  mode: VisualizationMode;
-  setMode: (mode: VisualizationMode) => void;
-  selectedYear: SelectOption;
-  handleYearChange: (option: SelectOption) => void;
-  yearOptions: SelectOption[];
-  legislatorOptions: SelectOption[];
-  selectedLegislatorOption: SelectOption | null;
-  handleLegislatorChange: (option: SelectOption | null) => void;
-  departmentOptions: SelectOption[];
-  selectedDepartmentOption: SelectOption | null;
-  handleDepartmentChange: (option: SelectOption | null) => void;
-  handleToggleShowAll: () => void;
-  isShowingAll: boolean;
-  isDesktop: boolean;
-  isMobile: boolean;
-  isLoading: boolean;
-  isError: boolean;
-  rawData: GetVisualizationProposalsQuery | undefined;
-  visualizationData: GetVisualizationProposalsQuery | null;
-  legislatorVisualizationData: VisualizationGroupedData | null;
-  summaryStats: SummaryStats;
-  formattedReductionAmount: string;
-  formattedFreezeAmount: string;
-  selectedDepartmentCategorizedData: Record<string, NodeDatum> | null;
-};
+import type { SummaryStats, UseVisualizationStateResult } from "./types";
 
 const useVisualizationState = (): UseVisualizationStateResult => {
-  const [activeTab, setActiveTab] = useState<VisualizationTab>("legislator");
-  const [mode, setMode] = useState<VisualizationMode>("amount");
+  const [activeTab, setActiveTab] = useState<VisualizationTab>(
+    VisualizationTab.Legislator
+  );
+  const [mode, setMode] = useState<VisualizationMode>(VisualizationMode.Amount);
   const [selectedYear, setSelectedYear] = useState<SelectOption>(
     YEAR_OPTIONS[0]
   );
@@ -247,10 +208,13 @@ const useVisualizationState = (): UseVisualizationStateResult => {
     departmentOptions,
   ]);
 
-  const normalizeDepartmentCategory = useCallback((category?: string | null) => {
-    const trimmed = category?.trim();
-    return trimmed && trimmed.length > 0 ? trimmed : "未分類";
-  }, []);
+  const normalizeDepartmentCategory = useCallback(
+    (category?: string | null) => {
+      const trimmed = category?.trim();
+      return trimmed && trimmed.length > 0 ? trimmed : "未分類";
+    },
+    []
+  );
 
   const filteredLegislatorProposalIds = useMemo(() => {
     if (isDesktop) return null;
@@ -279,9 +243,10 @@ const useVisualizationState = (): UseVisualizationStateResult => {
     return new Set(ids);
   }, [activeTab, allProposals, selectedDepartmentOption]);
 
-  const selectedDepartmentCategorizedData = useMemo<
-    Record<string, NodeDatum> | null
-  >(() => {
+  const selectedDepartmentCategorizedData = useMemo<Record<
+    string,
+    NodeDatum
+  > | null>(() => {
     if (
       !data ||
       activeTab !== "department" ||
@@ -371,12 +336,7 @@ const useVisualizationState = (): UseVisualizationStateResult => {
       setSelectedDepartmentOption(departmentOptions[0]);
       setShouldAutoSelectDepartment(false);
     }
-  }, [
-    activeTab,
-    departmentOptions,
-    isDesktop,
-    selectedDepartmentOption,
-  ]);
+  }, [activeTab, departmentOptions, isDesktop, selectedDepartmentOption]);
 
   const effectiveData = useMemo(() => {
     if (!data) return null;
@@ -408,7 +368,12 @@ const useVisualizationState = (): UseVisualizationStateResult => {
       }) ?? [];
 
     return { ...data, proposals: filteredProposals };
-  }, [activeTab, data, filteredDepartmentProposalIds, filteredLegislatorProposalIds]);
+  }, [
+    activeTab,
+    data,
+    filteredDepartmentProposalIds,
+    filteredLegislatorProposalIds,
+  ]);
 
   const visualizationData = effectiveData ?? data ?? null;
 
@@ -485,4 +450,4 @@ const useVisualizationState = (): UseVisualizationStateResult => {
   };
 };
 
-export { YEAR_OPTIONS, useVisualizationState };
+export { useVisualizationState };

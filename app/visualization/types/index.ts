@@ -40,3 +40,39 @@ export type VisualizationViewProps = {
   showSelectedDepartmentChart: boolean;
   onNodeClick: (node: NodeDatum) => void;
 };
+
+export type SummaryStats = {
+  totalReductionAmount: number;
+  reductionCount: number;
+  totalFreezeAmount: number;
+  freezeCount: number;
+  mainResolutionCount: number;
+};
+export type UseVisualizationStateResult = {
+  activeTab: VisualizationTab;
+  handleTabChange: (tab: VisualizationTab) => void;
+  mode: VisualizationMode;
+  setMode: (mode: VisualizationMode) => void;
+  selectedYear: SelectOption;
+  handleYearChange: (option: SelectOption) => void;
+  yearOptions: SelectOption[];
+  legislatorOptions: SelectOption[];
+  selectedLegislatorOption: SelectOption | null;
+  handleLegislatorChange: (option: SelectOption | null) => void;
+  departmentOptions: SelectOption[];
+  selectedDepartmentOption: SelectOption | null;
+  handleDepartmentChange: (option: SelectOption | null) => void;
+  handleToggleShowAll: () => void;
+  isShowingAll: boolean;
+  isDesktop: boolean;
+  isMobile: boolean;
+  isLoading: boolean;
+  isError: boolean;
+  rawData: GetVisualizationProposalsQuery | undefined;
+  visualizationData: GetVisualizationProposalsQuery | null;
+  legislatorVisualizationData: VisualizationGroupedData | null;
+  summaryStats: SummaryStats;
+  formattedReductionAmount: string;
+  formattedFreezeAmount: string;
+  selectedDepartmentCategorizedData: Record<string, NodeDatum> | null;
+};
