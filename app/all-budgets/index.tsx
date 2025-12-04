@@ -131,20 +131,33 @@ export const AllBudgets = () => {
   // 計算 GraphQL 參數
   const skip = (currentPage - 1) * pageSize;
   const orderBy = useMemo((): ProposalOrderByInput[] => {
+    // 預設以預算金額由大到小排序，確保結果穩定
+    const budgetAmountDesc: ProposalOrderByInput = {
+      budgetAmount: OrderDirection.Desc,
+    };
+
     // 將 sortOptions 的 value 轉換為 GraphQL orderBy 格式
     const sortOption = find(sortOptions, (o) => o.value === selectedSort);
-    if (!sortOption) return [{ id: OrderDirection.Desc }];
+    if (!sortOption) return [budgetAmountDesc];
 
     const direction =
       sortOption.direction === SortDirection.ASC
         ? OrderDirection.Asc
         : OrderDirection.Desc;
 
-    return [
-      {
-        [sortOption.field]: direction,
-      },
-    ];
+    const primaryOrder: ProposalOrderByInput = {
+      [sortOption.field]: direction,
+    };
+
+    // 若主要排序即為 budgetAmount，避免重複條目
+    if (sortOption.field === "budgetAmount") {
+      if (direction === OrderDirection.Desc) {
+        return [budgetAmountDesc];
+      }
+      return [primaryOrder];
+    }
+
+    return [primaryOrder, budgetAmountDesc];
   }, [selectedSort]);
 
   const whereFilter = useMemo((): ProposalWhereInput => {

@@ -14,6 +14,18 @@ export const sortOptions = [
     field: "id",
     direction: SortDirection.DESC,
   },
+  {
+    value: "budget-amount-desc",
+    label: "預算金額 (降序)",
+    field: "budgetAmount",
+    direction: SortDirection.DESC,
+  },
+  {
+    value: "budget-amount-asc",
+    label: "預算金額 (升序)",
+    field: "budgetAmount",
+    direction: SortDirection.ASC,
+  },
 ];
 
 export type SortOption = (typeof sortOptions)[number];
