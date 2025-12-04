@@ -12,7 +12,6 @@ const createVisualizationStore = (initProps?: VisualizationStore["state"]) => {
   const DEFAULT_PROPS: Partial<VisualizationStore> = {
     state: undefined,
   };
-  console.log({ DEFAULT_PROPS });
   return create<VisualizationStore>()((set) => ({
     ...DEFAULT_PROPS,
     ...initProps,
