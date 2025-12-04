@@ -96,21 +96,52 @@ const createScallopedPath = (radius: number) => {
   return `${path} Z`;
 };
 
+const sanitizeNodeValue = (value: number | undefined): number => {
+  if (typeof value !== "number") return 0;
+  if (!isFinite(value)) return 0;
+  if (value < 0) return 0;
+  return value;
+};
+
+const sanitizeNodeData = (node: NodeDatum): NodeDatum => {
+  const sanitized: NodeDatum = {
+    ...node,
+    value: sanitizeNodeValue(node.value),
+  };
+
+  if (node.children && node.children.length > 0) {
+    sanitized.children = node.children.map(sanitizeNodeData);
+  }
+
+  return sanitized;
+};
+
 const buildHierarchy = (
   data: NodeDatum,
   width: number,
   height: number,
   paddingAccessor: (node: d3.HierarchyNode<NodeDatum>) => number
-) =>
-  d3
+) => {
+  // Validate dimensions
+  const validWidth = isFinite(width) && width > 0 ? width : DEFAULT_CHART_WIDTH;
+  const validHeight = isFinite(height) && height > 0 ? height : validWidth;
+
+  // Sanitize data to ensure all values are valid
+  const sanitizedData = sanitizeNodeData(data);
+
+  return d3
     .pack<NodeDatum>()
-    .size([width, height])
-    .padding((node) => paddingAccessor(node))(
+    .size([validWidth, validHeight])
+    .padding((node) => {
+      const padding = paddingAccessor(node);
+      return isFinite(padding) && padding >= 0 ? padding : 3;
+    })(
     d3
-      .hierarchy<NodeDatum>(data)
-      .sum((d) => (typeof d.value === "number" ? d.value : 0))
+      .hierarchy<NodeDatum>(sanitizedData)
+      .sum((d) => sanitizeNodeValue(d.value))
       .sort((a, b) => (b.value ?? 0) - (a.value ?? 0))
   );
+};
 
 const buildRandomizedSmallNodePositions = (
   root: d3.HierarchyCircularNode<NodeDatum>
@@ -194,6 +225,38 @@ export const useCirclePackChart = ({
   } = useGestureHint({ autoHideMs: GESTURE_HINT_AUTO_HIDE_MS });
 
   const { root, width, height, color, initialFocus, animations, animationsEnabled } = useMemo(() => {
+    // Validate data structure
+    if (!data || !data.id) {
+      // Return a minimal valid hierarchy if data is invalid
+      const fallbackData: NodeDatum = {
+        id: "empty",
+        name: "empty",
+        value: 0,
+        children: [],
+      };
+      const widthValue = DEFAULT_CHART_WIDTH;
+      const heightValue = widthValue;
+      const colorScale = d3
+        .scaleLinear<string>()
+        .domain([0, 5])
+        .range(["hsl(152,80%,80%)", "hsl(228,30%,40%)"])
+        .interpolate(d3.interpolateHcl);
+      const paddingAccessor = typeof padding === "function" ? padding : () => (typeof padding === "number" ? padding : 3);
+      const hierarchy = buildHierarchy(fallbackData, widthValue, heightValue, paddingAccessor);
+      return {
+        root: hierarchy,
+        width: widthValue,
+        height: heightValue,
+        color: colorScale,
+        initialFocus: hierarchy,
+        animations: {
+          focus: 0,
+          label: 0,
+        },
+        animationsEnabled: false,
+      };
+    }
+
     const widthValue = customWidth ?? DEFAULT_CHART_WIDTH;
     const heightValue =
       typeof customHeight === "number" && customHeight > 0 ? customHeight : widthValue;

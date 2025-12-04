@@ -186,7 +186,7 @@ export const transformToGroupedByLegislatorData = (
         legislatorNodes.push({
           id: `${proposerId}-freeze`, // 使用 proposerId 來建立唯一的節點 ID
           // proposalId: undefined, // 移除或設定為 undefined
-          name: `${legislatorName}\n${formatAmountWithUnit(legislatorFreezeAmount)}`,
+          name: `${legislatorName}\n${partyName}\n${formatAmountWithUnit(legislatorFreezeAmount)}`,
           value: Math.pow(legislatorFreezeAmount, 0.45),
           color: partyColor,
           proposerId: mainProposer?.id, // 立委 ID 是這裡
@@ -198,7 +198,7 @@ export const transformToGroupedByLegislatorData = (
         legislatorNodes.push({
           id: `${proposerId}-reduce`, // 使用 proposerId 來建立唯一的節點 ID
           // proposalId: undefined, // 移除或設定為 undefined
-          name: `${legislatorName}\n${formatAmountWithUnit(legislatorReductionAmount)}`,
+          name: `${legislatorName}\n${partyName}\n${formatAmountWithUnit(legislatorReductionAmount)}`,
           value: Math.pow(legislatorReductionAmount, 0.45),
           color: partyColor,
           proposerId: mainProposer?.id, // 立委 ID 是這裡
@@ -206,16 +206,44 @@ export const transformToGroupedByLegislatorData = (
         });
       }
     } else {
-      if (mainResolutionProposals.length <= 0) return;
-      const totalCount = mainResolutionProposals.length;
-      if (totalCount > 0) {
+      const freezeCount = freezeProposals.length;
+      const reductionCount = reductionProposals.length;
+      const pureMainResolutionCount = mainResolutionProposals.filter(
+        (proposal) =>
+          defaultTo(proposal.freezeAmount, 0) === 0 &&
+          defaultTo(proposal.reductionAmount, 0) === 0
+      ).length;
+
+      if (freezeCount > 0) {
         legislatorNodes.push({
-          id: `${proposerId}-main-resolution`,
-          // proposalId: undefined, // 移除或設定為 undefined
-          name: `${legislatorName}\n${totalCount}案`,
-          value: Math.pow(totalCount, 0.45),
+          id: `${proposerId}-freeze-count`,
+          name: `${legislatorName}\n${partyName}\n${freezeCount}案`,
+          value: freezeCount,
           color: partyColor,
-          proposerId: mainProposer?.id, // 立委 ID 是這裡
+          proposerId: mainProposer?.id,
+          proposalType: "freeze",
+          isFrozen: true,
+        });
+      }
+
+      if (reductionCount > 0) {
+        legislatorNodes.push({
+          id: `${proposerId}-reduce-count`,
+          name: `${legislatorName}\n${partyName}\n${reductionCount}案`,
+          value: reductionCount,
+          color: partyColor,
+          proposerId: mainProposer?.id,
+          proposalType: "reduce",
+        });
+      }
+
+      if (pureMainResolutionCount > 0) {
+        legislatorNodes.push({
+          id: `${proposerId}-main-resolution-count`,
+          name: `${legislatorName}\n${partyName}\n${pureMainResolutionCount}案`,
+          value: pureMainResolutionCount,
+          color: partyColor,
+          proposerId: mainProposer?.id,
           proposalType: "main-resolution",
         });
       }
@@ -404,22 +432,17 @@ export const transformToCategorizedData = (
 
   return mapValues(groupedByDepartment, (departmentProposals, categoryName) => {
     const proposerNodes: NodeDatum[] = [];
-    const mainProposer = departmentProposals[0]?.proposers?.[0];
-    const proposerName = mainProposer?.name ?? "未知提案者";
-    const partyName = mainProposer?.party?.name ?? "未知黨籍";
-    const partyColor =
-      mainProposer?.party?.color ??
-      PARTY_COLORS.get(partyName) ??
-      DEFAULT_COLOR;
-
     const freezeProposals = departmentProposals.filter(
       (proposal) => (proposal.freezeAmount ?? 0) > 0
     );
     const reductionProposals = departmentProposals.filter(
       (proposal) => (proposal.reductionAmount ?? 0) > 0
     );
-    const mainResolutionProposals = departmentProposals.filter((proposal) =>
-      proposal.proposalTypes?.includes(ProposalProposalTypeType.Other)
+    const mainResolutionProposals = departmentProposals.filter(
+      (proposal) =>
+        proposal.proposalTypes?.includes(ProposalProposalTypeType.Other) &&
+        defaultTo(proposal.freezeAmount, 0) === 0 &&
+        defaultTo(proposal.reductionAmount, 0) === 0
     );
 
     const pushFinancialNode = (
@@ -466,7 +489,7 @@ export const transformToCategorizedData = (
           proposerNodes.push({
             id: `proposer-${categoryName}-${proposerId}-${key}`, // 更新 ID，使其更清晰地表示立委節點
             proposalId: undefined, // 將 proposalId 設定為 undefined
-            name: `${proposerDisplayName}\n${GROUP_LABELS[key]}\n${formatAmountWithUnit(
+            name: `${proposerDisplayName}\n${proposerPartyName}\n${GROUP_LABELS[key]}\n${formatAmountWithUnit(
               defaultTo(key === "freeze" ? freezeAmount : reductionAmount, 0)
             )}`,
             value: Math.pow(
@@ -488,20 +511,81 @@ export const transformToCategorizedData = (
     if (mode === "amount") {
       pushFinancialNode("freeze", freezeProposals);
       pushFinancialNode("reduce", reductionProposals);
-    }
+    } else {
+      const pushFinancialCountNode = (
+        key: Extract<ProposalVisualizationType, "freeze" | "reduce">,
+        proposalsForKey: typeof departmentProposals
+      ) => {
+        if (!proposalsForKey.length) return;
+        const groupedByProposer = groupBy(
+          proposalsForKey,
+          (p) => p.proposers?.[0]?.id ?? "unknown-proposer"
+        );
+        forEach(
+          entries(groupedByProposer),
+          ([proposerId, groupedByProposerProposals]) => {
+            const totalCount = groupedByProposerProposals.length;
+            if (totalCount <= 0) return;
 
-    if (mode === "count" && mainResolutionProposals.length > 0) {
-      const totalCount = mainResolutionProposals.length;
-      if (totalCount > 0) {
-        proposerNodes.push({
-          id: `proposer-${categoryName}-main-resolution`,
-          proposalId: undefined, // 確保這裡也是 undefined
-          name: `${proposerName}\n${GROUP_LABELS.other}\n${totalCount}案`,
-          value: Math.pow(totalCount, 0.45),
-          color: partyColor,
-          proposerId: mainProposer?.id,
-          proposalType: "main-resolution",
-        });
+            const primaryProposer =
+              groupedByProposerProposals[0]?.proposers?.[0];
+            const proposerDisplayName =
+              primaryProposer?.name ?? "未知提案者";
+            const proposerPartyName =
+              primaryProposer?.party?.name ?? "無黨籍";
+            const proposerPartyColor =
+              primaryProposer?.party?.color ??
+              PARTY_COLORS.get(proposerPartyName) ??
+              DEFAULT_COLOR;
+
+            proposerNodes.push({
+              id: `proposer-${categoryName}-${proposerId}-${key}-count`,
+              proposalId: undefined,
+              name: `${proposerDisplayName}\n${proposerPartyName}\n${GROUP_LABELS[key]}\n${totalCount}案`,
+              value: totalCount,
+              color: proposerPartyColor,
+              proposerId,
+              proposalType: key,
+              isFrozen: key === "freeze",
+            });
+          }
+        );
+      };
+
+      pushFinancialCountNode("freeze", freezeProposals);
+      pushFinancialCountNode("reduce", reductionProposals);
+
+      if (mainResolutionProposals.length > 0) {
+        const groupedByProposer = groupBy(
+          mainResolutionProposals,
+          (p) => p.proposers?.[0]?.id ?? "unknown-proposer"
+        );
+        forEach(
+          entries(groupedByProposer),
+          ([proposerId, groupedProposals]) => {
+            const totalCount = groupedProposals.length;
+            if (totalCount <= 0) return;
+            const primaryProposer = groupedProposals[0]?.proposers?.[0];
+            const proposerDisplayName =
+              primaryProposer?.name ?? "未知提案者";
+            const proposerPartyName =
+              primaryProposer?.party?.name ?? "無黨籍";
+            const proposerPartyColor =
+              primaryProposer?.party?.color ??
+              PARTY_COLORS.get(proposerPartyName) ??
+              DEFAULT_COLOR;
+
+            proposerNodes.push({
+              id: `proposer-${categoryName}-${proposerId}-main-resolution-count`,
+              proposalId: undefined,
+              name: `${proposerDisplayName}\n${proposerPartyName}\n${GROUP_LABELS.other}\n${totalCount}案`,
+              value: totalCount,
+              color: proposerPartyColor,
+              proposerId,
+              proposalType: "main-resolution",
+            });
+          }
+        );
       }
     }
 
