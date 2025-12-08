@@ -248,7 +248,7 @@ const BudgetDetailView = ({
                           <p className="bg-brand-accent w-fit rounded-t-lg border-2 border-black px-2.5 py-1 text-white">
                             減列金額
                           </p>
-                          <p className="text-brand-accent flex w-fit border-t border-black pt-4 font-bold md:pr-8 lg:pr-16 xl:pr-32">
+                          <p className="text-brand-accent flex w-fit border-t border-black pt-4 font-bold md:pr-8 lg:pr-24 xl:pr-32">
                             {formatNumber(proposal.reductionAmount)}
                           </p>
                         </div>
@@ -282,20 +282,23 @@ const BudgetDetailView = ({
                         </div>
                       )}
                     </div>
-                    <div id="right" className="w-5/11">
-                      <p className="bg-brand-accent w-fit rounded-t-lg border-2 border-black px-2.5 py-1 text-white">
-                        提案單圖檔
-                      </p>
-                      <div className="flex border-t border-black pt-4 font-bold">
-                        <Image
-                          src={
-                            proposal.budgetImageUrl || "/icon/default-image.svg"
-                          }
-                          alt="proposal-image"
-                          className="w-full"
-                        />
+                    {hasImage && (
+                      <div id="right" className="w-5/11">
+                        <p className="bg-brand-accent w-fit rounded-t-lg border-2 border-black px-2.5 py-1 text-white">
+                          提案單圖檔
+                        </p>
+                        <div className="flex border-t border-black pt-4 font-bold">
+                          <Image
+                            src={
+                              proposal.budgetImageUrl ||
+                              "/icon/default-image.svg"
+                            }
+                            alt="proposal-image"
+                            className="w-full shadow-md"
+                          />
+                        </div>
                       </div>
-                    </div>
+                    )}
                   </section>
                 )}
                 {/* row 5 without image */}
@@ -478,14 +481,19 @@ const BudgetDetailView = ({
                 {formatNumber(proposal.freezeAmount)}
               </p>
             </section>
-            <section className="flex flex-col gap-y-4">
-              <p className="font-bold">預算書圖檔</p>
-              <Image
-                src={proposal.budgetImageUrl || "/icon/default-image.svg"}
-                alt="default-image"
-                className="size-5"
-              />
-            </section>
+          </div>
+          <div className="my-4 h-px w-full bg-gray-300" />
+          <div className="flex gap-x-10">
+            {hasImage && (
+              <section className="flex flex-col gap-y-4 px-3.5">
+                <p className="font-bold">預算書圖檔</p>
+                <Image
+                  src={proposal.budgetImageUrl ?? ""}
+                  alt="proposal-image"
+                  className="w-full shadow-md"
+                />
+              </section>
+            )}
           </div>
           {shouldShowBudgetInfo && (
             <>
