@@ -38,6 +38,14 @@ import { sortOptions } from "~/constants/options";
 import { find } from "lodash";
 import AllBudgetsView, { type YearOption } from "./AllBudgetsView";
 
+const NON_NULL_BUDGET_CONDITION: ProposalWhereInput = {
+  OR: [
+    { budgetAmount: { gt: 0 } },
+    { budgetAmount: { lt: 0 } },
+    { budgetAmount: { equals: 0 } },
+  ],
+};
+
 export function meta() {
   return [
     { title: "歷年預算列表 - 國會預算監督平台" },
@@ -48,6 +56,11 @@ export function meta() {
     },
   ];
 }
+
+type PaginatedProposalsResult = Pick<
+  GetPaginatedProposalsQuery,
+  "proposals" | "proposalsCount"
+>;
 
 export const AllBudgets = () => {
   const [searchParams] = useSearchParams();
@@ -130,7 +143,7 @@ export const AllBudgets = () => {
 
   // 計算 GraphQL 參數
   const skip = (currentPage - 1) * pageSize;
-  const orderBy = useMemo((): ProposalOrderByInput[] => {
+  const { orderBy, isBudgetAmountSort } = useMemo(() => {
     // 預設以預算金額由大到小排序，確保結果穩定
     const budgetAmountDesc: ProposalOrderByInput = {
       budgetAmount: OrderDirection.Desc,
@@ -138,7 +151,11 @@ export const AllBudgets = () => {
 
     // 將 sortOptions 的 value 轉換為 GraphQL orderBy 格式
     const sortOption = find(sortOptions, (o) => o.value === selectedSort);
-    if (!sortOption) return [budgetAmountDesc];
+    if (!sortOption)
+      return {
+        orderBy: [budgetAmountDesc],
+        isBudgetAmountSort: true,
+      };
 
     const direction =
       sortOption.direction === SortDirection.ASC
@@ -152,12 +169,21 @@ export const AllBudgets = () => {
     // 若主要排序即為 budgetAmount，避免重複條目
     if (sortOption.field === "budgetAmount") {
       if (direction === OrderDirection.Desc) {
-        return [budgetAmountDesc];
+        return {
+          orderBy: [budgetAmountDesc],
+          isBudgetAmountSort: true,
+        };
       }
-      return [primaryOrder];
+      return {
+        orderBy: [primaryOrder],
+        isBudgetAmountSort: true,
+      };
     }
 
-    return [primaryOrder, budgetAmountDesc];
+    return {
+      orderBy: [primaryOrder, budgetAmountDesc],
+      isBudgetAmountSort: false,
+    };
   }, [selectedSort]);
 
   const whereFilter = useMemo((): ProposalWhereInput => {
@@ -194,23 +220,95 @@ export const AllBudgets = () => {
   }, [departmentId, personId, debouncedSearchedValue, selectedYear]);
 
   // 修改後的 React Query（支援分頁）
-  const { data, isLoading, isError, isPlaceholderData } = useQuery({
-    queryKey: proposalQueryKeysWithOrderAndSkip.paginated(
-      currentPage,
-      pageSize,
-      selectedSort,
-      whereFilter,
-      selectedYear
-    ),
-    queryFn: () =>
+  const fetchBudgetAmountSorted = useCallback(async () => {
+    const combineWithBaseFilters = (
+      extra: ProposalWhereInput
+    ): ProposalWhereInput => ({
+      AND: [whereFilter, extra],
+    });
+
+    const nonNullWhere = combineWithBaseFilters(NON_NULL_BUDGET_CONDITION);
+    const nullWhere = combineWithBaseFilters({
+      NOT: [NON_NULL_BUDGET_CONDITION],
+    });
+
+    const [nonNullMeta, nullMeta] = await Promise.all([
       execute(GET_PAGINATED_PROPOSALS_QUERY, {
-        skip,
-        take: pageSize,
+        skip: 0,
+        take: 0,
         orderBy,
-        where: whereFilter,
+        where: nonNullWhere,
       }),
-    placeholderData: keepPreviousData, // 避免切頁時閃爍
-  });
+      execute(GET_PAGINATED_PROPOSALS_QUERY, {
+        skip: 0,
+        take: 0,
+        orderBy,
+        where: nullWhere,
+      }),
+    ]);
+
+    const nonNullCount = nonNullMeta?.proposalsCount ?? 0;
+    const nullCount = nullMeta?.proposalsCount ?? 0;
+    const totalCount = nonNullCount + nullCount;
+
+    const nonNullSkip = Math.min(skip, nonNullCount);
+    const remainingNonNull = Math.max(
+      Math.min(pageSize, nonNullCount - nonNullSkip),
+      0
+    );
+
+    const needsNull = pageSize > remainingNonNull;
+    const nullSkip = needsNull ? Math.max(skip - nonNullCount, 0) : 0;
+    const nullTake = needsNull ? pageSize - remainingNonNull : 0;
+
+    const [nonNullData, nullData] = await Promise.all([
+      remainingNonNull > 0
+        ? execute(GET_PAGINATED_PROPOSALS_QUERY, {
+            skip: nonNullSkip,
+            take: remainingNonNull,
+            orderBy,
+            where: nonNullWhere,
+          })
+        : Promise.resolve(null),
+      nullTake > 0
+        ? execute(GET_PAGINATED_PROPOSALS_QUERY, {
+            skip: nullSkip,
+            take: nullTake,
+            orderBy,
+            where: nullWhere,
+          })
+        : Promise.resolve(null),
+    ]);
+
+    return {
+      proposals: [
+        ...(nonNullData?.proposals ?? []),
+        ...(nullData?.proposals ?? []),
+      ],
+      proposalsCount: totalCount,
+    } satisfies PaginatedProposalsResult;
+  }, [whereFilter, skip, pageSize, orderBy]);
+
+  const { data, isLoading, isError, isPlaceholderData } =
+    useQuery<PaginatedProposalsResult>({
+      queryKey: proposalQueryKeysWithOrderAndSkip.paginated(
+        currentPage,
+        pageSize,
+        selectedSort,
+        whereFilter,
+        selectedYear
+      ),
+      queryFn: () =>
+        isBudgetAmountSort
+          ? fetchBudgetAmountSorted()
+          : execute(GET_PAGINATED_PROPOSALS_QUERY, {
+              skip,
+              take: pageSize,
+              orderBy,
+              where: whereFilter,
+            }),
+      placeholderData: keepPreviousData, // 避免切頁時閃爍
+    });
   // 更新總數到 store（用於計算總頁數）
   useEffect(() => {
     if (data?.proposalsCount != null) {
