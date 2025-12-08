@@ -183,7 +183,9 @@ function getLatestCommitteeName(
       ): entry is {
         committee: StageCommittee;
         startDate: Date;
-      } => Boolean(entry?.committee?.name) && Boolean(entry?.startDate)
+      } =>
+        Boolean(entry?.startDate) &&
+        Boolean(entry?.committee?.name ?? entry?.committee?.displayName)
     )
     .reduce<{
       committee: StageCommittee;
@@ -196,7 +198,11 @@ function getLatestCommitteeName(
     }, null);
 
   if (latestCommittee) {
-    return latestCommittee.committee.name ?? fallbackStage;
+    return (
+      latestCommittee.committee.name ??
+      latestCommittee.committee.displayName ??
+      fallbackStage
+    );
   }
 
   return fallbackStage;
