@@ -1,4 +1,4 @@
-import{p as l}from"./chunk-WWGJGFF6-C1k8rglg.js";import{t as a}from"./gql-wXtZbEb8.js";const m="/congress-budget-watch-platform/".replace(/\/$/,""),u=`${m}/`,P=500,c=/^([a-z][a-z\d+\-.]*:)?\/\//i,_=({src:e,...r})=>{const s=c.test(e)?e:`${u}${e.startsWith("/")?e.slice(1):e}`;return l.jsx("img",{src:s,...r})};a(`
+import{p as l}from"./chunk-WWGJGFF6-C1k8rglg.js";import{t as a}from"./gql-CryelyAX.js";const m="/congress-budget-watch-platform/".replace(/\/$/,""),u=`${m}/`,P=500,c=/^([a-z][a-z\d+\-.]*:)?\/\//i,_=({src:e,...r})=>{const s=c.test(e)?e:`${u}${e.startsWith("/")?e.slice(1):e}`;return l.jsx("img",{src:s,...r})};a(`
   query GetBudgetsWithGovernment {
     budgets {
       id
