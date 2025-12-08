@@ -1,4 +1,4 @@
-import{p as l}from"./chunk-WWGJGFF6-C1k8rglg.js";import{t as r}from"./gql-B77SbNtU.js";const m="/congress-budget-watch-platform/".replace(/\/$/,""),u=`${m}/`,g=500,P=({src:e,...a})=>l.jsx("img",{src:u+e,...a});r(`
+import{p as l}from"./chunk-WWGJGFF6-C1k8rglg.js";import{t as a}from"./gql-B77SbNtU.js";const m="/congress-budget-watch-platform/".replace(/\/$/,""),u=`${m}/`,P=500,c=/^([a-z][a-z\d+\-.]*:)?\/\//i,_=({src:e,...r})=>{const s=c.test(e)?e:`${u}${e.startsWith("/")?e.slice(1):e}`;return l.jsx("img",{src:s,...r})};a(`
   query GetBudgetsWithGovernment {
     budgets {
       id
@@ -19,7 +19,7 @@ import{p as l}from"./chunk-WWGJGFF6-C1k8rglg.js";import{t as r}from"./gql-B77SbN
     }
     budgetsCount
   }
-`);const _=r(`
+`);const A=a(`
   query GetGovernments {
     governments {
       id
@@ -28,7 +28,7 @@ import{p as l}from"./chunk-WWGJGFF6-C1k8rglg.js";import{t as r}from"./gql-B77SbN
       description
     }
   }
-`),s={all:["governments"],lists:()=>[...s.all,"list"],list:e=>[...s.lists(),{filters:e}]},A=r(`
+`),i={all:["governments"],lists:()=>[...i.all,"list"],list:e=>[...i.lists(),{filters:e}]},E=a(`
   query GetPeopleList {
     peopleList(orderBy: [{ name: asc }]) {
       id
@@ -41,7 +41,7 @@ import{p as l}from"./chunk-WWGJGFF6-C1k8rglg.js";import{t as r}from"./gql-B77SbN
       }
     }
   }
-`),o={all:["people"],lists:()=>[...o.all,"list"],list:e=>[...o.lists(),{filters:e}]};r(`
+`),n={all:["people"],lists:()=>[...n.all,"list"],list:e=>[...n.lists(),{filters:e}]};a(`
   query GetProposalsOrderedByIdDesc {
     proposals(orderBy: [{ id: desc }]) {
       id
@@ -85,7 +85,7 @@ import{p as l}from"./chunk-WWGJGFF6-C1k8rglg.js";import{t as r}from"./gql-B77SbN
     }
     proposalsCount
   }
-`);const E=r(`
+`);const h=a(`
   query GetProposalById($id: ID!) {
     proposal(where: { id: $id }) {
       id
@@ -182,14 +182,14 @@ import{p as l}from"./chunk-WWGJGFF6-C1k8rglg.js";import{t as r}from"./gql-B77SbN
       }
     }
   }
-`),h=r(`
+`),S=a(`
   query GetProposalYears {
     budgetYears(orderBy: [{ year: desc }]) {
       id
       year
     }
   }
-`),t={all:["proposals"],lists:()=>[...t.all,"list"],list:e=>[...t.lists(),{filters:e}],paginated:(e,a)=>[...t.lists(),"paginated",{where:e,year:a}],details:()=>[...t.all,"detail"],detail:e=>[...t.details(),e],years:()=>[...t.all,"years"]},S={all:["proposals"],lists:()=>[...t.all,"list"],list:e=>[...t.lists(),{filters:e}],paginated:(e,a,n,p,d)=>[...t.lists(),"paginated",{page:e,pageSize:a,sort:n,where:p,year:d}],details:()=>[...t.all,"detail"],detail:e=>[...t.details(),e],years:()=>[...t.all,"years"]},I=r(`
+`),t={all:["proposals"],lists:()=>[...t.all,"list"],list:e=>[...t.lists(),{filters:e}],paginated:(e,r)=>[...t.lists(),"paginated",{where:e,year:r}],details:()=>[...t.all,"detail"],detail:e=>[...t.details(),e],years:()=>[...t.all,"years"]},T={all:["proposals"],lists:()=>[...t.all,"list"],list:e=>[...t.lists(),{filters:e}],paginated:(e,r,o,s,d)=>[...t.lists(),"paginated",{page:e,pageSize:r,sort:o,where:s,year:d}],details:()=>[...t.all,"detail"],detail:e=>[...t.details(),e],years:()=>[...t.all,"years"]},b=a(`
   query GetPaginatedProposals(
     $skip: Int!
     $take: Int!
@@ -237,7 +237,7 @@ import{p as l}from"./chunk-WWGJGFF6-C1k8rglg.js";import{t as r}from"./gql-B77SbN
     }
     proposalsCount(where: $where)
   }
-`),T=r(`
+`),I=a(`
   mutation UPDATE_PROPOSAL_REACTS(
     $where: ProposalWhereUniqueInput!
     $data: ProposalUpdateInput!
@@ -250,7 +250,7 @@ import{p as l}from"./chunk-WWGJGFF6-C1k8rglg.js";import{t as r}from"./gql-B77SbN
       react_whatever
     }
   }
-`),b=r(`
+`),$=a(`
   query GetLatestBudgetYear($skip: Int!, $take: Int!) {
     budgetYears(orderBy: [{ year: desc }], skip: $skip, take: $take) {
       year
@@ -258,7 +258,7 @@ import{p as l}from"./chunk-WWGJGFF6-C1k8rglg.js";import{t as r}from"./gql-B77SbN
       dataProgress
     }
   }
-`),i={all:["budgetYear"],list:(e=0,a=1)=>[...i.all,"list",{skip:e,take:a}],latest:()=>[...i.all,"latest"]},$=r(`
+`),p={all:["budgetYear"],list:(e=0,r=1)=>[...p.all,"list",{skip:e,take:r}],latest:()=>[...p.all,"latest"]},R=a(`
   query GetVisualizationProposals($where: ProposalWhereInput!) {
     proposals(where: $where) {
       ...VisualizationProposalWithContext
@@ -290,4 +290,4 @@ import{p as l}from"./chunk-WWGJGFF6-C1k8rglg.js";import{t as r}from"./gql-B77SbN
       }
     }
   }
-`);export{b as G,P as I,u as S,T as U,g as a,i as b,h as c,S as d,I as e,$ as f,E as g,s as h,_ as i,o as j,A as k,t as p};
+`);export{$ as G,_ as I,u as S,I as U,P as a,p as b,S as c,T as d,b as e,R as f,h as g,i as h,A as i,n as j,E as k,t as p};
