@@ -98,6 +98,20 @@ export const formatAmountWithUnit = (value: number): string => {
   return `${formatted.trim()}元`;
 };
 
+const sanitizePartyName = (partyName?: string | null): string | null => {
+  if (typeof partyName !== "string") {
+    return null;
+  }
+  const trimmed = partyName.trim();
+  return trimmed.length > 0 ? trimmed : null;
+};
+
+const hasLabelContent = (value?: string | null): value is string =>
+  typeof value === "string" && value.trim().length > 0;
+
+const buildNodeLabel = (...parts: Array<string | null | undefined>) =>
+  parts.filter(hasLabelContent).join("\n");
+
 export const transformToCirclePackData = (
   data: GetVisualizationProposalsQuery
 ): NodeDatum => {
@@ -106,7 +120,8 @@ export const transformToCirclePackData = (
     .map<NodeDatum | null>((proposal) => {
       const { id, proposers, freezeAmount, reductionAmount } = proposal;
       const proposer = proposers?.[0]; // Assuming the first proposer is the main one
-      const party = proposer?.party?.name ?? "無黨籍";
+      const proposerName = proposer?.name ?? "";
+      const party = sanitizePartyName(proposer?.party?.name);
       const originalValue = (freezeAmount ?? 0) + (reductionAmount ?? 0);
 
       if (originalValue === 0) {
@@ -114,10 +129,12 @@ export const transformToCirclePackData = (
       }
 
       const scaledValue = Math.pow(originalValue, 0.45);
-      const name = `${proposer?.name}\n${party}\n${formatAmountWithUnit(
-        originalValue
-      )}`;
-      const color = PARTY_COLORS.get(party) || DEFAULT_COLOR;
+      const name = buildNodeLabel(
+        proposerName,
+        party,
+        formatAmountWithUnit(originalValue)
+      );
+      const color = PARTY_COLORS.get(party ?? "無黨籍") || DEFAULT_COLOR;
 
       const node: NodeDatum = {
         name,
@@ -158,10 +175,10 @@ export const transformToGroupedByLegislatorData = (
   forEach(entries(groupedByLegislator), ([proposerId, legislatorProposals]) => {
     const mainProposer = legislatorProposals[0]?.proposers?.[0];
     const legislatorName = mainProposer?.name ?? "未知立委";
-    const partyName = mainProposer?.party?.name ?? "未知黨派";
+    const partyName = sanitizePartyName(mainProposer?.party?.name);
     const partyColor =
       mainProposer?.party?.color ??
-      PARTY_COLORS.get(partyName) ??
+      (partyName ? PARTY_COLORS.get(partyName) : undefined) ??
       DEFAULT_COLOR;
     const freezeProposals = legislatorProposals.filter(
       (proposal) => defaultTo(proposal.freezeAmount, 0) > 0
@@ -186,7 +203,11 @@ export const transformToGroupedByLegislatorData = (
         legislatorNodes.push({
           id: `${proposerId}-freeze`, // 使用 proposerId 來建立唯一的節點 ID
           // proposalId: undefined, // 移除或設定為 undefined
-          name: `${legislatorName}\n${partyName}\n${formatAmountWithUnit(legislatorFreezeAmount)}`,
+          name: buildNodeLabel(
+            legislatorName,
+            partyName,
+            formatAmountWithUnit(legislatorFreezeAmount)
+          ),
           value: Math.pow(legislatorFreezeAmount, 0.45),
           color: partyColor,
           proposerId: mainProposer?.id, // 立委 ID 是這裡
@@ -198,7 +219,11 @@ export const transformToGroupedByLegislatorData = (
         legislatorNodes.push({
           id: `${proposerId}-reduce`, // 使用 proposerId 來建立唯一的節點 ID
           // proposalId: undefined, // 移除或設定為 undefined
-          name: `${legislatorName}\n${partyName}\n${formatAmountWithUnit(legislatorReductionAmount)}`,
+          name: buildNodeLabel(
+            legislatorName,
+            partyName,
+            formatAmountWithUnit(legislatorReductionAmount)
+          ),
           value: Math.pow(legislatorReductionAmount, 0.45),
           color: partyColor,
           proposerId: mainProposer?.id, // 立委 ID 是這裡
@@ -217,7 +242,7 @@ export const transformToGroupedByLegislatorData = (
       if (freezeCount > 0) {
         legislatorNodes.push({
           id: `${proposerId}-freeze-count`,
-          name: `${legislatorName}\n${partyName}\n${freezeCount}案`,
+          name: buildNodeLabel(legislatorName, partyName, `${freezeCount}案`),
           value: freezeCount,
           color: partyColor,
           proposerId: mainProposer?.id,
@@ -229,7 +254,11 @@ export const transformToGroupedByLegislatorData = (
       if (reductionCount > 0) {
         legislatorNodes.push({
           id: `${proposerId}-reduce-count`,
-          name: `${legislatorName}\n${partyName}\n${reductionCount}案`,
+          name: buildNodeLabel(
+            legislatorName,
+            partyName,
+            `${reductionCount}案`
+          ),
           value: reductionCount,
           color: partyColor,
           proposerId: mainProposer?.id,
@@ -240,7 +269,11 @@ export const transformToGroupedByLegislatorData = (
       if (pureMainResolutionCount > 0) {
         legislatorNodes.push({
           id: `${proposerId}-main-resolution-count`,
-          name: `${legislatorName}\n${partyName}\n${pureMainResolutionCount}案`,
+          name: buildNodeLabel(
+            legislatorName,
+            partyName,
+            `${pureMainResolutionCount}案`
+          ),
           value: pureMainResolutionCount,
           color: partyColor,
           proposerId: mainProposer?.id,
@@ -475,29 +508,34 @@ export const transformToCategorizedData = (
           );
 
           if (freezeAmount <= 0 && reductionAmount <= 0) return;
-          const primaryProposer =
-            groupedByProposerProposals[0]?.proposers?.[0];
-          const proposerDisplayName =
-            primaryProposer?.name ?? "未知提案者";
-          const proposerPartyName =
-            primaryProposer?.party?.name ?? "無黨籍";
+          const primaryProposer = groupedByProposerProposals[0]?.proposers?.[0];
+          const proposerDisplayName = primaryProposer?.name ?? "";
+          const proposerPartyName = sanitizePartyName(
+            primaryProposer?.party?.name
+          );
           const proposerPartyColor =
             primaryProposer?.party?.color ??
-            PARTY_COLORS.get(proposerPartyName) ??
+            (proposerPartyName
+              ? PARTY_COLORS.get(proposerPartyName)
+              : undefined) ??
             DEFAULT_COLOR;
+          const totalAmount = defaultTo(
+            key === "freeze" ? freezeAmount : reductionAmount,
+            0
+          );
+          const amountLabel = formatAmountWithUnit(totalAmount);
 
           proposerNodes.push({
             id: `proposer-${categoryName}-${proposerId}-${key}`, // 更新 ID，使其更清晰地表示立委節點
             proposalId: undefined, // 將 proposalId 設定為 undefined
-            name: `${proposerDisplayName}\n${proposerPartyName}\n${GROUP_LABELS[key]}\n${formatAmountWithUnit(
-              defaultTo(key === "freeze" ? freezeAmount : reductionAmount, 0)
-            )}`,
-            value: Math.pow(
-              defaultTo(key === "freeze" ? freezeAmount : reductionAmount, 0),
-              0.45
+            name: buildNodeLabel(
+              proposerDisplayName,
+              proposerPartyName,
+              GROUP_LABELS[key],
+              amountLabel
             ),
-            color:
-              proposerPartyColor,
+            value: Math.pow(totalAmount, 0.45),
+            color: proposerPartyColor,
             proposerId,
             proposalType: key,
             isFrozen: key === "freeze",
@@ -529,19 +567,26 @@ export const transformToCategorizedData = (
 
             const primaryProposer =
               groupedByProposerProposals[0]?.proposers?.[0];
-            const proposerDisplayName =
-              primaryProposer?.name ?? "未知提案者";
-            const proposerPartyName =
-              primaryProposer?.party?.name ?? "無黨籍";
+            const proposerDisplayName = primaryProposer?.name ?? "";
+            const proposerPartyName = sanitizePartyName(
+              primaryProposer?.party?.name
+            );
             const proposerPartyColor =
               primaryProposer?.party?.color ??
-              PARTY_COLORS.get(proposerPartyName) ??
+              (proposerPartyName
+                ? PARTY_COLORS.get(proposerPartyName)
+                : undefined) ??
               DEFAULT_COLOR;
 
             proposerNodes.push({
               id: `proposer-${categoryName}-${proposerId}-${key}-count`,
               proposalId: undefined,
-              name: `${proposerDisplayName}\n${proposerPartyName}\n${GROUP_LABELS[key]}\n${totalCount}案`,
+              name: buildNodeLabel(
+                proposerDisplayName,
+                proposerPartyName,
+                GROUP_LABELS[key],
+                `${totalCount}案`
+              ),
               value: totalCount,
               color: proposerPartyColor,
               proposerId,
@@ -566,19 +611,26 @@ export const transformToCategorizedData = (
             const totalCount = groupedProposals.length;
             if (totalCount <= 0) return;
             const primaryProposer = groupedProposals[0]?.proposers?.[0];
-            const proposerDisplayName =
-              primaryProposer?.name ?? "未知提案者";
-            const proposerPartyName =
-              primaryProposer?.party?.name ?? "無黨籍";
+            const proposerDisplayName = primaryProposer?.name ?? "";
+            const proposerPartyName = sanitizePartyName(
+              primaryProposer?.party?.name
+            );
             const proposerPartyColor =
               primaryProposer?.party?.color ??
-              PARTY_COLORS.get(proposerPartyName) ??
+              (proposerPartyName
+                ? PARTY_COLORS.get(proposerPartyName)
+                : undefined) ??
               DEFAULT_COLOR;
 
             proposerNodes.push({
               id: `proposer-${categoryName}-${proposerId}-main-resolution-count`,
               proposalId: undefined,
-              name: `${proposerDisplayName}\n${proposerPartyName}\n${GROUP_LABELS.other}\n${totalCount}案`,
+              name: buildNodeLabel(
+                proposerDisplayName,
+                proposerPartyName,
+                GROUP_LABELS.other,
+                `${totalCount}案`
+              ),
               value: totalCount,
               color: proposerPartyColor,
               proposerId,
@@ -596,4 +648,3 @@ export const transformToCategorizedData = (
     };
   });
 };
-
