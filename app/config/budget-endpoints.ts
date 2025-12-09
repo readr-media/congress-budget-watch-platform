@@ -1,10 +1,10 @@
 import { z } from "zod";
 
 export const BUDGET_BY_DEPARTMENT_URL =
-  "https://storage.googleapis.com/ccw-tw/json/budget/by-department_latest.json";
+  "https://storage.googleapis.com/ccw-tw-prod/json/budget/by-department_latest.json";
 
 export const BUDGET_BY_LEGISLATOR_URL =
-  "https://storage.googleapis.com/ccw-tw/json/budget/by-legislator_latest.json";
+  "https://storage.googleapis.com/ccw-tw-prod/json/budget/by-legislator_latest.json";
 
 export const BUDGET_ENDPOINTS = {
   department: BUDGET_BY_DEPARTMENT_URL,
