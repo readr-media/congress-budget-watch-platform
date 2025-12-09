@@ -20,5 +20,4 @@ export type SortOption = (typeof sortOptions)[number];
 
 export const YEAR_OPTIONS: SelectOption[] = [
   { value: "114", label: "114年度 (2025)" },
-  { value: "113", label: "113年度 (2024)" },
 ];
