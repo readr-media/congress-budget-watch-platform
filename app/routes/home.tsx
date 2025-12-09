@@ -45,6 +45,14 @@ export function meta() {
       content: OG_IMAGE_URL,
     },
     {
+      property: "og:image:width",
+      content: "2400",
+    },
+    {
+      property: "og:image:height",
+      content: "1260",
+    },
+    {
       name: "twitter:card",
       content: "summary_large_image",
     },
