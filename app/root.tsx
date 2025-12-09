@@ -16,6 +16,7 @@ import Footer from "./components/footer";
 import BudgetHeader from "./components/budget-header";
 import DataProgressMarquee from "./components/data-progress-marquee";
 import BackToTopButton from "./components/back-to-top-button";
+import { STATIC_ASSETS_PREFIX } from "./constants/config";
 // Create a client
 const queryClient = new QueryClient();
 const MOBILE_BREAKPOINT = 768;
@@ -65,6 +66,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
+        <link rel="icon" href={`${STATIC_ASSETS_PREFIX}/favicon.ico`} />
       </head>
       <body>
         <QueryClientProvider client={queryClient}>

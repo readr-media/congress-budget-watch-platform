@@ -12,12 +12,30 @@ import type { BudgetProgressStage } from "~/constants/progress-stages";
 import { STATIC_ASSETS_PREFIX } from "~/constants/config";
 
 export function meta() {
+  const ogImageUrl = `${STATIC_ASSETS_PREFIX}/image/og.png`;
   return [
-    { title: "中央政府總預算案審查監督平台" },
+    { title: "【持續更新】中央政府總預算案審查監督平台" },
+    {
+      property: "og:title",
+      content: "【持續更新】中央政府總預算案審查監督平台",
+    },
     {
       name: "description",
       content:
-        "收錄歷年及最新中央政府預算審議情形，包含立委提案刪減和凍結的緣由和金額，便於搜尋及比較，更能即時追蹤最新審議進度。",
+        "收錄歷年及最新中央政府預算審議情形，包含立委提案刪減和凍結的緣由和金額，便於搜尋及比較，更能即時追蹤最新審議進度。還可透過視覺化方式瀏覽，一目暸然。除了已數位化的資料，此平台也透過群眾協力（crowdsourcing）辨識提案掃描檔，歡迎至協作區加入合作行列。",
+    },
+    {
+      property: "og:description",
+      content:
+        "收錄歷年及最新中央政府預算審議情形，包含立委提案刪減和凍結的緣由和金額，便於搜尋及比較，更能即時追蹤最新審議進度。還可透過視覺化方式瀏覽，一目暸然。除了已數位化的資料，此平台也透過群眾協力（crowdsourcing）辨識提案掃描檔，歡迎至協作區加入合作行列。",
+    },
+    {
+      property: "og:image",
+      content: ogImageUrl,
+    },
+    {
+      name: "twitter:image",
+      content: ogImageUrl,
     },
   ];
 }
