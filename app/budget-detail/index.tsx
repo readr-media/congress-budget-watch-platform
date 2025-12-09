@@ -43,7 +43,8 @@ const BudgetDetail = () => {
   );
   const mergedProposalsData = formatMergedProposals(
     proposal.mergedProposals,
-    proposal.mergedParentProposals
+    proposal.mergedParentProposals,
+    proposal
   );
   const hasMerged = hasMergedProposals(proposal);
 

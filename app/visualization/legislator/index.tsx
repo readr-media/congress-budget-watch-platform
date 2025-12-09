@@ -1,8 +1,8 @@
 import { useMemo, useState, useCallback } from "react";
-import { Link, useNavigate, useParams } from "react-router";
+import { Link, useNavigate, useParams, useSearchParams } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 import { sumBy, filter } from "lodash";
-import SessionChart from "./session-chart";
+import SessionChart, { type YearCommitteeInfo } from "./session-chart";
 import BudgetTypeLegend from "~/components/budget-type-legend";
 import { BUDGET_TYPE_LEGEND_ITEMS } from "~/constants/legends";
 import SummaryPanel, {
@@ -22,8 +22,10 @@ import {
   transformToGroupedSessionData,
   formatAmountWithUnit,
   mapVisualizationProposals,
+  PASSED_PROPOSAL_RESULTS,
   type NodeDatum,
 } from "../helpers";
+import { YEAR_OPTIONS } from "~/constants/options";
 import {
   GET_PERSON_BY_ID_QUERY,
   peopleQueryKeys,
@@ -55,6 +57,7 @@ type TermEntry = {
 
 type Committee = {
   name?: string | null;
+  session?: string | null;
   term?: {
     startDate?: string | null;
     termNumber?: number | null;
@@ -63,11 +66,18 @@ type Committee = {
 
 const buildWhereFilter = (
   selectedType: ProposalKind,
-  proposerId: string | undefined
+  proposerId: string | undefined,
+  selectedYearValue: number
 ): ProposalWhereInput => {
   const baseFilter: ProposalWhereInput = {
     mergedParentProposals: null,
     historicalParentProposals: null,
+    result: {
+      in: [...PASSED_PROPOSAL_RESULTS],
+    },
+    year: {
+      year: { equals: selectedYearValue },
+    },
   };
 
   if (selectedType === "proposal-cosign") {
@@ -102,16 +112,52 @@ const buildWhereFilter = (
   };
 };
 
-const deriveYearToCommitteeMap = (committees?: Committee[] | null) => {
-  if (!committees) return new Map<string, string>();
+const SESSION_YEAR_REGEX = /(\d+)\s*年度/;
+const SESSION_TERM_REGEX = /第(\d+)屆/;
 
-  const map = new Map<string, string>();
+const deriveBudgetYearKey = (committee: Committee): string | undefined => {
+  if (committee.term?.startDate) {
+    const year = new Date(committee.term.startDate).getFullYear();
+    const budgetYear = year - 1911 + 1;
+    return `${budgetYear}年度`;
+  }
+
+  const sessionYearMatch = committee.session?.match(SESSION_YEAR_REGEX);
+  if (sessionYearMatch?.[1]) {
+    return `${sessionYearMatch[1]}年度`;
+  }
+
+  return undefined;
+};
+
+const deriveTermNumberValue = (committee: Committee): number | undefined => {
+  if (typeof committee.term?.termNumber === "number") {
+    return committee.term.termNumber;
+  }
+
+  const sessionTermMatch = committee.session?.match(SESSION_TERM_REGEX);
+  if (sessionTermMatch?.[1]) {
+    const parsed = Number(sessionTermMatch[1]);
+    return Number.isNaN(parsed) ? undefined : parsed;
+  }
+
+  return undefined;
+};
+
+const deriveYearToCommitteeMap = (
+  committees?: Committee[] | null
+): Map<string, YearCommitteeInfo> => {
+  if (!committees) return new Map<string, YearCommitteeInfo>();
+
+  const map = new Map<string, YearCommitteeInfo>();
   committees.forEach((committee) => {
-    if (committee.term?.startDate) {
-      const year = new Date(committee.term.startDate).getFullYear();
-      const budgetYear = year - 1911 + 1;
-      map.set(`${budgetYear}年度`, committee.name ?? "委員會");
-    }
+    const key = deriveBudgetYearKey(committee);
+    if (!key) return;
+
+    map.set(key, {
+      committeeName: committee.name ?? "委員會",
+      termNumber: deriveTermNumberValue(committee),
+    });
   });
   return map;
 };
@@ -263,12 +309,23 @@ const ModeSelector = ({ mode, onChange }: ModeSelectorProps) => (
 
 const VisualizationLegislator = () => {
   const { id: proposerId } = useParams();
+  const [searchParams] = useSearchParams();
   const [selectedType, setSelectedType] = useState<ProposalKind>("proposal");
   const [mode, setMode] = useState<VisualizationModeType>("amount");
+  const selectedYearValue = useMemo(() => {
+    const paramValue = searchParams.get("year");
+    const parsed = paramValue ? parseInt(paramValue, 10) : NaN;
+    if (!Number.isNaN(parsed)) {
+      return parsed;
+    }
+    const defaultYear = YEAR_OPTIONS[0]?.value;
+    const fallback = defaultYear ? parseInt(defaultYear, 10) : 0;
+    return Number.isNaN(fallback) ? 0 : fallback;
+  }, [searchParams]);
 
   const whereFilter = useMemo(
-    () => buildWhereFilter(selectedType, proposerId),
-    [selectedType, proposerId]
+    () => buildWhereFilter(selectedType, proposerId, selectedYearValue),
+    [selectedType, proposerId, selectedYearValue]
   );
 
   const {
@@ -280,7 +337,6 @@ const VisualizationLegislator = () => {
     queryFn: () =>
       execute(GET_VISUALIZATION_PROPOSALS_QUERY, {
         skip: 0,
-        take: 1000, // Assuming we want to fetch all proposals for this view
         orderBy: [{ id: OrderDirection.Desc }],
         where: whereFilter,
       }),
@@ -326,7 +382,12 @@ const VisualizationLegislator = () => {
       if (!response.ok) {
         throw new Error("無法載入立委預算資料");
       }
-      return budgetByLegislatorSchema.parse(await response.json());
+      const payload = await response.json();
+      const result = budgetByLegislatorSchema.safeParse(payload);
+      if (!result.success) {
+        throw new Error("立委預算資料格式不符合預期");
+      }
+      return result.data;
     },
     enabled: !!proposerId,
   });

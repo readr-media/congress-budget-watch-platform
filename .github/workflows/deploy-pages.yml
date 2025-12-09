@@ -6,10 +6,15 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    env:
-      REACT_ROUTER_BASENAME: /congress-budget-watch-platform/
     steps:
       - uses: actions/checkout@v4
+      - name: Configure base path
+        run: |
+          if [ "${GITHUB_REPOSITORY}" = "Citizen-Congress-Watch/congress-budget-watch-platform" ]; then
+            echo "REACT_ROUTER_BASENAME=/" >> "$GITHUB_ENV"
+          else
+            echo "REACT_ROUTER_BASENAME=/congress-budget-watch-platform/" >> "$GITHUB_ENV"
+          fi
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:

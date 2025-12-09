@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { find, filter, sumBy } from "lodash";
 import { useMediaQuery } from "usehooks-ts";
 import { execute } from "~/graphql/execute";
 import {
@@ -8,72 +7,33 @@ import {
   proposalQueryKeys,
 } from "~/queries";
 import {
-  OrderDirection,
-  ProposalProposalTypeType,
   VisualizationProposalBaseFragmentDoc,
   VisualizationProposalWithContextFragmentDoc,
-  type ProposalOrderByInput,
   type ProposalWhereInput,
   type GetVisualizationProposalsQuery,
 } from "~/graphql/graphql";
-import { sortOptions } from "~/constants/options";
+import { YEAR_OPTIONS } from "~/constants/options";
 import {
-  formatAmountWithUnit,
+  getProposerKey,
   mapVisualizationProposals,
+  transformToCategorizedData,
   transformToGroupedByLegislatorData,
   type VisualizationGroupedData,
+  type NodeDatum,
 } from "./helpers";
 import { useFragment } from "~/graphql";
-import type {
-  SelectOption,
+import {
+  type SelectOption,
   VisualizationMode,
   VisualizationTab,
 } from "~/types/visualization";
+import type { UseVisualizationStateResult } from "./types";
 
-const YEAR_OPTIONS: SelectOption[] = [
-  { value: "114", label: "114年度 (2025)" },
-  { value: "113", label: "113年度 (2024)" },
-];
-
-type SummaryStats = {
-  totalReductionAmount: number;
-  reductionCount: number;
-  totalFreezeAmount: number;
-  freezeCount: number;
-  mainResolutionCount: number;
-};
-
-type UseVisualizationStateResult = {
-  activeTab: VisualizationTab;
-  handleTabChange: (tab: VisualizationTab) => void;
-  mode: VisualizationMode;
-  setMode: (mode: VisualizationMode) => void;
-  selectedYear: SelectOption;
-  handleYearChange: (option: SelectOption) => void;
-  yearOptions: SelectOption[];
-  legislatorOptions: SelectOption[];
-  selectedLegislatorOption: SelectOption | null;
-  handleLegislatorChange: (option: SelectOption | null) => void;
-  departmentOptions: SelectOption[];
-  selectedDepartmentOption: SelectOption | null;
-  handleDepartmentChange: (option: SelectOption | null) => void;
-  handleToggleShowAll: () => void;
-  isShowingAll: boolean;
-  isDesktop: boolean;
-  isMobile: boolean;
-  isLoading: boolean;
-  isError: boolean;
-  rawData: GetVisualizationProposalsQuery | undefined;
-  visualizationData: GetVisualizationProposalsQuery | null;
-  legislatorVisualizationData: VisualizationGroupedData | null;
-  summaryStats: SummaryStats;
-  formattedReductionAmount: string;
-  formattedFreezeAmount: string;
-};
-
-export const useVisualizationState = (): UseVisualizationStateResult => {
-  const [activeTab, setActiveTab] = useState<VisualizationTab>("legislator");
-  const [mode, setMode] = useState<VisualizationMode>("amount");
+const useVisualizationState = (): UseVisualizationStateResult => {
+  const [activeTab, setActiveTab] = useState<VisualizationTab>(
+    VisualizationTab.Legislator
+  );
+  const [mode, setMode] = useState<VisualizationMode>(VisualizationMode.Amount);
   const [selectedYear, setSelectedYear] = useState<SelectOption>(
     YEAR_OPTIONS[0]
   );
@@ -92,10 +52,6 @@ export const useVisualizationState = (): UseVisualizationStateResult => {
   const isDesktop = useMediaQuery("(min-width: 768px)");
   const isMobile = !isDesktop;
 
-  const selectedSort = "id-asc";
-  const currentPage = 1;
-  const pageSize = 1000;
-
   const whereFilter = useCallback((): ProposalWhereInput => {
     return {
       year: {
@@ -103,38 +59,19 @@ export const useVisualizationState = (): UseVisualizationStateResult => {
       },
       mergedParentProposals: null,
       historicalParentProposals: null,
+      result: {
+        equals: "passed",
+      },
     };
   }, [selectedYear.value]);
 
-  const orderBy = useMemo((): ProposalOrderByInput[] => {
-    const sortOption = find(sortOptions, (o) => o.value === selectedSort);
-    if (!sortOption) {
-      return [{ id: OrderDirection.Desc }];
-    }
-
-    const direction =
-      sortOption.direction === "asc" ? OrderDirection.Asc : OrderDirection.Desc;
-
-    return [
-      {
-        [sortOption.field]: direction,
-      },
-    ];
-  }, [selectedSort]);
-
   const { data, isLoading, isError } = useQuery({
     queryKey: proposalQueryKeys.paginated(
-      currentPage,
-      pageSize,
-      selectedSort,
       whereFilter(),
       parseInt(selectedYear.value, 10)
     ),
     queryFn: () =>
       execute(GET_VISUALIZATION_PROPOSALS_QUERY, {
-        skip: 0,
-        take: pageSize,
-        orderBy,
         where: whereFilter(),
       }),
     placeholderData: keepPreviousData,
@@ -143,13 +80,12 @@ export const useVisualizationState = (): UseVisualizationStateResult => {
   const handleTabChange = useCallback(
     (tab: VisualizationTab) => {
       setActiveTab(tab);
-      if (!isDesktop) {
-        if (tab === "legislator") {
-          setShouldAutoSelectLegislator(true);
-        } else {
-          setShouldAutoSelectDepartment(true);
-        }
+      if (isDesktop) return;
+      if (tab === "legislator") {
+        setShouldAutoSelectLegislator(true);
+        return;
       }
+      setShouldAutoSelectDepartment(true);
     },
     [isDesktop]
   );
@@ -182,39 +118,22 @@ export const useVisualizationState = (): UseVisualizationStateResult => {
     }
   }, []);
 
-  const handleToggleShowAll = useCallback(() => {
-    if (activeTab === "legislator") {
-      if (selectedLegislatorOption) {
-        previousLegislatorOption.current = selectedLegislatorOption;
-        setSelectedLegislatorOption(null);
-        setShouldAutoSelectLegislator(false);
-      } else if (previousLegislatorOption.current) {
-        setSelectedLegislatorOption(previousLegislatorOption.current);
-        setShouldAutoSelectLegislator(false);
-      }
-    } else if (activeTab === "department") {
-      if (selectedDepartmentOption) {
-        previousDepartmentOption.current = selectedDepartmentOption;
-        setSelectedDepartmentOption(null);
-        setShouldAutoSelectDepartment(false);
-      } else if (previousDepartmentOption.current) {
-        setSelectedDepartmentOption(previousDepartmentOption.current);
-        setShouldAutoSelectDepartment(false);
-      }
-    }
-  }, [activeTab, selectedLegislatorOption, selectedDepartmentOption]);
-
   const allProposals = useMemo(() => mapVisualizationProposals(data), [data]);
 
   const legislatorOptions = useMemo<SelectOption[]>(() => {
     const unique = new Map<string, SelectOption>();
     allProposals.forEach((proposal) => {
-      const proposer = proposal.proposers?.[0];
-      const value = proposer?.id ?? proposer?.name ?? "";
-      const label = proposer?.name ?? "未命名立委";
-      if (value) {
-        unique.set(value, { value, label });
-      }
+      const proposers = proposal.proposers?.length
+        ? proposal.proposers
+        : [];
+      proposers.forEach((proposer, index) => {
+        const value = getProposerKey(proposer, proposal.id, index);
+        if (!value) return;
+        const label = proposer?.name ?? "未命名立委";
+        if (!unique.has(value)) {
+          unique.set(value, { value, label });
+        }
+      });
     });
     return Array.from(unique.values()).sort((a, b) =>
       a.label.localeCompare(b.label, "zh-Hant")
@@ -233,14 +152,59 @@ export const useVisualizationState = (): UseVisualizationStateResult => {
     );
   }, [allProposals]);
 
+  const handleToggleShowAll = useCallback(() => {
+    if (activeTab === "legislator") {
+      if (selectedLegislatorOption) {
+        previousLegislatorOption.current = selectedLegislatorOption;
+        setSelectedLegislatorOption(null);
+        setShouldAutoSelectLegislator(false);
+      } else if (previousLegislatorOption.current) {
+        setSelectedLegislatorOption(previousLegislatorOption.current);
+        setShouldAutoSelectLegislator(false);
+      } else if (legislatorOptions.length > 0) {
+        setSelectedLegislatorOption(legislatorOptions[0]);
+        setShouldAutoSelectLegislator(false);
+      }
+    } else if (activeTab === "department") {
+      if (selectedDepartmentOption) {
+        previousDepartmentOption.current = selectedDepartmentOption;
+        setSelectedDepartmentOption(null);
+        setShouldAutoSelectDepartment(false);
+      } else if (previousDepartmentOption.current) {
+        setSelectedDepartmentOption(previousDepartmentOption.current);
+        setShouldAutoSelectDepartment(false);
+      } else if (departmentOptions.length > 0) {
+        setSelectedDepartmentOption(departmentOptions[0]);
+        setShouldAutoSelectDepartment(false);
+      }
+    }
+  }, [
+    activeTab,
+    selectedLegislatorOption,
+    selectedDepartmentOption,
+    legislatorOptions,
+    departmentOptions,
+  ]);
+
+  const normalizeDepartmentCategory = useCallback(
+    (category?: string | null) => {
+      const trimmed = category?.trim();
+      return trimmed && trimmed.length > 0 ? trimmed : "未分類";
+    },
+    []
+  );
+
   const filteredLegislatorProposalIds = useMemo(() => {
     if (isDesktop) return null;
     if (activeTab !== "legislator" || !selectedLegislatorOption) return null;
     const ids = allProposals
       .filter((proposal) => {
-        const proposer = proposal.proposers?.[0];
-        const value = proposer?.id ?? proposer?.name ?? "";
-        return value === selectedLegislatorOption.value;
+        const proposers = proposal.proposers ?? [];
+        if (proposers.length === 0) return false;
+        return proposers.some((proposer, index) => {
+          const key = getProposerKey(proposer, proposal.id, index);
+          return key === selectedLegislatorOption.value;
+        });
       })
       .map((proposal) => proposal.id)
       .filter((id): id is string => Boolean(id));
@@ -248,7 +212,6 @@ export const useVisualizationState = (): UseVisualizationStateResult => {
   }, [activeTab, allProposals, isDesktop, selectedLegislatorOption]);
 
   const filteredDepartmentProposalIds = useMemo(() => {
-    if (isDesktop) return null;
     if (activeTab !== "department" || !selectedDepartmentOption) return null;
     const ids = allProposals
       .filter((proposal) => {
@@ -259,7 +222,51 @@ export const useVisualizationState = (): UseVisualizationStateResult => {
       .map((proposal) => proposal.id)
       .filter((id): id is string => Boolean(id));
     return new Set(ids);
-  }, [activeTab, allProposals, isDesktop, selectedDepartmentOption]);
+  }, [activeTab, allProposals, selectedDepartmentOption]);
+
+  const selectedDepartmentCategorizedData = useMemo<Record<
+    string,
+    NodeDatum
+  > | null>(() => {
+    if (
+      !data ||
+      activeTab !== "department" ||
+      !selectedDepartmentOption ||
+      !selectedDepartmentOption.value
+    ) {
+      return null;
+    }
+
+    const filteredProposals =
+      data.proposals?.filter((proposal) => {
+        if (!proposal) return false;
+        const proposalWithContext = useFragment(
+          VisualizationProposalWithContextFragmentDoc,
+          proposal
+        );
+        const category = normalizeDepartmentCategory(
+          proposalWithContext.government?.category ?? null
+        );
+        return category === selectedDepartmentOption.value;
+      }) ?? [];
+
+    if (!filteredProposals.length) {
+      return null;
+    }
+
+    const filteredData: GetVisualizationProposalsQuery = {
+      ...data,
+      proposals: filteredProposals,
+    };
+
+    return transformToCategorizedData(filteredData, mode);
+  }, [
+    activeTab,
+    data,
+    mode,
+    normalizeDepartmentCategory,
+    selectedDepartmentOption,
+  ]);
 
   useEffect(() => {
     if (!isMobile) return;
@@ -302,9 +309,22 @@ export const useVisualizationState = (): UseVisualizationStateResult => {
     shouldAutoSelectLegislator,
   ]);
 
+  useEffect(() => {
+    if (!isDesktop) return;
+    if (activeTab !== "department") return;
+    const hasSelection =
+      selectedDepartmentOption &&
+      departmentOptions.some(
+        (option) => option.value === selectedDepartmentOption.value
+      );
+    if (!hasSelection && departmentOptions.length > 0) {
+      setSelectedDepartmentOption(departmentOptions[0]);
+      setShouldAutoSelectDepartment(false);
+    }
+  }, [activeTab, departmentOptions, isDesktop, selectedDepartmentOption]);
+
   const effectiveData = useMemo(() => {
     if (!data) return null;
-    if (isDesktop) return data;
 
     let filteredIds: Set<string> | null = null;
     if (activeTab === "legislator" && filteredLegislatorProposalIds) {
@@ -338,49 +358,43 @@ export const useVisualizationState = (): UseVisualizationStateResult => {
     data,
     filteredDepartmentProposalIds,
     filteredLegislatorProposalIds,
-    isDesktop,
   ]);
 
   const visualizationData = effectiveData ?? data ?? null;
 
-  const summaryStats = useMemo<SummaryStats>(() => {
-    const proposals = mapVisualizationProposals(effectiveData);
-
-    const reductionProposals = filter(
-      proposals,
-      (p) => p.reductionAmount && p.reductionAmount > 0
-    );
-
-    const freezeProposals = filter(
-      proposals,
-      (p) => p.freezeAmount && p.freezeAmount > 0
-    );
-
-    const mainResolutionProposals = filter(proposals, (p) =>
-      p.proposalTypes?.includes(ProposalProposalTypeType.Other)
-    );
-
-    return {
-      totalReductionAmount: sumBy(reductionProposals, "reductionAmount"),
-      reductionCount: reductionProposals.length,
-      totalFreezeAmount: sumBy(freezeProposals, "freezeAmount"),
-      freezeCount: freezeProposals.length,
-      mainResolutionCount: mainResolutionProposals.length,
-    };
-  }, [effectiveData]);
-
-  const formattedReductionAmount = formatAmountWithUnit(
-    summaryStats.totalReductionAmount
-  );
-  const formattedFreezeAmount = formatAmountWithUnit(
-    summaryStats.totalFreezeAmount
-  );
-
   const legislatorVisualizationData =
     useMemo<VisualizationGroupedData | null>(() => {
       if (!effectiveData) return null;
-      return transformToGroupedByLegislatorData(effectiveData, mode);
-    }, [effectiveData, mode]);
+      const baseData = transformToGroupedByLegislatorData(effectiveData, mode);
+      const shouldFilterBySelection =
+        !isDesktop && activeTab === "legislator" && selectedLegislatorOption;
+      if (!shouldFilterBySelection) {
+        return baseData;
+      }
+      const rootNode = baseData[""];
+      if (!rootNode?.children) {
+        return baseData;
+      }
+      const filteredChildren = rootNode.children.filter((child) => {
+        return (
+          child.proposerId === selectedLegislatorOption.value ||
+          child.proposerKey === selectedLegislatorOption.value
+        );
+      });
+      return {
+        ...baseData,
+        "": {
+          ...rootNode,
+          children: filteredChildren,
+        },
+      };
+    }, [
+      activeTab,
+      effectiveData,
+      isDesktop,
+      mode,
+      selectedLegislatorOption,
+    ]);
 
   const isShowingAll =
     (activeTab === "legislator" && !selectedLegislatorOption) ||
@@ -409,10 +423,8 @@ export const useVisualizationState = (): UseVisualizationStateResult => {
     rawData: data,
     visualizationData,
     legislatorVisualizationData,
-    summaryStats,
-    formattedReductionAmount,
-    formattedFreezeAmount,
+    selectedDepartmentCategorizedData,
   };
 };
 
-export { YEAR_OPTIONS };
+export { useVisualizationState };

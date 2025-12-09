@@ -1,6 +1,12 @@
-export type VisualizationTab = "legislator" | "department";
+export enum VisualizationTab {
+  Legislator = "legislator",
+  Department = "department",
+}
 
-export type VisualizationMode = "amount" | "count";
+export enum VisualizationMode {
+  Amount = "amount",
+  Count = "count",
+}
 
 export type SelectOption = {
   value: string;

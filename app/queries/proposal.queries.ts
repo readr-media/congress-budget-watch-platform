@@ -117,6 +117,12 @@ export const GET_PROPOSAL_BY_ID_QUERY = graphql(`
         location
         meetingRecordUrl
         type
+        committee {
+          displayName
+          name
+          endDate
+          startDate
+        }
       }
       mergedProposals {
         id
@@ -161,16 +167,38 @@ export const proposalQueryKeys = {
   ],
   // 新增: 分頁查詢 keys
   paginated: (
-    page: number,
-    pageSize: number,
-    sortBy: string,
     where?: Record<string, unknown>,
     year?: number | string | null // 新增 year 參數
   ) =>
     [
       ...proposalQueryKeys.lists(),
       "paginated",
-      { page, pageSize, sortBy, where, year }, // 將 year 加入 key
+      { where, year }, // 將 year 加入 key
+    ] as const,
+  details: () => [...proposalQueryKeys.all, "detail"] as const,
+  detail: (id: string) => [...proposalQueryKeys.details(), id] as const,
+  years: () => [...proposalQueryKeys.all, "years"] as const,
+} as const;
+
+export const proposalQueryKeysWithOrderAndSkip = {
+  all: ["proposals"] as const,
+  lists: () => [...proposalQueryKeys.all, "list"] as const,
+  list: (filters?: Record<string, unknown>) => [
+    ...proposalQueryKeys.lists(),
+    { filters },
+  ],
+  // 新增: 分頁查詢 keys
+  paginated: (
+    page: number,
+    pageSize: number,
+    sort: string,
+    where?: Record<string, unknown>,
+    year?: number | string | null // 新增 year 參數
+  ) =>
+    [
+      ...proposalQueryKeys.lists(),
+      "paginated",
+      { page, pageSize, sort, where, year },
     ] as const,
   details: () => [...proposalQueryKeys.all, "detail"] as const,
   detail: (id: string) => [...proposalQueryKeys.details(), id] as const,
@@ -195,6 +223,8 @@ export const GET_PAGINATED_PROPOSALS_QUERY = graphql(`
         id
         type
         committee {
+          displayName
+          name
           endDate
           startDate
         }

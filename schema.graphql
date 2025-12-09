@@ -882,7 +882,14 @@ input PeopleWhereUniqueInput {
 
 type Proposal {
   budget: Budget
+  budgetAmount: Float
   budgetImageUrl: String
+  budgetMajorCategory: String
+  budgetMediumCategory: String
+  budgetMinorCategory: String
+  budgetProjectName: String
+  budgetType: String
+  budgetYear: Int
   coSigners(cursor: PeopleWhereUniqueInput, orderBy: [PeopleOrderByInput!]! = [], skip: Int! = 0, take: Int, where: PeopleWhereInput! = {}): [People!]
   coSignersCount(where: PeopleWhereInput! = {}): Int
   description: String
@@ -950,6 +957,7 @@ input ProposalManyRelationFilter {
 }
 
 input ProposalOrderByInput {
+  budgetAmount: OrderDirection
   budgetImageUrl: OrderDirection
   description: OrderDirection
   freezeAmount: OrderDirection
@@ -1033,6 +1041,7 @@ input ProposalWhereInput {
   NOT: [ProposalWhereInput!]
   OR: [ProposalWhereInput!]
   budget: BudgetWhereInput
+  budgetAmount: FloatNullableFilter
   budgetImageUrl: StringNullableFilter
   coSigners: PeopleManyRelationFilter
   description: StringNullableFilter

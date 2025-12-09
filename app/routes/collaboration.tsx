@@ -29,16 +29,12 @@ export default function Collaboration() {
     queryFn: () => execute(GET_RECOGNITION_STATS_QUERY),
   });
 
-  const passedRecognitions =
-    data?.recognitionImages?.filter((img) => img.result === "passed") ?? [];
-
-  const stats = {
-    recognized: passedRecognitions.length,
-    unrecognized: data?.recognitionImagesCount ?? 0,
-  };
+  const passedRecognitions = data?.recognitionImages ?? [];
+  const recognizedCount = passedRecognitions.length;
+  const unrecognizedCount = data?.recognitionImagesCount ?? 0;
 
   return (
-    <main className="font-noto-sans-tc flex flex-col items-center px-5 py-6 md:px-8 bg-surface-base">
+    <main className="font-noto-sans-tc bg-surface-base flex flex-col items-center px-5 py-6 md:px-8">
       <div className="flex w-full max-w-[680px] flex-col items-center gap-6">
         <img src={Banner} alt="協作區橫幅" />
         <h1 className="text-center text-2xl leading-none font-bold md:text-4xl">
@@ -46,10 +42,8 @@ export default function Collaboration() {
         </h1>
         <div className="text-center text-sm leading-none font-bold">
           <span>
-            <span className="text-budget-accent">
-              {stats.recognized} 已辨識
-            </span>
-            / {stats.unrecognized} 未辨識
+            <span className="text-budget-accent">{recognizedCount} 已辨識</span>
+            / {unrecognizedCount} 未辨識
           </span>
         </div>
         <div className="flex w-full items-center justify-between gap-4 md:max-w-sm">
@@ -85,10 +79,11 @@ export default function Collaboration() {
             type="button"
             aria-pressed={activeTab === "steps"}
             onClick={() => setActiveTab("steps")}
-            className={`cursor-pointer rounded-sm border border-black p-2.5 text-base leading-none font-bold transition-colors ${activeTab === "steps"
-              ? "bg-success text-white"
-              : "bg-white text-black"
-              }`}
+            className={`cursor-pointer rounded-sm border border-black p-2.5 text-base leading-none font-bold transition-colors ${
+              activeTab === "steps"
+                ? "bg-success text-white"
+                : "bg-white text-black"
+            }`}
           >
             教學步驟
           </button>
@@ -96,10 +91,11 @@ export default function Collaboration() {
             type="button"
             aria-pressed={activeTab === "qa"}
             onClick={() => setActiveTab("qa")}
-            className={`cursor-pointer rounded-sm border border-black p-2.5 text-base leading-none font-bold transition-colors ${activeTab === "qa"
-              ? "bg-success text-white"
-              : "bg-white text-black"
-              }`}
+            className={`cursor-pointer rounded-sm border border-black p-2.5 text-base leading-none font-bold transition-colors ${
+              activeTab === "qa"
+                ? "bg-success text-white"
+                : "bg-white text-black"
+            }`}
           >
             Q&A 區
           </button>

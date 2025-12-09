@@ -1,6 +1,11 @@
 import { useMemo } from "react";
 import type { GetVisualizationProposalsQuery } from "~/graphql/graphql";
-import { transformToCategorizedData, type NodeDatum } from "../helpers";
+import {
+  formatAmountWithUnit,
+  GROUP_LABELS,
+  transformToCategorizedData,
+  type NodeDatum,
+} from "../helpers";
 import CirclePackChart, { type CirclePackPadding } from "../circle-pack-chart";
 
 type DepartmentVisualizationProps = {
@@ -11,6 +16,9 @@ type DepartmentVisualizationProps = {
   mode: "amount" | "count";
   transformedData?: Record<string, NodeDatum>;
   padding?: CirclePackPadding;
+  selectedDepartmentCategorizedData?: Record<string, NodeDatum> | null;
+  selectedDepartmentTitle?: string | null;
+  showSelectedDepartmentChart?: boolean;
 };
 
 const DEFAULT_PADDING: CirclePackPadding = (node) => {
@@ -23,6 +31,8 @@ const DEFAULT_PADDING: CirclePackPadding = (node) => {
   return 22;
 };
 
+const HIGHLIGHT_VALUE_EXPONENT = 0.45;
+
 export const DepartmentVisualization = ({
   data,
   width = 928,
@@ -32,6 +42,9 @@ export const DepartmentVisualization = ({
   mode,
   transformedData,
   padding,
+  selectedDepartmentCategorizedData,
+  selectedDepartmentTitle,
+  showSelectedDepartmentChart,
 }: DepartmentVisualizationProps) => {
   const categorizedData = useMemo(
     () => transformedData ?? transformToCategorizedData(data, mode),
@@ -40,7 +53,83 @@ export const DepartmentVisualization = ({
 
   const paddingValue = useMemo(() => padding ?? DEFAULT_PADDING, [padding]);
 
+  const mergedSelectedDepartmentChildren = useMemo<NodeDatum[] | null>(() => {
+    if (!selectedDepartmentCategorizedData) return null;
+    const children = Object.values(selectedDepartmentCategorizedData).flatMap(
+      (node) => node.children ?? []
+    );
+    if (!children.length) return null;
+
+    type MergedEntry = {
+      totalAmount: number;
+      node: NodeDatum;
+    };
+
+    const merged = new Map<string, MergedEntry>();
+    children.forEach((child) => {
+      const key = [
+        child.proposerId ?? child.name ?? "unknown",
+        child.proposalType ?? "unknown-type",
+      ].join("-");
+
+      const displayName =
+        child.name?.split("\n")[0] ?? child.name ?? "無名提案者";
+      const circleValue = child.value ?? 0;
+      const amount =
+        circleValue > 0
+          ? Math.pow(circleValue, 1 / HIGHLIGHT_VALUE_EXPONENT)
+          : 0;
+      const categoryLabel =
+        GROUP_LABELS[child.proposalType as keyof typeof GROUP_LABELS] ?? "";
+
+      const existing = merged.get(key);
+      if (existing) {
+        const nextAmount = existing.totalAmount + amount;
+        merged.set(key, {
+          totalAmount: nextAmount,
+          node: {
+            ...existing.node,
+            name: `${displayName}\n${categoryLabel}\n${formatAmountWithUnit(
+              nextAmount
+            )}`,
+            value: Math.pow(nextAmount, HIGHLIGHT_VALUE_EXPONENT),
+          },
+        });
+      } else {
+        merged.set(key, {
+          totalAmount: amount,
+          node: {
+            ...child,
+            id: `merged-${key}`,
+            name: `${displayName}\n${categoryLabel}\n${formatAmountWithUnit(
+              amount
+            )}`,
+            value: Math.pow(amount, HIGHLIGHT_VALUE_EXPONENT),
+          },
+        });
+      }
+    });
+
+    return Array.from(merged.values()).map((entry) => entry.node);
+  }, [selectedDepartmentCategorizedData]);
+
+  const highlightedChartData = useMemo<NodeDatum | null>(() => {
+    if (!mergedSelectedDepartmentChildren || !showSelectedDepartmentChart) {
+      return null;
+    }
+    return {
+      id: `selected-department-${selectedDepartmentTitle ?? "selected"}`,
+      name: selectedDepartmentTitle ?? "目前部會",
+      children: mergedSelectedDepartmentChildren,
+    };
+  }, [
+    mergedSelectedDepartmentChildren,
+    selectedDepartmentTitle,
+    showSelectedDepartmentChart,
+  ]);
+
   const categories = Object.keys(categorizedData);
+  const highlightChartData = highlightedChartData;
 
   if (categories.length === 0) {
     return (
@@ -52,9 +141,25 @@ export const DepartmentVisualization = ({
       </div>
     );
   }
-
   return (
     <div className="flex flex-col items-center justify-center gap-y-8">
+      {highlightChartData && (
+        <div
+          key="selected-department-highlight"
+          className="flex w-full flex-col items-center justify-center gap-y-5 font-bold"
+        >
+          <p className="text-xl">
+            看全部
+          </p>
+              <CirclePackChart
+                data={highlightChartData}
+            width={width}
+            height={height ?? width}
+            padding={paddingValue}
+            onNodeClick={onNodeClick}
+          />
+        </div>
+      )}
       {Object.entries(categorizedData).map(([category, chartData]) => (
         <div
           key={category}

@@ -1387,7 +1387,14 @@ export type PeopleWhereUniqueInput = {
 export type Proposal = {
   __typename?: 'Proposal';
   budget?: Maybe<Budget>;
+  budgetAmount?: Maybe<Scalars['Float']['output']>;
   budgetImageUrl?: Maybe<Scalars['String']['output']>;
+  budgetMajorCategory?: Maybe<Scalars['String']['output']>;
+  budgetMediumCategory?: Maybe<Scalars['String']['output']>;
+  budgetMinorCategory?: Maybe<Scalars['String']['output']>;
+  budgetProjectName?: Maybe<Scalars['String']['output']>;
+  budgetType?: Maybe<Scalars['String']['output']>;
+  budgetYear?: Maybe<Scalars['Int']['output']>;
   coSigners?: Maybe<Array<People>>;
   coSignersCount?: Maybe<Scalars['Int']['output']>;
   description?: Maybe<Scalars['String']['output']>;
@@ -1539,6 +1546,7 @@ export type ProposalManyRelationFilter = {
 };
 
 export type ProposalOrderByInput = {
+  budgetAmount?: InputMaybe<OrderDirection>;
   budgetImageUrl?: InputMaybe<OrderDirection>;
   description?: InputMaybe<OrderDirection>;
   freezeAmount?: InputMaybe<OrderDirection>;
@@ -1622,6 +1630,7 @@ export type ProposalWhereInput = {
   NOT?: InputMaybe<Array<ProposalWhereInput>>;
   OR?: InputMaybe<Array<ProposalWhereInput>>;
   budget?: InputMaybe<BudgetWhereInput>;
+  budgetAmount?: InputMaybe<FloatNullableFilter>;
   budgetImageUrl?: InputMaybe<StringNullableFilter>;
   coSigners?: InputMaybe<PeopleManyRelationFilter>;
   description?: InputMaybe<StringNullableFilter>;
@@ -2370,7 +2379,7 @@ export type GetProposalByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetProposalByIdQuery = { __typename?: 'Query', proposal?: { __typename?: 'Proposal', id: string, description?: string | null, reason?: string | null, publishStatus?: string | null, result?: string | null, freezeAmount?: number | null, reductionAmount?: number | null, budgetImageUrl?: string | null, proposalTypes?: Array<ProposalProposalTypeType> | null, recognitionAnswer?: string | null, unfreezeStatus?: string | null, react_angry?: number | null, react_disappoint?: number | null, react_good?: number | null, react_whatever?: number | null, historicalParentProposals?: { __typename?: 'Proposal', id: string } | null, mergedParentProposals?: { __typename?: 'Proposal', id: string, proposers?: Array<{ __typename?: 'People', id: string, name?: string | null }> | null } | null, historicalProposals?: Array<{ __typename?: 'Proposal', id: string, meetings?: Array<{ __typename?: 'Meeting', id: string }> | null, proposers?: Array<{ __typename?: 'People', id: string, name?: string | null }> | null }> | null, government?: { __typename?: 'Government', id: string, name?: string | null, category?: string | null, description?: string | null } | null, budget?: { __typename?: 'Budget', id: string, projectName?: string | null, projectDescription?: string | null, budgetAmount?: number | null, budgetUrl?: string | null, lastYearSettlement?: number | null, year?: number | null, type?: string | null, majorCategory?: string | null, mediumCategory?: string | null, minorCategory?: string | null, description?: string | null } | null, proposers?: Array<{ __typename?: 'People', id: string, name?: string | null, type?: string | null, description?: string | null }> | null, coSigners?: Array<{ __typename?: 'People', id: string, name?: string | null, type?: string | null }> | null, meetings?: Array<{ __typename?: 'Meeting', id: string, displayName?: string | null, meetingDate?: any | null, description?: string | null, location?: string | null, meetingRecordUrl?: string | null, type?: string | null }> | null, mergedProposals?: Array<{ __typename?: 'Proposal', id: string, proposers?: Array<{ __typename?: 'People', id: string, name?: string | null }> | null }> | null } | null };
+export type GetProposalByIdQuery = { __typename?: 'Query', proposal?: { __typename?: 'Proposal', id: string, description?: string | null, reason?: string | null, publishStatus?: string | null, result?: string | null, freezeAmount?: number | null, reductionAmount?: number | null, budgetImageUrl?: string | null, proposalTypes?: Array<ProposalProposalTypeType> | null, recognitionAnswer?: string | null, unfreezeStatus?: string | null, react_angry?: number | null, react_disappoint?: number | null, react_good?: number | null, react_whatever?: number | null, historicalParentProposals?: { __typename?: 'Proposal', id: string } | null, mergedParentProposals?: { __typename?: 'Proposal', id: string, proposers?: Array<{ __typename?: 'People', id: string, name?: string | null }> | null } | null, historicalProposals?: Array<{ __typename?: 'Proposal', id: string, meetings?: Array<{ __typename?: 'Meeting', id: string }> | null, proposers?: Array<{ __typename?: 'People', id: string, name?: string | null }> | null }> | null, government?: { __typename?: 'Government', id: string, name?: string | null, category?: string | null, description?: string | null } | null, budget?: { __typename?: 'Budget', id: string, projectName?: string | null, projectDescription?: string | null, budgetAmount?: number | null, budgetUrl?: string | null, lastYearSettlement?: number | null, year?: number | null, type?: string | null, majorCategory?: string | null, mediumCategory?: string | null, minorCategory?: string | null, description?: string | null } | null, proposers?: Array<{ __typename?: 'People', id: string, name?: string | null, type?: string | null, description?: string | null }> | null, coSigners?: Array<{ __typename?: 'People', id: string, name?: string | null, type?: string | null }> | null, meetings?: Array<{ __typename?: 'Meeting', id: string, displayName?: string | null, meetingDate?: any | null, description?: string | null, location?: string | null, meetingRecordUrl?: string | null, type?: string | null, committee?: Array<{ __typename?: 'Committee', displayName?: string | null, name?: string | null, endDate?: any | null, startDate?: any | null }> | null }> | null, mergedProposals?: Array<{ __typename?: 'Proposal', id: string, proposers?: Array<{ __typename?: 'People', id: string, name?: string | null }> | null }> | null } | null };
 
 export type GetProposalYearsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -2385,7 +2394,7 @@ export type GetPaginatedProposalsQueryVariables = Exact<{
 }>;
 
 
-export type GetPaginatedProposalsQuery = { __typename?: 'Query', proposalsCount?: number | null, proposals?: Array<{ __typename?: 'Proposal', id: string, description?: string | null, reason?: string | null, result?: string | null, freezeAmount?: number | null, reductionAmount?: number | null, proposalTypes?: Array<ProposalProposalTypeType> | null, react_angry?: number | null, react_disappoint?: number | null, react_good?: number | null, react_whatever?: number | null, year?: { __typename?: 'BudgetYear', id: string, year?: number | null } | null, meetings?: Array<{ __typename?: 'Meeting', id: string, type?: string | null, committee?: Array<{ __typename?: 'Committee', endDate?: any | null, startDate?: any | null }> | null }> | null, government?: { __typename?: 'Government', id: string, name?: string | null } | null, budget?: { __typename?: 'Budget', id: string, budgetAmount?: number | null } | null, proposers?: Array<{ __typename?: 'People', id: string, name?: string | null }> | null }> | null };
+export type GetPaginatedProposalsQuery = { __typename?: 'Query', proposalsCount?: number | null, proposals?: Array<{ __typename?: 'Proposal', id: string, description?: string | null, reason?: string | null, result?: string | null, freezeAmount?: number | null, reductionAmount?: number | null, proposalTypes?: Array<ProposalProposalTypeType> | null, react_angry?: number | null, react_disappoint?: number | null, react_good?: number | null, react_whatever?: number | null, year?: { __typename?: 'BudgetYear', id: string, year?: number | null } | null, meetings?: Array<{ __typename?: 'Meeting', id: string, type?: string | null, committee?: Array<{ __typename?: 'Committee', displayName?: string | null, name?: string | null, endDate?: any | null, startDate?: any | null }> | null }> | null, government?: { __typename?: 'Government', id: string, name?: string | null } | null, budget?: { __typename?: 'Budget', id: string, budgetAmount?: number | null } | null, proposers?: Array<{ __typename?: 'People', id: string, name?: string | null }> | null }> | null };
 
 export type Update_Proposal_ReactsMutationVariables = Exact<{
   where: ProposalWhereUniqueInput;
@@ -2396,9 +2405,6 @@ export type Update_Proposal_ReactsMutationVariables = Exact<{
 export type Update_Proposal_ReactsMutation = { __typename?: 'Mutation', updateProposal?: { __typename?: 'Proposal', id: string, react_angry?: number | null, react_disappoint?: number | null, react_good?: number | null, react_whatever?: number | null } | null };
 
 export type GetVisualizationProposalsQueryVariables = Exact<{
-  skip: Scalars['Int']['input'];
-  take: Scalars['Int']['input'];
-  orderBy: Array<ProposalOrderByInput> | ProposalOrderByInput;
   where: ProposalWhereInput;
 }>;
 
@@ -2531,7 +2537,7 @@ export const GetPeopleListDocument = new TypedDocumentString(`
     `) as unknown as TypedDocumentString<GetPeopleListQuery, GetPeopleListQueryVariables>;
 export const RecognitionImagesDocument = new TypedDocumentString(`
     query RecognitionImages {
-  recognitionImages {
+  recognitionImages(where: {verificationStatus: {equals: "verified"}}) {
     result
   }
   recognitionImagesCount
@@ -2682,6 +2688,12 @@ export const GetProposalByIdDocument = new TypedDocumentString(`
       location
       meetingRecordUrl
       type
+      committee {
+        displayName
+        name
+        endDate
+        startDate
+      }
     }
     mergedProposals {
       id
@@ -2724,6 +2736,8 @@ export const GetPaginatedProposalsDocument = new TypedDocumentString(`
       id
       type
       committee {
+        displayName
+        name
         endDate
         startDate
       }
@@ -2765,8 +2779,8 @@ export const Update_Proposal_ReactsDocument = new TypedDocumentString(`
 }
     `) as unknown as TypedDocumentString<Update_Proposal_ReactsMutation, Update_Proposal_ReactsMutationVariables>;
 export const GetVisualizationProposalsDocument = new TypedDocumentString(`
-    query GetVisualizationProposals($skip: Int!, $take: Int!, $orderBy: [ProposalOrderByInput!]!, $where: ProposalWhereInput!) {
-  proposals(skip: $skip, take: $take, orderBy: $orderBy, where: $where) {
+    query GetVisualizationProposals($where: ProposalWhereInput!) {
+  proposals(where: $where) {
     ...VisualizationProposalWithContext
   }
 }

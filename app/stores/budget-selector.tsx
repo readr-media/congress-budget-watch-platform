@@ -49,7 +49,7 @@ const DEFAULT_STATE: BudgetSelectorState = {
   selectedValue: "all",
   searchedValue: "",
   visible: true,
-  selectedSort: "id-asc",
+  selectedSort: "budget-amount-desc",
   departmentFilter: { category: null, departmentId: null },
   peopleFilter: { personId: null },
   selectedYear: null,

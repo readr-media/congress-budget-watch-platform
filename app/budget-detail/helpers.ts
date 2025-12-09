@@ -26,21 +26,34 @@ export type MergedProposalInfo = {
   isParent?: boolean;
 };
 
+export const PROPOSAL_TYPE_LABELS: Record<ProposalProposalTypeType, string> = {
+  [ProposalProposalTypeTypeEnum.Freeze]: "凍結",
+  [ProposalProposalTypeTypeEnum.Reduce]: "減列",
+  [ProposalProposalTypeTypeEnum.Other]: "主決議",
+};
+
+export const PROPOSAL_RESULT_LABELS: Record<string, string> = {
+  passed: "通過",
+  rejected: "不通過",
+  pending: "待審議",
+  reserved: "保留",
+  withdrawn: "撤案",
+};
+
 /**
  * 將 ProposalProposalTypeType 轉換為中文顯示文字
  */
 export function getProposalTypeDisplay(
-  types?: Array<ProposalProposalTypeType> | null
+  types?: Array<ProposalProposalTypeType | null> | null
 ): string {
-  if (!types || types.length === 0) return "未分類";
+  const sanitizedTypes = (types ?? []).filter(
+    (type): type is ProposalProposalTypeType => Boolean(type)
+  );
+  if (sanitizedTypes.length === 0) return "未分類";
 
-  const typeMap: Record<ProposalProposalTypeType, string> = {
-    [ProposalProposalTypeTypeEnum.Freeze]: "凍結",
-    [ProposalProposalTypeTypeEnum.Reduce]: "減列",
-    [ProposalProposalTypeTypeEnum.Other]: "其他",
-  };
-
-  return types.map((t) => typeMap[t] || t).join("、");
+  return sanitizedTypes
+    .map((type) => PROPOSAL_TYPE_LABELS[type] ?? type)
+    .join("、");
 }
 
 /**
@@ -49,14 +62,8 @@ export function getProposalTypeDisplay(
 export function getResultDisplay(result?: string | null): string {
   if (!result) return "待審議";
 
-  // 根據實際 API 回傳的值來調整
-  const resultMap: Record<string, string> = {
-    passed: "通過",
-    rejected: "不通過",
-    pending: "待審議",
-  };
-
-  return resultMap[result] || result;
+  const normalizedResult = result.trim().toLowerCase();
+  return PROPOSAL_RESULT_LABELS[normalizedResult] || result;
 }
 
 /**
@@ -102,6 +109,54 @@ export function formatReducedAndFrozenAmount(
   return `${formattedReduced} / ${formattedFrozen}`;
 }
 
+type MeetingCommittee = NonNullable<Meeting["committee"]>[number];
+
+function toDate(value?: string | Date | null): Date | null {
+  if (!value) return null;
+  if (value instanceof Date) return value;
+  const parsed = new Date(value);
+  return Number.isNaN(parsed.getTime()) ? null : parsed;
+}
+
+function getLatestCommitteeNameFromMeeting(
+  committees?: (MeetingCommittee | null)[] | null,
+  fallback = "會議"
+): string {
+  const latestCommittee = (committees ?? [])
+    .filter((committee): committee is MeetingCommittee => Boolean(committee))
+    .map((committee) => ({
+      committee,
+      startDate: toDate(committee.startDate),
+    }))
+    .filter(
+      (
+        entry
+      ): entry is {
+        committee: MeetingCommittee;
+        startDate: Date;
+      } => Boolean(entry.startDate)
+    )
+    .reduce<{
+      committee: MeetingCommittee;
+      startDate: Date;
+    } | null>((selected, current) => {
+      if (!selected) return current;
+      return current.startDate.getTime() > selected.startDate.getTime()
+        ? current
+        : selected;
+    }, null);
+
+  if (latestCommittee) {
+    return (
+      latestCommittee.committee.name ??
+      latestCommittee.committee.displayName ??
+      fallback
+    );
+  }
+
+  return fallback;
+}
+
 /**
  * 將 Meeting 陣列轉換為 Timeline 格式
  * 如果沒有 meetings 資料，返回空陣列
@@ -134,7 +189,10 @@ export function meetingsToTimeline(
           day: "numeric",
         })
       : "日期未定",
-    title: mapStageLabel(meeting.type, "會議"),
+    title: getLatestCommitteeNameFromMeeting(
+      meeting.committee,
+      mapStageLabel(meeting.type, "會議")
+    ),
     historicalProposalId: meeting.id
       ? meetingToHistoricalProposal.get(meeting.id)
       : undefined,
@@ -149,15 +207,22 @@ type MergedProposalLike = {
 
 /**
  * 將 mergedProposals / mergedParentProposals 轉換為顯示格式
+ * 如果查詢不到母提案資料但當前提案有併案子提案，會自動帶入當前提案為「主」
  */
 export function formatMergedProposals(
   mergedProposals?: Array<MergedProposalLike> | null,
-  mergedParentProposal?: MergedProposalLike
+  mergedParentProposal?: MergedProposalLike,
+  currentProposal?: MergedProposalLike
 ): MergedProposalInfo[] {
   const normalized: Array<{ raw: MergedProposalLike; isParent: boolean }> = [];
 
   if (mergedParentProposal?.id) {
     normalized.push({ raw: mergedParentProposal, isParent: true });
+  } else if (
+    currentProposal?.id &&
+    (mergedProposals?.length ?? 0) > 0
+  ) {
+    normalized.push({ raw: currentProposal, isParent: true });
   }
 
   if (mergedProposals && mergedProposals.length > 0) {

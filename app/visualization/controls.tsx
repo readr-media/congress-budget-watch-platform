@@ -1,6 +1,6 @@
 import Select, { type SingleValue } from "react-select";
 import { VisualizationSelector } from "~/components/visualization-selector";
-import type { SelectOption, VisualizationTab } from "~/types/visualization";
+import { VisualizationTab, type SelectOption } from "~/types/visualization";
 
 type DesktopControlsProps = {
   activeTab: VisualizationTab;
@@ -21,7 +21,7 @@ export const DesktopControls = ({
     <div className="hidden flex-col gap-y-2 md:flex md:flex-row md:items-center md:justify-center md:gap-x-6">
       <div className="flex items-center justify-center gap-x-1.5 md:gap-x-6">
         <button
-          onClick={() => onTabChange("legislator")}
+          onClick={() => onTabChange(VisualizationTab.Legislator)}
           className={`rounded px-2.5 transition-colors ${
             activeTab === "legislator"
               ? "bg-brand-primary text-white"
@@ -31,7 +31,7 @@ export const DesktopControls = ({
           依立委
         </button>
         <button
-          onClick={() => onTabChange("department")}
+          onClick={() => onTabChange(VisualizationTab.Department)}
           className={`rounded px-2.5 transition-colors ${
             activeTab === "department"
               ? "bg-brand-primary text-white"
@@ -103,7 +103,7 @@ export const MobileControls = ({
           看全部
         </button>
         <button
-          onClick={() => onTabChange("legislator")}
+          onClick={() => onTabChange(VisualizationTab.Legislator)}
           className={`rounded px-2.5 transition-colors ${
             activeTab === "legislator"
               ? "bg-brand-primary text-white"
@@ -113,7 +113,7 @@ export const MobileControls = ({
           依立委
         </button>
         <button
-          onClick={() => onTabChange("department")}
+          onClick={() => onTabChange(VisualizationTab.Department)}
           className={`rounded px-2.5 transition-colors ${
             activeTab === "department"
               ? "bg-brand-primary text-white"

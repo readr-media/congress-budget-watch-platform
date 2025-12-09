@@ -1,5 +1,4 @@
 import {
-  ProposalProposalTypeType,
   type People,
   type Proposal,
   type GetPaginatedProposalsQuery,
@@ -20,25 +19,10 @@ import {
 import {
   formatNumber,
   formatReducedAndFrozenAmount,
+  getProposalTypeDisplay,
+  PROPOSAL_RESULT_LABELS,
 } from "~/budget-detail/helpers";
 import type { BudgetTableData } from "~/components/budget-table";
-
-function getProposalTypeDisplay(
-  proposalTypes?: (ProposalProposalTypeType | null)[] | null
-): string {
-  if (!proposalTypes || proposalTypes.length === 0) {
-    return "無";
-  }
-  const proposalTypeMap = new Map([
-    ["other", "主決議"],
-    ["freeze", "凍結案"],
-    ["reduction", "刪減案"],
-  ]);
-  return proposalTypes
-    .filter((proposalType) => proposalType !== null)
-    .map((proposalType) => proposalTypeMap.get(proposalType ?? "") ?? "")
-    .join("、");
-}
 
 function formatLegislator(legislator: People | null): string {
   return legislator?.name || "";
@@ -57,6 +41,9 @@ const formatProposers = (proposers?: (People | null)[] | null): string =>
     : "未知提案人";
 
 type StageCommittee = {
+  name?: string | null;
+  displayName?: string | null;
+  startDate?: string | Date | null;
   endDate?: string | Date | null;
 };
 
@@ -177,12 +164,54 @@ function meetingsToStage(
   return fallbackStage;
 }
 
+function getLatestCommitteeName(
+  meetings?: (MeetingForStage | null)[] | null,
+  fallbackStage = "委員會"
+): string {
+  const latestCommittee = (meetings ?? [])
+    .flatMap((meeting) => meeting?.committee ?? [])
+    .map((committee) => {
+      if (!committee) return null;
+      return {
+        committee,
+        startDate: toDate(committee.startDate),
+      };
+    })
+    .filter(
+      (
+        entry
+      ): entry is {
+        committee: StageCommittee;
+        startDate: Date;
+      } =>
+        Boolean(entry?.startDate) &&
+        Boolean(entry?.committee?.name ?? entry?.committee?.displayName)
+    )
+    .reduce<{
+      committee: StageCommittee;
+      startDate: Date;
+    } | null>((selected, current) => {
+      if (!selected) return current;
+      return current.startDate.getTime() > selected.startDate.getTime()
+        ? current
+        : selected;
+    }, null);
+
+  if (latestCommittee) {
+    return (
+      latestCommittee.committee.name ??
+      latestCommittee.committee.displayName ??
+      fallbackStage
+    );
+  }
+
+  return fallbackStage;
+}
+
 const transformProposalResult = (result?: string | null): string => {
-  const resultMap: Record<string, string> = {
-    passed: "通過",
-    rejected: "不通過",
-  };
-  return (result && resultMap[result]) || "待審議";
+  if (!result) return "待審議";
+  const normalized = result.trim().toLowerCase();
+  return PROPOSAL_RESULT_LABELS[normalized] || "待審議";
 };
 
 export function proposalToBudgetTableData(
@@ -193,7 +222,11 @@ export function proposalToBudgetTableData(
     sequence: () => 0,
     department: flow(get("government.name"), defaultTo("部會")),
     date: (p: ProposalInput) => getLatestMeetingDate(p.meetings), // 重新使用 getLatestMeetingDate
-    stage: (proposal: ProposalInput) => meetingsToStage(proposal.meetings),
+    stage: (proposal: ProposalInput) =>
+      getLatestCommitteeName(
+        proposal.meetings,
+        meetingsToStage(proposal.meetings)
+      ),
     proposer: flow(prop("proposers"), formatProposers),
     proposalType: flow(prop("proposalTypes"), getProposalTypeDisplay),
     proposalResult: flow(prop("result"), transformProposalResult),
