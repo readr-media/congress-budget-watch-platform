@@ -1,3 +1,4 @@
+import * as Dialog from "@radix-ui/react-dialog";
 import { useEffect, useRef, useState, type RefObject } from "react";
 import { ShareButton } from "@readr-media/share-button";
 import { NavLink, useLocation } from "react-router";
@@ -112,12 +113,38 @@ const BudgetHeader = () => {
         </ul>
       </div>
       <div className="flex h-10 w-[134px] items-center justify-end gap-x-3.5">
-        <NavLink
-          to=""
-          className="hidden cursor-pointer pt-2 underline md:block"
-        >
-          製作團隊
-        </NavLink>
+        <Dialog.Root>
+          <Dialog.Trigger asChild>
+            <button
+              type="button"
+              className="hidden cursor-pointer pt-2 text-left underline md:block"
+            >
+              製作團隊
+            </button>
+          </Dialog.Trigger>
+          <Dialog.Portal>
+            <Dialog.Overlay className="bg-black/40 fixed inset-0" />
+            <Dialog.Content className="bg-white text-gray-900 fixed top-1/2 left-1/2 w-[min(90vw,420px)] -translate-x-1/2 -translate-y-1/2 rounded-xl p-6 shadow-xl focus:outline-none">
+              <Dialog.Title className="text-center text-xl font-bold">
+                製作團隊
+              </Dialog.Title>
+              <div className="mt-4 space-y-2 text-base leading-relaxed">
+                <p>記者：李又如</p>
+                <p>設計：曾立宇</p>
+                <p>
+                  工程：林祐哲、簡信昌、李又如、李文瀚、鄧宇哲、陳柏維、簡信昌
+                </p>
+                <p>資料處理：李又如、劉怡馨、陳珮瑜、徐湘芸</p>
+                <p>資料合作：歐噴有限公司</p>
+              </div>
+              <Dialog.Close asChild>
+                <button className="text-brand-primary border-brand-primary hover:bg-brand-primary mt-6 flex w-full items-center justify-center rounded-full border px-4 py-2 font-semibold hover:text-white focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 focus:outline-none">
+                  關閉
+                </button>
+              </Dialog.Close>
+            </Dialog.Content>
+          </Dialog.Portal>
+        </Dialog.Root>
         {isMounted ? (
           <ShareButton
             className="share-button-header max-h-[21px] w-full"

@@ -1,8 +1,5 @@
 import { Suspense, lazy } from "react";
-import Select, {
-  type SingleValue,
-  type StylesConfig,
-} from "react-select";
+import Select, { type SingleValue, type StylesConfig } from "react-select";
 import ProgressBar from "~/components/progress-bar";
 import Image from "~/components/image";
 import type { BudgetTableData } from "~/components/budget-table";
@@ -151,9 +148,7 @@ const AllBudgetsView = ({
       <Select
         styles={customSelectStyles}
         value={selectedYearOption}
-        onChange={(option) =>
-          onYearChange(option as SingleValue<YearOption>)
-        }
+        onChange={(option) => onYearChange(option as SingleValue<YearOption>)}
         options={yearOptions}
         placeholder="選擇年份"
       />
@@ -177,9 +172,7 @@ const AllBudgetsView = ({
       <Select
         styles={customSelectStyles}
         value={selectedYearOption}
-        onChange={(option) =>
-          onYearChange(option as SingleValue<YearOption>)
-        }
+        onChange={(option) => onYearChange(option as SingleValue<YearOption>)}
         options={yearOptions}
         placeholder="選擇年份"
       />
@@ -222,4 +215,3 @@ const AllBudgetsView = ({
 );
 
 export default AllBudgetsView;
-

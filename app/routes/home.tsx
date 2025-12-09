@@ -130,7 +130,7 @@ export default function Home() {
         {/* Navigation Buttons */}
         <nav
           className="flex flex-col gap-3 md:grid md:grid-cols-2 md:gap-6 lg:grid-cols-4 lg:gap-4"
-          aria-label="主要導航"
+          aria-label="main navigate"
         >
           {navigationButtons.map((button) => (
             <NavLink
@@ -150,25 +150,46 @@ export default function Home() {
         </nav>
       </div>
       <div className="mt-15 flex items-center justify-center gap-x-2 md:mt-25 md:gap-x-3">
-        <Image
-          src="/image/readr-logo.svg"
-          alt="Readr logo"
-          width={110}
-          height={48}
-        />
-        <Image
-          src="/image/Friedrich-Naumann-Foundation-logo.svg"
-          alt="Friedrich-Naumann-Foundation-logo"
-          width={130}
-          height={48}
-          className="h-auto w-[130px] md:w-50"
-        />
-        <Image
-          src="/image/CCW-logo.svg"
-          alt="Citizen-Watch-logo"
-          width={90}
-          height={48}
-        />
+        <NavLink
+          to="https://www.readr.tw/"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Readr"
+        >
+          <Image
+            src="/image/readr-logo.svg"
+            alt="Readr logo"
+            width={110}
+            height={48}
+          />
+        </NavLink>
+        <NavLink
+          to="https://www.freiheit.org/zh/taiwan"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Friedrich Naumann Foundation"
+        >
+          <Image
+            src="/image/Friedrich-Naumann-Foundation-logo.svg"
+            alt="Friedrich-Naumann-Foundation-logo"
+            width={130}
+            height={48}
+            className="h-auto w-[130px] md:w-50"
+          />
+        </NavLink>
+        <NavLink
+          to="https://ccw.org.tw/"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Citizen Congress Watch"
+        >
+          <Image
+            src="/image/CCW-logo.svg"
+            alt="Citizen-Watch-logo"
+            width={90}
+            height={48}
+          />
+        </NavLink>
         <Image
           src="/image/donate-CCW-logo.svg"
           alt="donate-CCW-logo"

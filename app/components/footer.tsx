@@ -49,7 +49,7 @@ const Footer = () => {
         </Link>
         <span className="text-neutral-200">|</span>
         <a
-          href="https://data.gov.tw"
+          href="https://github.com/Citizen-Congress-Watch/budget_data"
           target="_blank"
           rel="noopener noreferrer"
           className="text-info-accent underline"
@@ -58,7 +58,7 @@ const Footer = () => {
         </a>
         <span className="text-neutral-200">|</span>
         <a
-          href="https://github.com/readr-media/congress-budget"
+          href="https://github.com/orgs/Citizen-Congress-Watch/repositories"
           target="_blank"
           rel="noopener noreferrer"
           className="underline"
