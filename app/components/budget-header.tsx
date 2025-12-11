@@ -99,7 +99,7 @@ const BudgetHeader = () => {
               <li key={item.to}>
                 <NavLink
                   to={item.to}
-                  className={`block rounded-lg border px-5 md:px-2 lg:px-5 py-1 ${
+                  className={`block rounded-lg border px-5 py-1 md:px-2 lg:px-5 ${
                     isActive
                       ? "border-[#E9808E] bg-white text-[#E9808E]"
                       : "border-[#B3B3B3] bg-[#E3E3E3] text-[#828282]"
@@ -123,22 +123,21 @@ const BudgetHeader = () => {
             </button>
           </Dialog.Trigger>
           <Dialog.Portal>
-            <Dialog.Overlay className="bg-black/40 fixed inset-0" />
-            <Dialog.Content className="bg-white text-gray-900 fixed top-1/2 left-1/2 w-[min(90vw,420px)] -translate-x-1/2 -translate-y-1/2 rounded-xl p-6 shadow-xl focus:outline-none">
+            <Dialog.Overlay className="fixed inset-0 bg-black/40" />
+            <Dialog.Content className="fixed top-1/2 left-1/2 w-[min(90vw,420px)] -translate-x-1/2 -translate-y-1/2 rounded-xl bg-white p-6 text-gray-900 shadow-xl focus:outline-none">
               <Dialog.Title className="text-center text-xl font-bold">
                 製作團隊
               </Dialog.Title>
               <div className="mt-4 space-y-2 text-base leading-relaxed">
                 <p>記者：李又如</p>
                 <p>設計：曾立宇</p>
-                <p>
-                  工程：林祐哲、簡信昌、李又如、李文瀚、鄧宇哲、陳柏維、簡信昌
-                </p>
+                <p>工程：林祐哲、簡信昌、李又如、李文瀚、鄧宇哲、陳柏維</p>
+                <p>產品經理：羅偉力</p>
                 <p>資料處理：李又如、劉怡馨、陳珮瑜、徐湘芸</p>
                 <p>資料合作：歐噴有限公司</p>
               </div>
               <Dialog.Close asChild>
-                <button className="text-brand-primary border-brand-primary hover:bg-brand-primary mt-6 flex w-full items-center justify-center rounded-full border px-4 py-2 font-semibold hover:text-white focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 focus:outline-none">
+                <button className="text-brand-primary border-brand-primary hover:bg-brand-primary focus-visible:ring-brand-primary mt-6 flex w-full items-center justify-center rounded-full border px-4 py-2 font-semibold hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2">
                   關閉
                 </button>
               </Dialog.Close>
