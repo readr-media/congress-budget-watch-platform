@@ -57,6 +57,30 @@ export const mapVisualizationProposals = (
   return extractProposals(data);
 };
 
+const deriveProposalNodeMeta = (
+  proposal: VisualizationProposal
+): {
+  proposalType?: ProposalVisualizationType;
+  isFrozen: boolean;
+} => {
+  const freezeAmount = defaultTo(proposal.freezeAmount, 0);
+  const reductionAmount = defaultTo(proposal.reductionAmount, 0);
+
+  if (freezeAmount > 0) {
+    return { proposalType: "freeze", isFrozen: true };
+  }
+
+  if (reductionAmount > 0) {
+    return { proposalType: "reduce", isFrozen: false };
+  }
+
+  if (proposal.proposalTypes?.includes(ProposalProposalTypeType.Other)) {
+    return { proposalType: "main-resolution", isFrozen: false };
+  }
+
+  return { proposalType: undefined, isFrozen: false };
+};
+
 export const PASSED_PROPOSAL_RESULTS = ["passed", "通過"] as const;
 
 export type ProposalVisualizationType = "freeze" | "reduce" | "main-resolution";
@@ -390,13 +414,15 @@ export const transformToGroupedSessionData = (
               proposer?.party?.color ||
               PARTY_COLORS.get(party) ||
               DEFAULT_COLOR;
+            const { proposalType, isFrozen } = deriveProposalNodeMeta(proposal);
 
             return {
               id,
               name,
               value: scaledValue,
               color,
-              isFrozen: !!freezeAmount,
+              isFrozen,
+              proposalType,
               proposerId: proposer?.id,
               children: [],
             };
@@ -426,6 +452,7 @@ export const transformToGroupedSessionData = (
               const party = proposer?.party?.name ?? "無黨籍";
               const name = `${id}\n${government?.name ?? "未知部會"}\n1案`;
               const color = PARTY_COLORS.get(party) || DEFAULT_COLOR;
+              const { proposalType, isFrozen } = deriveProposalNodeMeta(proposal);
 
               return {
                 id,
@@ -433,6 +460,8 @@ export const transformToGroupedSessionData = (
                 value: 1,
                 color,
                 children: [],
+                proposalType,
+                isFrozen,
                 proposerId: proposer?.id,
               };
             });

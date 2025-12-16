@@ -8,12 +8,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Configure base path
+      - name: Configure base path and custom domain
         run: |
           if [ "${GITHUB_REPOSITORY}" = "Citizen-Congress-Watch/congress-budget-watch-platform" ]; then
             echo "REACT_ROUTER_BASENAME=/" >> "$GITHUB_ENV"
+            echo "CUSTOM_DOMAIN=watchmoney.ccw.org.tw" >> "$GITHUB_ENV"
           else
             echo "REACT_ROUTER_BASENAME=/congress-budget-watch-platform/" >> "$GITHUB_ENV"
+            echo "CUSTOM_DOMAIN=" >> "$GITHUB_ENV"
           fi
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -29,6 +31,9 @@ jobs:
         run: pnpm build
       - name: Copy fallback
         run: cp build/client/index.html build/client/404.html
+      - name: Write custom domain file
+        if: env.CUSTOM_DOMAIN != ''
+        run: echo "$CUSTOM_DOMAIN" > build/client/CNAME
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v4
         with:
