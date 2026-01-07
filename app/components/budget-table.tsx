@@ -55,7 +55,12 @@ const DesktopTableHeader = () => {
         （階段）
       </div>
       <div className={headerCellClasses}>提案人</div>
-      <div className={headerCellClasses}>提案</div>
+      <div className={`${headerCellClasses} flex-col`}>
+        提案 <br />
+        <span className="text-[#3e51ff] text-[10px] font-medium leading-tight">
+          （解凍最新狀態）
+        </span>
+      </div>
       <div className={headerCellClasses}>審議結果</div>
       <div className={headerCellClasses}>提案內容</div>
       <div className={headerCellClasses}>
@@ -160,8 +165,11 @@ const BudgetTableRow = ({ item }: { item: BudgetTableData }) => {
       </TableRow>
 
       <div className="grid grid-cols-[1fr_1fr_2fr_2fr] grid-rows-[76px] justify-items-center text-center">
-        <p className="flex size-full items-center justify-center border-b-2 bg-white px-2 py-3.5 font-bold md:border-y-2 md:bg-neutral-400 md:p-0">
+        <p className="flex size-full flex-col items-center justify-center border-b-2 bg-white px-2 py-3.5 font-bold md:border-y-2 md:bg-neutral-400 md:p-0">
           提案
+          <span className="text-[#3e51ff] text-[10px] font-medium leading-tight">
+            （解凍最新狀態）
+          </span>
         </p>
         <p className="flex size-full items-center justify-center border-b-2 bg-white px-2 py-3.5 font-bold md:w-[120px] md:border-y-2 md:bg-neutral-400 md:p-0">
           審議結果

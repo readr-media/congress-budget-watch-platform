@@ -42,10 +42,9 @@ const resolveMode = () => {
 
 const envEndpoint = resolveEnvEndpoint();
 const mode = resolveMode();
-
+console.log({ mode });
 const GQL_ENDPOINTS =
-  envEndpoint ??
-  (mode === "production" ? PROD_GQL_ENDPOINT : DEV_GQL_ENDPOINT);
-
+  envEndpoint ?? (mode === "production" ? PROD_GQL_ENDPOINT : DEV_GQL_ENDPOINT);
+console.log({ GQL_ENDPOINTS });
 const ERROR_REDIRECT_ROUTE = "/";
 export { GQL_ENDPOINTS, ERROR_REDIRECT_ROUTE };
