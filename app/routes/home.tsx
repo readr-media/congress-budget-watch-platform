@@ -10,6 +10,13 @@ import {
 } from "~/utils/progress";
 import type { BudgetProgressStage } from "~/constants/progress-stages";
 import { STATIC_ASSETS_PREFIX } from "~/constants/config";
+import {
+  UNFREEZE_PROGRESS_LABELS,
+  UNFREEZE_PROGRESS_ORDER,
+  UNFREEZE_PROGRESS_PERCENTAGES,
+  type UnfreezeProgressStage,
+} from "~/constants/unfreeze-progress";
+import { DEFAULT_REPUBLIC_YEAR } from "~/utils/year";
 
 const OG_DESCRIPTION =
   "收錄歷年及最新中央政府預算審議情形，包含立委提案刪減和凍結的緣由和金額，便於搜尋及比較，更能即時追蹤最新審議進度。還可透過視覺化方式瀏覽，一目暸然。除了已數位化的資料，此平台也透過群眾協力（crowdsourcing）辨識提案掃描檔，歡迎至協作區加入合作行列。";
@@ -95,9 +102,43 @@ type NavigationButton = {
   isExternal?: boolean;
 };
 
+const UNFREEZE_STAGE_SET = new Set<UnfreezeProgressStage>(
+  UNFREEZE_PROGRESS_ORDER
+);
+
+const getUnfreezeProgressDisplay = (
+  year: number | null | undefined,
+  stage: string | null | undefined
+) => {
+  const isValidStage =
+    !!stage && UNFREEZE_STAGE_SET.has(stage as UnfreezeProgressStage);
+
+  if (!isValidStage) {
+    const baseText = year
+      ? `${year} 年度中央政府總預算尚無解凍進度`
+      : "暫無解凍進度資料";
+    return {
+      text: baseText,
+      percentage: 0,
+      label: "尚無解凍進度",
+      isValid: false,
+    };
+  }
+
+  const normalizedStage = stage as UnfreezeProgressStage;
+  const stageLabel = UNFREEZE_PROGRESS_LABELS[normalizedStage];
+  const prefix = year ? `${year} 年度中央政府總預算` : "";
+
+  return {
+    text: prefix ? `${prefix}${stageLabel}` : stageLabel,
+    percentage: UNFREEZE_PROGRESS_PERCENTAGES[normalizedStage],
+    label: stageLabel,
+    isValid: true,
+  };
+};
+
 export default function Home() {
-  const currentYear = new Date().getFullYear();
-  const republicYear = currentYear - 1911;
+  const republicYear = DEFAULT_REPUBLIC_YEAR;
   const {
     data: budgetYearData,
     isLoading,
@@ -107,11 +148,15 @@ export default function Home() {
     queryFn: () =>
       execute(GET_LATEST_BUDGET_YEAR_QUERY, {
         skip: 0,
-        take: 1,
+        take: 10, // Fetch more to find 114 for testing
       }),
   });
 
-  const latestBudgetYear = budgetYearData?.budgetYears?.[0] ?? null;
+  // TODO: Temporary workaround for testing 114 data.
+  const latestBudgetYear =
+    budgetYearData?.budgetYears?.find((by) => by.year === republicYear) ??
+    budgetYearData?.budgetYears?.[0] ??
+    null;
   const progressStage = latestBudgetYear?.budgetProgress as
     | BudgetProgressStage
     | null
@@ -120,6 +165,10 @@ export default function Home() {
   const progressText = formatProgressText(
     latestBudgetYear?.year ?? null,
     latestBudgetYear?.dataProgress ?? null
+  );
+  const unfreezeProgressDisplay = getUnfreezeProgressDisplay(
+    latestBudgetYear?.year ?? null,
+    latestBudgetYear?.unfreezeProgress ?? null
   );
 
   const navigationButtons: NavigationButton[] = [
@@ -177,6 +226,33 @@ export default function Home() {
                 暫無審議進度資料
               </div>
             )}
+            <div className="mt-3 w-full">
+              {isLoading ? (
+                <div className="max-w-banner flex min-h-[48px] w-full items-center justify-center rounded-lg bg-gray-300 p-2 text-gray-600">
+                  載入解凍進度中...
+                </div>
+              ) : isError ? (
+                <div className="max-w-banner flex min-h-[48px] w-full items-center justify-center rounded-lg bg-red-100 p-2 text-red-600">
+                  解凍進度載入失敗，請稍後再試
+                </div>
+              ) : latestBudgetYear ? (
+                <div className="max-w-banner bg-brand-primary relative flex min-h-[48px] w-full items-center justify-between rounded-lg px-1 text-white">
+                  <div className="border-brand-primary text-brand-primary flex min-w-[120px] items-center justify-center rounded-lg border-2 bg-white px-2 py-2 text-base font-bold">
+                    解凍進度
+                  </div>
+                  <p className="flex flex-1 items-center justify-center px-3 text-center text-sm font-medium leading-snug md:text-base">
+                    {unfreezeProgressDisplay.text}
+                  </p>
+                  <div className="flex items-center border-l border-white px-4 py-2 text-lg font-bold">
+                    {unfreezeProgressDisplay.percentage}%
+                  </div>
+                </div>
+              ) : (
+                <div className="max-w-banner flex min-h-[48px] w-full items-center justify-center rounded-lg bg-gray-300 p-2 text-gray-600">
+                  暫無解凍進度資料
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Description */}
@@ -195,10 +271,9 @@ export default function Home() {
               key={button.label}
               to={button.href}
               className={({ isActive }) =>
-                `border-brand-accent flex min-h-[72px] w-full items-center justify-center rounded-lg border-3 px-6 py-4 text-center text-lg font-medium transition-colors ${
-                  isActive
-                    ? "bg-brand-accent"
-                    : "hover:bg-brand-accent bg-white hover:text-black"
+                `border-brand-accent flex min-h-[72px] w-full items-center justify-center rounded-lg border-3 px-6 py-4 text-center text-lg font-medium transition-colors ${isActive
+                  ? "bg-brand-accent"
+                  : "hover:bg-brand-accent bg-white hover:text-black"
                 } focus:ring-brand-accent text-budget-accent focus:ring-2 focus:ring-offset-2 focus:outline-none`
               }
             >

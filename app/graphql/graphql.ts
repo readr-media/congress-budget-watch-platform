@@ -136,6 +136,7 @@ export type BudgetYear = {
   id: Scalars['ID']['output'];
   proposals?: Maybe<Array<Proposal>>;
   proposalsCount?: Maybe<Scalars['Int']['output']>;
+  unfreezeProgress?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
   updatedBy?: Maybe<User>;
   year?: Maybe<Scalars['Int']['output']>;
@@ -161,6 +162,7 @@ export type BudgetYearCreateInput = {
   createdBy?: InputMaybe<UserRelateToOneForCreateInput>;
   dataProgress?: InputMaybe<Scalars['String']['input']>;
   proposals?: InputMaybe<ProposalRelateToManyForCreateInput>;
+  unfreezeProgress?: InputMaybe<Scalars['String']['input']>;
   updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
   updatedBy?: InputMaybe<UserRelateToOneForCreateInput>;
   year?: InputMaybe<Scalars['Int']['input']>;
@@ -171,6 +173,7 @@ export type BudgetYearOrderByInput = {
   createdAt?: InputMaybe<OrderDirection>;
   dataProgress?: InputMaybe<OrderDirection>;
   id?: InputMaybe<OrderDirection>;
+  unfreezeProgress?: InputMaybe<OrderDirection>;
   updatedAt?: InputMaybe<OrderDirection>;
   year?: InputMaybe<OrderDirection>;
 };
@@ -197,6 +200,7 @@ export type BudgetYearUpdateInput = {
   createdBy?: InputMaybe<UserRelateToOneForUpdateInput>;
   dataProgress?: InputMaybe<Scalars['String']['input']>;
   proposals?: InputMaybe<ProposalRelateToManyForUpdateInput>;
+  unfreezeProgress?: InputMaybe<Scalars['String']['input']>;
   updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
   updatedBy?: InputMaybe<UserRelateToOneForUpdateInput>;
   year?: InputMaybe<Scalars['Int']['input']>;
@@ -212,6 +216,7 @@ export type BudgetYearWhereInput = {
   dataProgress?: InputMaybe<StringFilter>;
   id?: InputMaybe<IdFilter>;
   proposals?: InputMaybe<ProposalManyRelationFilter>;
+  unfreezeProgress?: InputMaybe<StringNullableFilter>;
   updatedAt?: InputMaybe<DateTimeNullableFilter>;
   updatedBy?: InputMaybe<UserWhereInput>;
   year?: InputMaybe<IntFilter>;
@@ -1423,6 +1428,7 @@ export type Proposal = {
   result?: Maybe<Scalars['String']['output']>;
   unfreezeHistory?: Maybe<Array<Meeting>>;
   unfreezeHistoryCount?: Maybe<Scalars['Int']['output']>;
+  unfreezeReport?: Maybe<Scalars['String']['output']>;
   unfreezeStatus?: Maybe<Scalars['String']['output']>;
   year?: Maybe<BudgetYear>;
 };
@@ -1535,6 +1541,7 @@ export type ProposalCreateInput = {
   reductionAmount?: InputMaybe<Scalars['Float']['input']>;
   result?: InputMaybe<Scalars['String']['input']>;
   unfreezeHistory?: InputMaybe<MeetingRelateToManyForCreateInput>;
+  unfreezeReport?: InputMaybe<Scalars['String']['input']>;
   unfreezeStatus?: InputMaybe<Scalars['String']['input']>;
   year?: InputMaybe<BudgetYearRelateToOneForCreateInput>;
 };
@@ -1560,6 +1567,7 @@ export type ProposalOrderByInput = {
   recognitionAnswer?: InputMaybe<OrderDirection>;
   reductionAmount?: InputMaybe<OrderDirection>;
   result?: InputMaybe<OrderDirection>;
+  unfreezeReport?: InputMaybe<OrderDirection>;
   unfreezeStatus?: InputMaybe<OrderDirection>;
 };
 
@@ -1621,6 +1629,7 @@ export type ProposalUpdateInput = {
   reductionAmount?: InputMaybe<Scalars['Float']['input']>;
   result?: InputMaybe<Scalars['String']['input']>;
   unfreezeHistory?: InputMaybe<MeetingRelateToManyForUpdateInput>;
+  unfreezeReport?: InputMaybe<Scalars['String']['input']>;
   unfreezeStatus?: InputMaybe<Scalars['String']['input']>;
   year?: InputMaybe<BudgetYearRelateToOneForUpdateInput>;
 };
@@ -1653,6 +1662,7 @@ export type ProposalWhereInput = {
   reductionAmount?: InputMaybe<FloatNullableFilter>;
   result?: InputMaybe<StringNullableFilter>;
   unfreezeHistory?: InputMaybe<MeetingManyRelationFilter>;
+  unfreezeReport?: InputMaybe<StringNullableFilter>;
   unfreezeStatus?: InputMaybe<StringNullableFilter>;
   year?: InputMaybe<BudgetYearWhereInput>;
 };
@@ -2340,7 +2350,7 @@ export type GetLatestBudgetYearQueryVariables = Exact<{
 }>;
 
 
-export type GetLatestBudgetYearQuery = { __typename?: 'Query', budgetYears?: Array<{ __typename?: 'BudgetYear', year?: number | null, budgetProgress?: string | null, dataProgress?: string | null }> | null };
+export type GetLatestBudgetYearQuery = { __typename?: 'Query', budgetYears?: Array<{ __typename?: 'BudgetYear', year?: number | null, budgetProgress?: string | null, dataProgress?: string | null, unfreezeProgress?: string | null }> | null };
 
 export type GetBudgetsWithGovernmentQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -2486,6 +2496,7 @@ export const GetLatestBudgetYearDocument = new TypedDocumentString(`
     year
     budgetProgress
     dataProgress
+    unfreezeProgress
   }
 }
     `) as unknown as TypedDocumentString<GetLatestBudgetYearQuery, GetLatestBudgetYearQueryVariables>;

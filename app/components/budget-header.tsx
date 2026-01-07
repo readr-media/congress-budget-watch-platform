@@ -4,6 +4,7 @@ import { ShareButton } from "@readr-media/share-button";
 import { NavLink, useLocation } from "react-router";
 import Image from "./image";
 import { useOnClickOutside, useToggle } from "usehooks-ts";
+import { DEFAULT_REPUBLIC_YEAR } from "~/utils/year";
 
 const BudgetHeader = () => {
   const [isMounted, setIsMounted] = useState(false);
@@ -11,8 +12,7 @@ const BudgetHeader = () => {
   const hamburgerRef = useRef<HTMLDivElement | null>(null);
   const location = useLocation();
 
-  const currentYear = new Date().getFullYear();
-  const republicYear = currentYear - 1911;
+  const republicYear = DEFAULT_REPUBLIC_YEAR;
 
   const NAV_ITEMS = [
     {
@@ -64,11 +64,10 @@ const BudgetHeader = () => {
                 <NavLink
                   to={item.to}
                   onClick={() => setHamburgerShowValue(false)}
-                  className={`rounded-lg border px-1.5 ${
-                    isActive
-                      ? "border-[#E9808E] text-[#E9808E]"
-                      : "border-[#B3B3B3] text-white"
-                  }`}
+                  className={`rounded-lg border px-1.5 ${isActive
+                    ? "border-[#E9808E] text-[#E9808E]"
+                    : "border-[#B3B3B3] text-white"
+                    }`}
                 >
                   {item.label}
                 </NavLink>
@@ -99,11 +98,10 @@ const BudgetHeader = () => {
               <li key={item.to}>
                 <NavLink
                   to={item.to}
-                  className={`block rounded-lg border px-5 py-1 md:px-2 lg:px-5 ${
-                    isActive
-                      ? "border-[#E9808E] bg-white text-[#E9808E]"
-                      : "border-[#B3B3B3] bg-[#E3E3E3] text-[#828282]"
-                  }`}
+                  className={`block rounded-lg border px-5 py-1 md:px-2 lg:px-5 ${isActive
+                    ? "border-[#E9808E] bg-white text-[#E9808E]"
+                    : "border-[#B3B3B3] bg-[#E3E3E3] text-[#828282]"
+                    }`}
                 >
                   {item.label}
                 </NavLink>
