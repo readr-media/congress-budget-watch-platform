@@ -8,7 +8,10 @@ import {
   GET_PEOPLE_LIST_QUERY,
   peopleQueryKeys,
 } from "~/queries";
-import useBudgetSelectStore from "~/stores/budget-selector";
+import useBudgetSelectStore, {
+  useFreezeOnly,
+  useSetFreezeOnly,
+} from "~/stores/budget-selector";
 import Select, {
   components,
   type DropdownIndicatorProps,
@@ -84,7 +87,6 @@ const ByDepartmentSelector = ({ value }: { value: string }) => {
     queryFn: () => execute(GET_GOVERNMENTS_QUERY),
     enabled: value === "by-department", // 只在選中時 fetch
   });
-
 
   // 計算 unique categories
   const categoryOptions = useMemo(() => {
@@ -294,6 +296,8 @@ const BudgetsSelector: React.FC<BudgetsSelectorProps> = ({
     useBudgetSelectStore,
     (state) => state.actions.clearPeopleFilter
   );
+  const freezeOnly = useFreezeOnly();
+  const setFreezeOnly = useSetFreezeOnly();
 
   const handleSelectionChange = (value: string) => {
     setSelectedValue(value);
@@ -316,6 +320,34 @@ const BudgetsSelector: React.FC<BudgetsSelectorProps> = ({
       <legend className="sr-only">{content.pageTitle}</legend>
       {visible ? (
         <div className="mt-3 space-y-3">
+          <div className="flex w-full items-center justify-center gap-x-4 text-sm font-medium text-black">
+            <label className="flex items-center gap-x-2">
+              <input
+                type="radio"
+                name="freeze-filter"
+                value="all"
+                checked={!freezeOnly}
+                onChange={() => setFreezeOnly(false)}
+                className="h-4 w-4 border-gray-300 text-blue-600 focus:ring-blue-500"
+              />
+              <span className={!freezeOnly ? "text-black" : "text-gray-500"}>
+                全部
+              </span>
+            </label>
+            <label className="flex items-center gap-x-2">
+              <input
+                type="radio"
+                name="freeze-filter"
+                value="freeze-only"
+                checked={freezeOnly}
+                onChange={() => setFreezeOnly(true)}
+                className="h-4 w-4 border-gray-300 text-blue-600 focus:ring-blue-500"
+              />
+              <span className={freezeOnly ? "text-[#e9808e]" : "text-gray-500"}>
+                解凍
+              </span>
+            </label>
+          </div>
           {content.options.map((option) => (
             <div
               key={option.value}

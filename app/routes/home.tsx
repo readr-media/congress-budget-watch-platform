@@ -10,17 +10,12 @@ import {
 } from "~/utils/progress";
 import type { BudgetProgressStage } from "~/constants/progress-stages";
 import { STATIC_ASSETS_PREFIX } from "~/constants/config";
-import {
-  UNFREEZE_PROGRESS_LABELS,
-  UNFREEZE_PROGRESS_ORDER,
-  UNFREEZE_PROGRESS_PERCENTAGES,
-  type UnfreezeProgressStage,
-} from "~/constants/unfreeze-progress";
 import { DEFAULT_REPUBLIC_YEAR } from "~/utils/year";
 import ProgressBadge, {
   type ProgressBadgeProps,
 } from "~/components/progress-badge";
 import ProgressBadgeMobile from "~/components/progress-badge-mobile";
+import { getUnfreezeProgressDisplay } from "~/utils/unfreeze-progress";
 
 const OG_DESCRIPTION =
   "收錄歷年及最新中央政府預算審議情形，包含立委提案刪減和凍結的緣由和金額，便於搜尋及比較，更能即時追蹤最新審議進度。還可透過視覺化方式瀏覽，一目暸然。除了已數位化的資料，此平台也透過群眾協力（crowdsourcing）辨識提案掃描檔，歡迎至協作區加入合作行列。";
@@ -104,41 +99,6 @@ type NavigationButton = {
   label: string;
   href: string;
   isExternal?: boolean;
-};
-
-const UNFREEZE_STAGE_SET = new Set<UnfreezeProgressStage>(
-  UNFREEZE_PROGRESS_ORDER
-);
-
-const getUnfreezeProgressDisplay = (
-  year: number | null | undefined,
-  stage: string | null | undefined
-) => {
-  const isValidStage =
-    !!stage && UNFREEZE_STAGE_SET.has(stage as UnfreezeProgressStage);
-
-  if (!isValidStage) {
-    const baseText = year
-      ? `${year} 年度中央政府總預算尚無解凍進度`
-      : "暫無解凍進度資料";
-    return {
-      text: baseText,
-      percentage: 0,
-      label: "尚無解凍進度",
-      isValid: false,
-    };
-  }
-
-  const normalizedStage = stage as UnfreezeProgressStage;
-  const stageLabel = UNFREEZE_PROGRESS_LABELS[normalizedStage];
-  const prefix = year ? `${year} 年度中央政府總預算` : "";
-
-  return {
-    text: prefix ? `${prefix}${stageLabel}` : stageLabel,
-    percentage: UNFREEZE_PROGRESS_PERCENTAGES[normalizedStage],
-    label: stageLabel,
-    isValid: true,
-  };
 };
 
 export default function Home() {

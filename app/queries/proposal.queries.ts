@@ -150,6 +150,9 @@ export const GET_PROPOSAL_YEARS_QUERY = graphql(`
     budgetYears(orderBy: [{ year: desc }]) {
       id
       year
+      budgetProgress
+      dataProgress
+      unfreezeProgress
     }
   }
 `);
@@ -219,6 +222,7 @@ export const GET_PAGINATED_PROPOSALS_QUERY = graphql(`
         id
         year
       }
+      unfreezeStatus
       meetings {
         id
         type

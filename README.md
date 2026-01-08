@@ -91,6 +91,10 @@ export const usePaginationActions = () =>
 - `endpoints.ts`: 所有 API 的端點路徑。
 - `legends.ts`: 圖表中使用的圖例定義。
 
+## 已知限制
+
+- `/all-budgets` 的「解凍」篩選暫時以 `freezeAmount > 0` 來近似判斷凍結提案。因 GraphQL schema 尚未提供針對 `proposalTypes` 的 list filter，凍結金額為 0 或尚未設定金額的 freeze 類型提案目前不會出現在篩選結果中。待後端支援後，會改為依 `proposalTypes` 直接比對。
+
 ## 深色模式設定
 
 ### 目前狀態：深色模式已暫停

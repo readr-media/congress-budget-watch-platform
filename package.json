@@ -11,7 +11,7 @@
     "dev": "react-router dev",
     "start": "vite preview --outDir build/client",
     "typecheck": "react-router typegen && tsc",
-    "codegen": "graphql-codegen --config codegen.ts --concurrency 1",
+    "codegen": "npm_config_concurrency=1 graphql-codegen --config codegen.ts --concurrency 1",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "eslint . --fix",
