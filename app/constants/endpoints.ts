@@ -1,7 +1,7 @@
 const PROD_GQL_ENDPOINT =
   "https://ly-budget-gql-prod-702918025200.asia-east1.run.app/api/graphql";
 const DEV_GQL_ENDPOINT =
-  "https://ly-budget-dev-702918025200.asia-east1.run.app/api/graphql";
+  "https://ly-budget-gql-dev-702918025200.asia-east1.run.app/api/graphql";
 
 const resolveEnvEndpoint = () => {
   if (

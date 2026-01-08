@@ -1,4 +1,4 @@
-import type { VisualizationMode } from "~/types/visualization";
+import { VisualizationMode } from "~/types/visualization";
 
 const VisualizationModeSwitcher = ({
   mode,
@@ -14,9 +14,9 @@ const VisualizationModeSwitcher = ({
           <input
             type="radio"
             name="viz-mode"
-            value="amount"
-            checked={mode === "amount"}
-            onChange={() => onModeChange("amount")}
+            value={VisualizationMode.Amount}
+            checked={mode === VisualizationMode.Amount}
+            onChange={() => onModeChange(VisualizationMode.Amount)}
             className="accent-brand-primary h-4 w-4"
           />
           <span>依金額（刪減/凍結）</span>
@@ -25,9 +25,9 @@ const VisualizationModeSwitcher = ({
           <input
             type="radio"
             name="viz-mode"
-            value="count"
-            checked={mode === "count"}
-            onChange={() => onModeChange("count")}
+            value={VisualizationMode.Count}
+            checked={mode === VisualizationMode.Count}
+            onChange={() => onModeChange(VisualizationMode.Count)}
             className="accent-brand-primary h-4 w-4"
           />
           <span>依數量（凍結案/刪減案/建議案）</span>
