@@ -1,4 +1,4 @@
-import{p as l}from"./chunk-EPOLDU6W-BUbbWhPN.js";import{v as r}from"./gql-h-mhoVtL.js";const m="/congress-budget-watch-platform/".replace(/\/$/,""),u=`${m}/`,P=500,c=/^([a-z][a-z\d+\-.]*:)?\/\//i,_=({src:e,...a})=>{const s=c.test(e)?e:`${u}${e.startsWith("/")?e.slice(1):e}`;return l.jsx("img",{src:s,...a})};r(`
+import{p as l}from"./chunk-EPOLDU6W-BUbbWhPN.js";import{v as r}from"./gql-BsaTxBGS.js";const u="/congress-budget-watch-platform/".replace(/\/$/,""),m=`${u}/`,P=500,g=/^([a-z][a-z\d+\-.]*:)?\/\//i,_=({src:e,...a})=>{const s=g.test(e)?e:`${m}${e.startsWith("/")?e.slice(1):e}`;return l.jsx("img",{src:s,...a})};r(`
   query GetBudgetsWithGovernment {
     budgets {
       id
@@ -85,7 +85,7 @@ import{p as l}from"./chunk-EPOLDU6W-BUbbWhPN.js";import{v as r}from"./gql-h-mhoV
     }
     proposalsCount
   }
-`);const h=r(`
+`);const S=r(`
   query GetProposalById($id: ID!) {
     proposal(where: { id: $id }) {
       id
@@ -182,11 +182,14 @@ import{p as l}from"./chunk-EPOLDU6W-BUbbWhPN.js";import{v as r}from"./gql-h-mhoV
       }
     }
   }
-`),S=r(`
+`),h=r(`
   query GetProposalYears {
     budgetYears(orderBy: [{ year: desc }]) {
       id
       year
+      budgetProgress
+      dataProgress
+      unfreezeProgress
     }
   }
 `),t={all:["proposals"],lists:()=>[...t.all,"list"],list:e=>[...t.lists(),{filters:e}],paginated:(e,a)=>[...t.lists(),"paginated",{where:e,year:a}],details:()=>[...t.all,"detail"],detail:e=>[...t.details(),e],years:()=>[...t.all,"years"]},T={all:["proposals"],lists:()=>[...t.all,"list"],list:e=>[...t.lists(),{filters:e}],paginated:(e,a,o,s,d)=>[...t.lists(),"paginated",{page:e,pageSize:a,sort:o,where:s,year:d}],details:()=>[...t.all,"detail"],detail:e=>[...t.details(),e],years:()=>[...t.all,"years"]},b=r(`
@@ -203,6 +206,7 @@ import{p as l}from"./chunk-EPOLDU6W-BUbbWhPN.js";import{v as r}from"./gql-h-mhoV
         id
         year
       }
+      unfreezeStatus
       meetings {
         id
         type
@@ -291,4 +295,4 @@ import{p as l}from"./chunk-EPOLDU6W-BUbbWhPN.js";import{v as r}from"./gql-h-mhoV
       }
     }
   }
-`);export{$ as G,_ as I,u as S,I as U,b as a,p as b,P as c,S as d,T as e,R as f,h as g,i as h,A as i,n as j,E as k,t as p};
+`);export{$ as G,_ as I,m as S,I as U,b as a,p as b,P as c,h as d,T as e,R as f,S as g,i as h,A as i,n as j,E as k,t as p};
