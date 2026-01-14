@@ -60,6 +60,7 @@ export const GET_PROPOSAL_BY_ID_QUERY = graphql(`
       proposalTypes
       recognitionAnswer
       unfreezeStatus
+      unfreezeReport
       react_angry
       react_disappoint
       react_good
@@ -110,6 +111,21 @@ export const GET_PROPOSAL_BY_ID_QUERY = graphql(`
         type
       }
       meetings(orderBy: [{ meetingDate: desc }]) {
+        id
+        displayName
+        meetingDate
+        description
+        location
+        meetingRecordUrl
+        type
+        committee {
+          displayName
+          name
+          endDate
+          startDate
+        }
+      }
+      unfreezeHistory {
         id
         displayName
         meetingDate

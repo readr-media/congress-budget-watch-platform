@@ -14,6 +14,9 @@ export type TimelineItem = {
   date: string;
   title: string;
   description: string;
+  historicalProposalId?: string;
+  meetingRecordUrl?: string | null;
+  isUnfreeze?: boolean;
 };
 
 /**
@@ -40,6 +43,12 @@ export const PROPOSAL_RESULT_LABELS: Record<string, string> = {
   withdrawn: "撤案",
 };
 
+export const UNFREEZE_STATUS_LABELS: Record<string, string> = {
+  not_reviewed: "尚未審議",
+  reviewing: "審議中",
+  unfrozen: "已解凍",
+};
+
 /**
  * 將 ProposalProposalTypeType 轉換為中文顯示文字
  */
@@ -64,6 +73,11 @@ export function getResultDisplay(result?: string | null): string {
 
   const normalizedResult = result.trim().toLowerCase();
   return PROPOSAL_RESULT_LABELS[normalizedResult] || result;
+}
+
+export function getUnfreezeStatusDisplay(status?: string | null): string | null {
+  if (!status) return null;
+  return UNFREEZE_STATUS_LABELS[status] ?? status ?? "未知狀態";
 }
 
 /**
@@ -157,15 +171,56 @@ function getLatestCommitteeNameFromMeeting(
   return fallback;
 }
 
+type TimelineItemWithDate = TimelineItem & { rawDate: Date | null };
+
+function formatMeetingDate(date: Date | null): string {
+  if (!date) return "日期未定";
+  return date.toLocaleDateString("zh-TW", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+}
+
+function normalizeMeetingToTimelineItem(
+  meeting: Meeting,
+  index: number,
+  meetingToHistoricalProposal: Map<string, string>,
+  sourceLabel: string
+): TimelineItemWithDate {
+  const meetingDate = toDate(meeting.meetingDate);
+  const fallbackId = `${sourceLabel}-${index}`;
+  const meetingId = meeting.id ?? fallbackId;
+
+  return {
+    id: meetingId,
+    date: formatMeetingDate(meetingDate),
+    title: getLatestCommitteeNameFromMeeting(
+      meeting.committee,
+      mapStageLabel(meeting.type, "會議")
+    ),
+    historicalProposalId: meeting.id
+      ? meetingToHistoricalProposal.get(meeting.id)
+      : undefined,
+    description: meeting.description || meeting.location || "",
+    meetingRecordUrl: meeting.meetingRecordUrl,
+    isUnfreeze: meeting.type === "budget_unfreeze",
+    rawDate: meetingDate,
+  };
+}
+
 /**
  * 將 Meeting 陣列轉換為 Timeline 格式
  * 如果沒有 meetings 資料，返回空陣列
  */
 export function meetingsToTimeline(
   meetings?: Meeting[] | null,
-  historicalProposals?: Proposal["historicalProposals"]
+  historicalProposals?: Proposal["historicalProposals"],
+  unfreezeHistory?: Meeting[] | null
 ): TimelineItem[] {
-  if (!meetings || meetings.length === 0) return [];
+  const baseMeetings = meetings ?? [];
+  const extraMeetings = unfreezeHistory ?? [];
+  if (baseMeetings.length === 0 && extraMeetings.length === 0) return [];
 
   const meetingToHistoricalProposal = new Map<string, string>();
   (historicalProposals ?? []).forEach((historicalProposal) => {
@@ -180,24 +235,33 @@ export function meetingsToTimeline(
     });
   });
 
-  return meetings.map((meeting, index) => ({
-    id: meeting.id || index,
-    date: meeting.meetingDate
-      ? new Date(meeting.meetingDate).toLocaleDateString("zh-TW", {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        })
-      : "日期未定",
-    title: getLatestCommitteeNameFromMeeting(
-      meeting.committee,
-      mapStageLabel(meeting.type, "會議")
-    ),
-    historicalProposalId: meeting.id
-      ? meetingToHistoricalProposal.get(meeting.id)
-      : undefined,
-    description: meeting.description || meeting.location || "",
-  }));
+  const normalizedMeetings = baseMeetings.map((meeting, index) =>
+    normalizeMeetingToTimelineItem(
+      meeting,
+      index,
+      meetingToHistoricalProposal,
+      "meeting"
+    )
+  );
+
+  const normalizedUnfreezeHistory = extraMeetings.map(
+    (meeting, index) =>
+      normalizeMeetingToTimelineItem(
+        meeting,
+        index,
+        meetingToHistoricalProposal,
+        "unfreeze"
+      )
+  );
+
+  return [...normalizedMeetings, ...normalizedUnfreezeHistory]
+    .sort((a, b) => {
+      if (!a.rawDate && !b.rawDate) return 0;
+      if (!a.rawDate) return 1;
+      if (!b.rawDate) return -1;
+      return b.rawDate.getTime() - a.rawDate.getTime();
+    })
+    .map(({ rawDate: _rawDate, ...rest }) => rest);
 }
 
 type MergedProposalLike = {

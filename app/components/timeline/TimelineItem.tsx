@@ -5,6 +5,8 @@ export type TimelineItemData = {
   date: string;
   title: string;
   historicalProposalId?: string;
+  meetingRecordUrl?: string | null;
+  isUnfreeze?: boolean;
 };
 
 type TimelineItemProps = TimelineItemData & {
@@ -12,14 +14,17 @@ type TimelineItemProps = TimelineItemData & {
   isFirst?: boolean;
 };
 
-const TimelineConnector = () => <hr style={{ width: "2px" }} />;
+const TimelineConnector = () => <hr className="w-0.5 bg-black" />;
 
 export const TimelineItem = ({
   date,
   title,
   isFirst,
+  isLast,
   historicalProposalId,
-}: TimelineItemProps) => {
+  meetingRecordUrl,
+  isUnfreeze,
+}: TimelineItemProps & { isLast?: boolean }) => {
   const navigate = useNavigate();
 
   const handleNavigate = () => {
@@ -28,20 +33,53 @@ export const TimelineItem = ({
   };
 
   return (
-    <li>
+    <li className="min-h-16">
       {!isFirst && <TimelineConnector />}
       <div className="timeline-middle">
-        <div className="h-3 w-3 rounded-full bg-gray-900"></div>
+        <div
+          className={`h-3 w-3 ${isUnfreeze ? "rotate-45 bg-brand-primary" : "rounded-full bg-black"}`}
+          aria-hidden="true"
+        />
       </div>
       <div className="timeline-end rounded-xl bg-transparent px-6 py-4 md:px-0">
         <div className="flex items-center justify-between md:w-[200px] md:max-w-[200px]">
           <div className="min-w-0 text-gray-900">
-            <div className="md:text-md text-base leading-7 font-normal md:leading-8">
-              <time className="font-inherit leading-inherit align-middle text-inherit lg:underline">
-                {date}
-              </time>
-              <span className="align-middle">{title}</span>
-            </div>
+            {meetingRecordUrl ? (
+              <a
+                href={meetingRecordUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="md:text-md inline-block text-base leading-7 font-normal hover:underline md:leading-8"
+              >
+                <div className="flex flex-col">
+                  <time className="font-inherit leading-inherit align-middle text-inherit lg:underline">
+                    {date}
+                  </time>
+                  <div className="flex items-start gap-1">
+                    {isUnfreeze && (
+                      <span className="shrink-0 align-middle font-bold text-brand-primary">
+                        【解凍案】
+                      </span>
+                    )}
+                    <span className="align-middle">{title}</span>
+                  </div>
+                </div>
+              </a>
+            ) : (
+              <div className="md:text-md flex flex-col text-base leading-7 font-normal md:leading-8">
+                <time className="font-inherit leading-inherit align-middle text-inherit lg:underline">
+                  {date}
+                </time>
+                <div className="flex items-start gap-1">
+                  {isUnfreeze && (
+                    <span className="shrink-0 align-middle font-bold text-brand-primary">
+                      【解凍案】
+                    </span>
+                  )}
+                  <span className="align-middle">{title}</span>
+                </div>
+              </div>
+            )}
           </div>
           {historicalProposalId && (
             <button
@@ -54,7 +92,7 @@ export const TimelineItem = ({
           )}
         </div>
       </div>
-      <TimelineConnector />
+      {!isLast && <TimelineConnector />}
     </li>
   );
 };
