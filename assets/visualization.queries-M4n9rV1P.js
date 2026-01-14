@@ -1,4 +1,4 @@
-import{p as l}from"./chunk-EPOLDU6W-BUbbWhPN.js";import{v as r}from"./gql-BsaTxBGS.js";const u="/congress-budget-watch-platform/".replace(/\/$/,""),m=`${u}/`,P=500,g=/^([a-z][a-z\d+\-.]*:)?\/\//i,_=({src:e,...a})=>{const s=g.test(e)?e:`${m}${e.startsWith("/")?e.slice(1):e}`;return l.jsx("img",{src:s,...a})};r(`
+import{p as l}from"./chunk-EPOLDU6W-BUbbWhPN.js";import{v as r}from"./gql-LkxxGARM.js";const m="/congress-budget-watch-platform/".replace(/\/$/,""),u=`${m}/`,P=500,c=/^([a-z][a-z\d+\-.]*:)?\/\//i,_=({src:e,...a})=>{const s=c.test(e)?e:`${u}${e.startsWith("/")?e.slice(1):e}`;return l.jsx("img",{src:s,...a})};r(`
   query GetBudgetsWithGovernment {
     budgets {
       id
@@ -99,6 +99,7 @@ import{p as l}from"./chunk-EPOLDU6W-BUbbWhPN.js";import{v as r}from"./gql-BsaTxB
       proposalTypes
       recognitionAnswer
       unfreezeStatus
+      unfreezeReport
       react_angry
       react_disappoint
       react_good
@@ -149,6 +150,21 @@ import{p as l}from"./chunk-EPOLDU6W-BUbbWhPN.js";import{v as r}from"./gql-BsaTxB
         type
       }
       meetings(orderBy: [{ meetingDate: desc }]) {
+        id
+        displayName
+        meetingDate
+        description
+        location
+        meetingRecordUrl
+        type
+        committee {
+          displayName
+          name
+          endDate
+          startDate
+        }
+      }
+      unfreezeHistory {
         id
         displayName
         meetingDate
@@ -241,7 +257,7 @@ import{p as l}from"./chunk-EPOLDU6W-BUbbWhPN.js";import{v as r}from"./gql-BsaTxB
     }
     proposalsCount(where: $where)
   }
-`),I=r(`
+`),R=r(`
   mutation UPDATE_PROPOSAL_REACTS(
     $where: ProposalWhereUniqueInput!
     $data: ProposalUpdateInput!
@@ -254,7 +270,7 @@ import{p as l}from"./chunk-EPOLDU6W-BUbbWhPN.js";import{v as r}from"./gql-BsaTxB
       react_whatever
     }
   }
-`),$=r(`
+`),I=r(`
   query GetLatestBudgetYear($skip: Int!, $take: Int!) {
     budgetYears(orderBy: [{ year: desc }], skip: $skip, take: $take) {
       year
@@ -263,7 +279,7 @@ import{p as l}from"./chunk-EPOLDU6W-BUbbWhPN.js";import{v as r}from"./gql-BsaTxB
       unfreezeProgress
     }
   }
-`),p={all:["budgetYear"],list:(e=0,a=1)=>[...p.all,"list",{skip:e,take:a}],latest:()=>[...p.all,"latest"]},R=r(`
+`),p={all:["budgetYear"],list:(e=0,a=1)=>[...p.all,"list",{skip:e,take:a}],latest:()=>[...p.all,"latest"]},$=r(`
   query GetVisualizationProposals($where: ProposalWhereInput!) {
     proposals(where: $where) {
       ...VisualizationProposalWithContext
@@ -295,4 +311,4 @@ import{p as l}from"./chunk-EPOLDU6W-BUbbWhPN.js";import{v as r}from"./gql-BsaTxB
       }
     }
   }
-`);export{$ as G,_ as I,m as S,I as U,b as a,p as b,P as c,h as d,T as e,R as f,S as g,i as h,A as i,n as j,E as k,t as p};
+`);export{I as G,_ as I,u as S,R as U,b as a,p as b,P as c,h as d,T as e,$ as f,S as g,i as h,A as i,n as j,E as k,t as p};
