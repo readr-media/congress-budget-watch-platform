@@ -14,7 +14,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import Footer from "./components/footer";
 import BudgetHeader from "./components/budget-header";
-import DataProgressMarquee from "./components/data-progress-marquee";
 import BackToTopButton from "./components/back-to-top-button";
 import { STATIC_ASSETS_PREFIX } from "./constants/config";
 
@@ -124,10 +123,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <body>
         <QueryClientProvider client={queryClient}>
           <div className="grid min-h-screen grid-rows-[auto_1fr_auto]">
-            <div>
-              <BudgetHeader />
-              <DataProgressMarquee />
-            </div>
+          <div>
+            <BudgetHeader />
+          </div>
             <main>{children}</main>
             <Footer />
           </div>

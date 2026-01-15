@@ -7,6 +7,7 @@ import { DepartmentVisualization } from "./department";
 import type { VisualizationViewProps } from "./types";
 import VisualizationModeSwitcher from "./components/visualization-mode-switcher";
 import DepartmentDropdown from "./components/department-dropdown";
+import DataProgressNotice from "~/components/data-progress-notice";
 
 const VisualizationView = ({
   activeTab,
@@ -50,6 +51,7 @@ const VisualizationView = ({
   if (isLoading) return <BudgetDetailSkeleton isDesktop={isDesktop} />;
   return (
     <div>
+      <DataProgressNotice />
       <div className="flex flex-col gap-y-3 p-4">
         <DesktopControls
           activeTab={activeTab}
