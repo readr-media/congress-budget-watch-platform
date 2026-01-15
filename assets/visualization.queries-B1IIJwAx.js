@@ -1,4 +1,4 @@
-import{p as l}from"./chunk-EPOLDU6W-BUbbWhPN.js";import{v as r}from"./gql-LkxxGARM.js";const m="/congress-budget-watch-platform/".replace(/\/$/,""),u=`${m}/`,P=500,c=/^([a-z][a-z\d+\-.]*:)?\/\//i,_=({src:e,...a})=>{const s=c.test(e)?e:`${u}${e.startsWith("/")?e.slice(1):e}`;return l.jsx("img",{src:s,...a})};r(`
+import{g as r}from"./gql-CXkKbLhy.js";r(`
   query GetBudgetsWithGovernment {
     budgets {
       id
@@ -19,7 +19,7 @@ import{p as l}from"./chunk-EPOLDU6W-BUbbWhPN.js";import{v as r}from"./gql-LkxxGA
     }
     budgetsCount
   }
-`);const A=r(`
+`);const m=r(`
   query GetGovernments {
     governments {
       id
@@ -28,7 +28,7 @@ import{p as l}from"./chunk-EPOLDU6W-BUbbWhPN.js";import{v as r}from"./gql-LkxxGA
       description
     }
   }
-`),i={all:["governments"],lists:()=>[...i.all,"list"],list:e=>[...i.lists(),{filters:e}]},E=r(`
+`),s={all:["governments"],lists:()=>[...s.all,"list"],list:e=>[...s.lists(),{filters:e}]},u=r(`
   query GetPeopleList {
     peopleList(orderBy: [{ name: asc }]) {
       id
@@ -41,7 +41,7 @@ import{p as l}from"./chunk-EPOLDU6W-BUbbWhPN.js";import{v as r}from"./gql-LkxxGA
       }
     }
   }
-`),n={all:["people"],lists:()=>[...n.all,"list"],list:e=>[...n.lists(),{filters:e}]};r(`
+`),o={all:["people"],lists:()=>[...o.all,"list"],list:e=>[...o.lists(),{filters:e}]};r(`
   query GetProposalsOrderedByIdDesc {
     proposals(orderBy: [{ id: desc }]) {
       id
@@ -85,7 +85,7 @@ import{p as l}from"./chunk-EPOLDU6W-BUbbWhPN.js";import{v as r}from"./gql-LkxxGA
     }
     proposalsCount
   }
-`);const S=r(`
+`);const y=r(`
   query GetProposalById($id: ID!) {
     proposal(where: { id: $id }) {
       id
@@ -198,7 +198,7 @@ import{p as l}from"./chunk-EPOLDU6W-BUbbWhPN.js";import{v as r}from"./gql-LkxxGA
       }
     }
   }
-`),h=r(`
+`),g=r(`
   query GetProposalYears {
     budgetYears(orderBy: [{ year: desc }]) {
       id
@@ -208,7 +208,7 @@ import{p as l}from"./chunk-EPOLDU6W-BUbbWhPN.js";import{v as r}from"./gql-LkxxGA
       unfreezeProgress
     }
   }
-`),t={all:["proposals"],lists:()=>[...t.all,"list"],list:e=>[...t.lists(),{filters:e}],paginated:(e,a)=>[...t.lists(),"paginated",{where:e,year:a}],details:()=>[...t.all,"detail"],detail:e=>[...t.details(),e],years:()=>[...t.all,"years"]},T={all:["proposals"],lists:()=>[...t.all,"list"],list:e=>[...t.lists(),{filters:e}],paginated:(e,a,o,s,d)=>[...t.lists(),"paginated",{page:e,pageSize:a,sort:o,where:s,year:d}],details:()=>[...t.all,"detail"],detail:e=>[...t.details(),e],years:()=>[...t.all,"years"]},b=r(`
+`),t={all:["proposals"],lists:()=>[...t.all,"list"],list:e=>[...t.lists(),{filters:e}],paginated:(e,a)=>[...t.lists(),"paginated",{where:e,year:a}],details:()=>[...t.all,"detail"],detail:e=>[...t.details(),e],years:()=>[...t.all,"years"]},c={all:["proposals"],lists:()=>[...t.all,"list"],list:e=>[...t.lists(),{filters:e}],paginated:(e,a,n,p,d)=>[...t.lists(),"paginated",{page:e,pageSize:a,sort:n,where:p,year:d}],details:()=>[...t.all,"detail"],detail:e=>[...t.details(),e],years:()=>[...t.all,"years"]},P=r(`
   query GetPaginatedProposals(
     $skip: Int!
     $take: Int!
@@ -257,7 +257,7 @@ import{p as l}from"./chunk-EPOLDU6W-BUbbWhPN.js";import{v as r}from"./gql-LkxxGA
     }
     proposalsCount(where: $where)
   }
-`),R=r(`
+`),_=r(`
   mutation UPDATE_PROPOSAL_REACTS(
     $where: ProposalWhereUniqueInput!
     $data: ProposalUpdateInput!
@@ -270,7 +270,7 @@ import{p as l}from"./chunk-EPOLDU6W-BUbbWhPN.js";import{v as r}from"./gql-LkxxGA
       react_whatever
     }
   }
-`),I=r(`
+`),A=r(`
   query GetLatestBudgetYear($skip: Int!, $take: Int!) {
     budgetYears(orderBy: [{ year: desc }], skip: $skip, take: $take) {
       year
@@ -279,7 +279,7 @@ import{p as l}from"./chunk-EPOLDU6W-BUbbWhPN.js";import{v as r}from"./gql-LkxxGA
       unfreezeProgress
     }
   }
-`),p={all:["budgetYear"],list:(e=0,a=1)=>[...p.all,"list",{skip:e,take:a}],latest:()=>[...p.all,"latest"]},$=r(`
+`),i={all:["budgetYear"],list:(e=0,a=1)=>[...i.all,"list",{skip:e,take:a}],latest:()=>[...i.all,"latest"]},h=r(`
   query GetVisualizationProposals($where: ProposalWhereInput!) {
     proposals(where: $where) {
       ...VisualizationProposalWithContext
@@ -311,4 +311,4 @@ import{p as l}from"./chunk-EPOLDU6W-BUbbWhPN.js";import{v as r}from"./gql-LkxxGA
       }
     }
   }
-`);export{I as G,_ as I,u as S,R as U,b as a,p as b,P as c,h as d,T as e,$ as f,S as g,i as h,A as i,n as j,E as k,t as p};
+`);export{A as G,_ as U,P as a,i as b,g as c,c as d,h as e,y as f,s as g,m as h,o as i,u as j,t as p};

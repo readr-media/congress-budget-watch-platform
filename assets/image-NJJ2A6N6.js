@@ -1,0 +1,1 @@
+import{p as a}from"./chunk-EPOLDU6W-BUbbWhPN.js";const e="/congress-budget-watch-platform/".replace(/\/$/,""),n=`${e}/`,E=500,r=/^([a-z][a-z\d+\-.]*:)?\/\//i,A=({src:s,...t})=>{const o=r.test(s)?s:`${n}${s.startsWith("/")?s.slice(1):s}`;return a.jsx("img",{src:o,...t})};export{A as I,n as S,E as a};
