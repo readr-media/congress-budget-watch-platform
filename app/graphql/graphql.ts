@@ -1423,6 +1423,7 @@ export type Proposal = {
   result?: Maybe<Scalars['String']['output']>;
   unfreezeHistory?: Maybe<Array<Meeting>>;
   unfreezeHistoryCount?: Maybe<Scalars['Int']['output']>;
+  unfreezeReport?: Maybe<Scalars['String']['output']>;
   unfreezeStatus?: Maybe<Scalars['String']['output']>;
   year?: Maybe<BudgetYear>;
 };
@@ -1535,6 +1536,7 @@ export type ProposalCreateInput = {
   reductionAmount?: InputMaybe<Scalars['Float']['input']>;
   result?: InputMaybe<Scalars['String']['input']>;
   unfreezeHistory?: InputMaybe<MeetingRelateToManyForCreateInput>;
+  unfreezeReport?: InputMaybe<Scalars['String']['input']>;
   unfreezeStatus?: InputMaybe<Scalars['String']['input']>;
   year?: InputMaybe<BudgetYearRelateToOneForCreateInput>;
 };
@@ -1560,6 +1562,7 @@ export type ProposalOrderByInput = {
   recognitionAnswer?: InputMaybe<OrderDirection>;
   reductionAmount?: InputMaybe<OrderDirection>;
   result?: InputMaybe<OrderDirection>;
+  unfreezeReport?: InputMaybe<OrderDirection>;
   unfreezeStatus?: InputMaybe<OrderDirection>;
 };
 
@@ -1621,6 +1624,7 @@ export type ProposalUpdateInput = {
   reductionAmount?: InputMaybe<Scalars['Float']['input']>;
   result?: InputMaybe<Scalars['String']['input']>;
   unfreezeHistory?: InputMaybe<MeetingRelateToManyForUpdateInput>;
+  unfreezeReport?: InputMaybe<Scalars['String']['input']>;
   unfreezeStatus?: InputMaybe<Scalars['String']['input']>;
   year?: InputMaybe<BudgetYearRelateToOneForUpdateInput>;
 };
@@ -1653,6 +1657,7 @@ export type ProposalWhereInput = {
   reductionAmount?: InputMaybe<FloatNullableFilter>;
   result?: InputMaybe<StringNullableFilter>;
   unfreezeHistory?: InputMaybe<MeetingManyRelationFilter>;
+  unfreezeReport?: InputMaybe<StringNullableFilter>;
   unfreezeStatus?: InputMaybe<StringNullableFilter>;
   year?: InputMaybe<BudgetYearWhereInput>;
 };
@@ -2342,6 +2347,11 @@ export type GetLatestBudgetYearQueryVariables = Exact<{
 
 export type GetLatestBudgetYearQuery = { __typename?: 'Query', budgetYears?: Array<{ __typename?: 'BudgetYear', year?: number | null, budgetProgress?: string | null, dataProgress?: string | null }> | null };
 
+export type GetBudgetYearsListQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetBudgetYearsListQuery = { __typename?: 'Query', budgetYears?: Array<{ __typename?: 'BudgetYear', id: string, year?: number | null }> | null };
+
 export type GetBudgetsWithGovernmentQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -2489,6 +2499,14 @@ export const GetLatestBudgetYearDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<GetLatestBudgetYearQuery, GetLatestBudgetYearQueryVariables>;
+export const GetBudgetYearsListDocument = new TypedDocumentString(`
+    query GetBudgetYearsList {
+  budgetYears(orderBy: [{year: desc}]) {
+    id
+    year
+  }
+}
+    `) as unknown as TypedDocumentString<GetBudgetYearsListQuery, GetBudgetYearsListQueryVariables>;
 export const GetBudgetsWithGovernmentDocument = new TypedDocumentString(`
     query GetBudgetsWithGovernment {
   budgets {

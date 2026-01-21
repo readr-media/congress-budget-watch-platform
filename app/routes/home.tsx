@@ -3,7 +3,11 @@ import type { LinksFunction } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 import Image from "~/components/image";
 import { execute } from "~/graphql/execute";
-import { GET_LATEST_BUDGET_YEAR_QUERY, budgetYearQueryKeys } from "~/queries";
+import {
+  GET_BUDGET_YEARS_LIST_QUERY,
+  GET_LATEST_BUDGET_YEAR_QUERY,
+  budgetYearQueryKeys,
+} from "~/queries";
 import {
   calculateProgressPercentage,
   formatProgressText,
@@ -95,9 +99,16 @@ type NavigationButton = {
   isExternal?: boolean;
 };
 
+const getLatestBudgetYearValue = (
+  budgetYears?: Array<{ year?: number | null } | null> | null
+) => {
+  const years = (budgetYears ?? [])
+    .map((entry) => entry?.year)
+    .filter((year): year is number => typeof year === "number");
+  return years.length ? years[0] : null;
+};
+
 export default function Home() {
-  const currentYear = new Date().getFullYear();
-  const republicYear = currentYear - 1911;
   const {
     data: budgetYearData,
     isLoading,
@@ -111,7 +122,19 @@ export default function Home() {
       }),
   });
 
+  const { data: budgetYearsData } = useQuery({
+    queryKey: budgetYearQueryKeys.years(),
+    queryFn: () => execute(GET_BUDGET_YEARS_LIST_QUERY),
+    staleTime: 5 * 60 * 1000,
+  });
+
   const latestBudgetYear = budgetYearData?.budgetYears?.[0] ?? null;
+  const latestBudgetYearValue = getLatestBudgetYearValue(
+    budgetYearsData?.budgetYears ?? null
+  );
+  const latestBudgetLink = latestBudgetYearValue
+    ? `/all-budgets?year=${latestBudgetYearValue}`
+    : "/all-budgets";
   const progressStage = latestBudgetYear?.budgetProgress as
     | BudgetProgressStage
     | null
@@ -124,7 +147,7 @@ export default function Home() {
 
   const navigationButtons: NavigationButton[] = [
     { label: "歷年預算", href: "/all-budgets" },
-    { label: "最新年度預算", href: `/all-budgets?year=${republicYear}` },
+    { label: "最新年度預算", href: latestBudgetLink },
     { label: "視覺化專區", href: "/visualization" },
     { label: "協作區", href: "/collaboration" },
   ];

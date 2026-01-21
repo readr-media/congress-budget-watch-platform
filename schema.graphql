@@ -918,6 +918,7 @@ type Proposal {
   result: String
   unfreezeHistory(cursor: MeetingWhereUniqueInput, orderBy: [MeetingOrderByInput!]! = [], skip: Int! = 0, take: Int, where: MeetingWhereInput! = {}): [Meeting!]
   unfreezeHistoryCount(where: MeetingWhereInput! = {}): Int
+  unfreezeReport: String
   unfreezeStatus: String
   year: BudgetYear
 }
@@ -946,6 +947,7 @@ input ProposalCreateInput {
   reductionAmount: Float
   result: String
   unfreezeHistory: MeetingRelateToManyForCreateInput
+  unfreezeReport: String
   unfreezeStatus: String
   year: BudgetYearRelateToOneForCreateInput
 }
@@ -971,6 +973,7 @@ input ProposalOrderByInput {
   recognitionAnswer: OrderDirection
   reductionAmount: OrderDirection
   result: OrderDirection
+  unfreezeReport: OrderDirection
   unfreezeStatus: OrderDirection
 }
 
@@ -1032,6 +1035,7 @@ input ProposalUpdateInput {
   reductionAmount: Float
   result: String
   unfreezeHistory: MeetingRelateToManyForUpdateInput
+  unfreezeReport: String
   unfreezeStatus: String
   year: BudgetYearRelateToOneForUpdateInput
 }
@@ -1064,6 +1068,7 @@ input ProposalWhereInput {
   reductionAmount: FloatNullableFilter
   result: StringNullableFilter
   unfreezeHistory: MeetingManyRelationFilter
+  unfreezeReport: StringNullableFilter
   unfreezeStatus: StringNullableFilter
   year: BudgetYearWhereInput
 }
