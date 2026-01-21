@@ -1,4 +1,4 @@
-import{g as r}from"./gql-CXkKbLhy.js";r(`
+import{p as l}from"./chunk-EPOLDU6W-BUbbWhPN.js";import{v as r}from"./gql-BxFV-4F3.js";const m="/congress-budget-watch-platform/".replace(/\/$/,""),u=`${m}/`,P=500,y=/^([a-z][a-z\d+\-.]*:)?\/\//i,_=({src:e,...a})=>{const s=y.test(e)?e:`${u}${e.startsWith("/")?e.slice(1):e}`;return l.jsx("img",{src:s,...a})};r(`
   query GetBudgetsWithGovernment {
     budgets {
       id
@@ -19,7 +19,7 @@ import{g as r}from"./gql-CXkKbLhy.js";r(`
     }
     budgetsCount
   }
-`);const m=r(`
+`);const A=r(`
   query GetGovernments {
     governments {
       id
@@ -28,7 +28,7 @@ import{g as r}from"./gql-CXkKbLhy.js";r(`
       description
     }
   }
-`),s={all:["governments"],lists:()=>[...s.all,"list"],list:e=>[...s.lists(),{filters:e}]},u=r(`
+`),n={all:["governments"],lists:()=>[...n.all,"list"],list:e=>[...n.lists(),{filters:e}]},E=r(`
   query GetPeopleList {
     peopleList(orderBy: [{ name: asc }]) {
       id
@@ -41,7 +41,7 @@ import{g as r}from"./gql-CXkKbLhy.js";r(`
       }
     }
   }
-`),o={all:["people"],lists:()=>[...o.all,"list"],list:e=>[...o.lists(),{filters:e}]};r(`
+`),p={all:["people"],lists:()=>[...p.all,"list"],list:e=>[...p.lists(),{filters:e}]};r(`
   query GetProposalsOrderedByIdDesc {
     proposals(orderBy: [{ id: desc }]) {
       id
@@ -85,7 +85,7 @@ import{g as r}from"./gql-CXkKbLhy.js";r(`
     }
     proposalsCount
   }
-`);const y=r(`
+`);const S=r(`
   query GetProposalById($id: ID!) {
     proposal(where: { id: $id }) {
       id
@@ -198,7 +198,7 @@ import{g as r}from"./gql-CXkKbLhy.js";r(`
       }
     }
   }
-`),g=r(`
+`),h=r(`
   query GetProposalYears {
     budgetYears(orderBy: [{ year: desc }]) {
       id
@@ -208,7 +208,7 @@ import{g as r}from"./gql-CXkKbLhy.js";r(`
       unfreezeProgress
     }
   }
-`),t={all:["proposals"],lists:()=>[...t.all,"list"],list:e=>[...t.lists(),{filters:e}],paginated:(e,a)=>[...t.lists(),"paginated",{where:e,year:a}],details:()=>[...t.all,"detail"],detail:e=>[...t.details(),e],years:()=>[...t.all,"years"]},c={all:["proposals"],lists:()=>[...t.all,"list"],list:e=>[...t.lists(),{filters:e}],paginated:(e,a,n,p,d)=>[...t.lists(),"paginated",{page:e,pageSize:a,sort:n,where:p,year:d}],details:()=>[...t.all,"detail"],detail:e=>[...t.details(),e],years:()=>[...t.all,"years"]},P=r(`
+`),t={all:["proposals"],lists:()=>[...t.all,"list"],list:e=>[...t.lists(),{filters:e}],paginated:(e,a)=>[...t.lists(),"paginated",{where:e,year:a}],details:()=>[...t.all,"detail"],detail:e=>[...t.details(),e],years:()=>[...t.all,"years"]},T={all:["proposals"],lists:()=>[...t.all,"list"],list:e=>[...t.lists(),{filters:e}],paginated:(e,a,i,s,d)=>[...t.lists(),"paginated",{page:e,pageSize:a,sort:i,where:s,year:d}],details:()=>[...t.all,"detail"],detail:e=>[...t.details(),e],years:()=>[...t.all,"years"]},R=r(`
   query GetPaginatedProposals(
     $skip: Int!
     $take: Int!
@@ -257,7 +257,7 @@ import{g as r}from"./gql-CXkKbLhy.js";r(`
     }
     proposalsCount(where: $where)
   }
-`),_=r(`
+`),b=r(`
   mutation UPDATE_PROPOSAL_REACTS(
     $where: ProposalWhereUniqueInput!
     $data: ProposalUpdateInput!
@@ -270,7 +270,7 @@ import{g as r}from"./gql-CXkKbLhy.js";r(`
       react_whatever
     }
   }
-`),A=r(`
+`),I=r(`
   query GetLatestBudgetYear($skip: Int!, $take: Int!) {
     budgetYears(orderBy: [{ year: desc }], skip: $skip, take: $take) {
       year
@@ -279,7 +279,14 @@ import{g as r}from"./gql-CXkKbLhy.js";r(`
       unfreezeProgress
     }
   }
-`),i={all:["budgetYear"],list:(e=0,a=1)=>[...i.all,"list",{skip:e,take:a}],latest:()=>[...i.all,"latest"]},h=r(`
+`),U=r(`
+  query GetBudgetYearsList {
+    budgetYears(orderBy: [{ year: desc }]) {
+      id
+      year
+    }
+  }
+`),o={all:["budgetYear"],list:(e=0,a=1)=>[...o.all,"list",{skip:e,take:a}],latest:()=>[...o.all,"latest"],years:()=>[...o.all,"years"]},G=r(`
   query GetVisualizationProposals($where: ProposalWhereInput!) {
     proposals(where: $where) {
       ...VisualizationProposalWithContext
@@ -311,4 +318,4 @@ import{g as r}from"./gql-CXkKbLhy.js";r(`
       }
     }
   }
-`);export{A as G,_ as U,P as a,i as b,g as c,c as d,h as e,y as f,s as g,m as h,o as i,u as j,t as p};
+`);export{U as G,_ as I,u as S,b as U,I as a,o as b,R as c,P as d,h as e,T as f,G as g,S as h,n as i,A as j,p as k,E as l,t as p};
