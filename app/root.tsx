@@ -89,7 +89,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
-        <link rel="icon" href={`${STATIC_ASSETS_PREFIX}favicon.ico`} />
+        <link
+          rel="icon"
+          type="image/svg+xml"
+          href={`${STATIC_ASSETS_PREFIX}favicon.svg`}
+        />
         <title>{DEFAULT_TITLE}</title>
         <meta name="description" content={DEFAULT_DESCRIPTION} />
         <meta property="og:title" content={DEFAULT_TITLE} />
