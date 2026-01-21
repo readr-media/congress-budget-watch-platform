@@ -15,9 +15,19 @@ export const GET_LATEST_BUDGET_YEAR_QUERY = graphql(`
   }
 `);
 
+export const GET_BUDGET_YEARS_LIST_QUERY = graphql(`
+  query GetBudgetYearsList {
+    budgetYears(orderBy: [{ year: desc }]) {
+      id
+      year
+    }
+  }
+`);
+
 export const budgetYearQueryKeys = {
   all: ["budgetYear"] as const,
   list: (skip = 0, take = 1) =>
     [...budgetYearQueryKeys.all, "list", { skip, take }] as const,
   latest: () => [...budgetYearQueryKeys.all, "latest"] as const,
+  years: () => [...budgetYearQueryKeys.all, "years"] as const,
 } as const;

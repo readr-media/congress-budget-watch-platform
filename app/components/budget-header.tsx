@@ -2,9 +2,20 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { useEffect, useRef, useState, type RefObject } from "react";
 import { ShareButton } from "@readr-media/share-button";
 import { NavLink, useLocation } from "react-router";
+import { useQuery } from "@tanstack/react-query";
 import Image from "./image";
 import { useOnClickOutside, useToggle } from "usehooks-ts";
-import { DEFAULT_REPUBLIC_YEAR } from "~/utils/year";
+import { execute } from "~/graphql/execute";
+import { GET_BUDGET_YEARS_LIST_QUERY, budgetYearQueryKeys } from "~/queries";
+
+const getLatestBudgetYearValue = (
+  budgetYears?: Array<{ year?: number | null } | null> | null
+) => {
+  const years = (budgetYears ?? [])
+    .map((entry) => entry?.year)
+    .filter((year): year is number => typeof year === "number");
+  return years.length ? years[0] : null;
+};
 
 const BudgetHeader = () => {
   const [isMounted, setIsMounted] = useState(false);
@@ -12,7 +23,20 @@ const BudgetHeader = () => {
   const hamburgerRef = useRef<HTMLDivElement | null>(null);
   const location = useLocation();
 
-  const republicYear = DEFAULT_REPUBLIC_YEAR;
+  const { data: budgetYearsData } = useQuery({
+    queryKey: budgetYearQueryKeys.years(),
+    queryFn: () => execute(GET_BUDGET_YEARS_LIST_QUERY),
+    staleTime: 5 * 60 * 1000,
+  });
+  const latestBudgetYearValue = getLatestBudgetYearValue(
+    budgetYearsData?.budgetYears ?? null
+  );
+  const latestBudgetLink = latestBudgetYearValue
+    ? `/all-budgets?year=${latestBudgetYearValue}`
+    : "/all-budgets";
+  const latestBudgetSearch = latestBudgetYearValue
+    ? `year=${latestBudgetYearValue}`
+    : "";
 
   const NAV_ITEMS = [
     {
@@ -24,11 +48,12 @@ const BudgetHeader = () => {
     },
     {
       label: "最新年度預算",
-      to: `/all-budgets?year=${republicYear}`,
+      to: latestBudgetLink,
       // Active when pathname matches AND year param matches
       isActive: (loc: { pathname: string; search: string }) =>
+        Boolean(latestBudgetYearValue) &&
         loc.pathname === "/all-budgets" &&
-        loc.search.includes(`year=${republicYear}`),
+        loc.search.includes(latestBudgetSearch),
     },
     {
       label: "視覺化專區",

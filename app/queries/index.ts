@@ -20,6 +20,7 @@ export {
 } from "./proposal.queries";
 
 export {
+  GET_BUDGET_YEARS_LIST_QUERY,
   GET_LATEST_BUDGET_YEAR_QUERY,
   budgetYearQueryKeys,
 } from "./budget-year.queries";

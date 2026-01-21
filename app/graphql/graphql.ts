@@ -2352,6 +2352,11 @@ export type GetLatestBudgetYearQueryVariables = Exact<{
 
 export type GetLatestBudgetYearQuery = { __typename?: 'Query', budgetYears?: Array<{ __typename?: 'BudgetYear', year?: number | null, budgetProgress?: string | null, dataProgress?: string | null, unfreezeProgress?: string | null }> | null };
 
+export type GetBudgetYearsListQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetBudgetYearsListQuery = { __typename?: 'Query', budgetYears?: Array<{ __typename?: 'BudgetYear', id: string, year?: number | null }> | null };
+
 export type GetBudgetsWithGovernmentQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -2500,6 +2505,14 @@ export const GetLatestBudgetYearDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<GetLatestBudgetYearQuery, GetLatestBudgetYearQueryVariables>;
+export const GetBudgetYearsListDocument = new TypedDocumentString(`
+    query GetBudgetYearsList {
+  budgetYears(orderBy: [{year: desc}]) {
+    id
+    year
+  }
+}
+    `) as unknown as TypedDocumentString<GetBudgetYearsListQuery, GetBudgetYearsListQueryVariables>;
 export const GetBudgetsWithGovernmentDocument = new TypedDocumentString(`
     query GetBudgetsWithGovernment {
   budgets {
