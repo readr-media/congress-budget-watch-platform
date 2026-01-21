@@ -14,7 +14,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import Footer from "./components/footer";
 import BudgetHeader from "./components/budget-header";
-import DataProgressMarquee from "./components/data-progress-marquee";
 import BackToTopButton from "./components/back-to-top-button";
 import { STATIC_ASSETS_PREFIX } from "./constants/config";
 
@@ -26,8 +25,23 @@ const DEFAULT_CANONICAL_URL =
 const DEFAULT_OG_IMAGE_URL = `${DEFAULT_CANONICAL_URL}image/og.png`;
 const DEFAULT_TWITTER_CARD = "summary_large_image";
 const DEFAULT_TWITTER_DOMAIN = "readr-media.github.io";
-// Create a client
-const queryClient = new QueryClient();
+
+/**
+ * NOTE：這裡設定了全域的 staleTime: 60秒。
+ * 若未來有需要即時性的資料（例如：即時聊天、即時開票數據），
+ * 請務必在該特定的 useQuery 中覆寫 staleTime: 0。
+ * 對於 Mutation (如投票)，需確保成功後有正確 Invalidate 相關 Queries 以更新畫面。
+ */
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 60 * 1000,
+      gcTime: 10 * 60 * 1000,
+      refetchOnWindowFocus: false,
+      retry: 1,
+    },
+  },
+});
 const MOBILE_BREAKPOINT = 768;
 const DESKTOP_THRESHOLD_MULTIPLIER = 1;
 const MOBILE_THRESHOLD_MULTIPLIER = 1.5;
@@ -109,10 +123,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <body>
         <QueryClientProvider client={queryClient}>
           <div className="grid min-h-screen grid-rows-[auto_1fr_auto]">
-            <div>
-              <BudgetHeader />
-              <DataProgressMarquee />
-            </div>
+          <div>
+            <BudgetHeader />
+          </div>
             <main>{children}</main>
             <Footer />
           </div>

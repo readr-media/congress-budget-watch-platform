@@ -19,6 +19,7 @@ import {
   useSearchedValue,
   useSelectedYear,
   useSetSelectedYear,
+  useFreezeOnly,
 } from "~/stores/budget-selector";
 import { useMediaQuery } from "usehooks-ts";
 import type {
@@ -36,7 +37,22 @@ import useDebounce from "~/hooks/useDebounce";
 import { SEARCH_DEBOUNCE_DELAY } from "~/constants/config";
 import { sortOptions } from "~/constants/options";
 import { find } from "lodash";
-import AllBudgetsView, { type YearOption } from "./AllBudgetsView";
+import AllBudgetsView, {
+  type YearOption,
+  type ProgressMode,
+  type ProgressTab,
+  type ProgressDisplayData,
+} from "./AllBudgetsView";
+import {
+  DEFAULT_UNFREEZE_LABELS,
+  getUnfreezeProgressDisplay,
+} from "~/utils/unfreeze-progress";
+import {
+  calculateProgressPercentage,
+  formatProgressText,
+  getProgressStageLabel,
+} from "~/utils/progress";
+import type { BudgetProgressStage } from "~/types/progress";
 
 const NON_NULL_BUDGET_CONDITION: ProposalWhereInput = {
   OR: [
@@ -45,6 +61,11 @@ const NON_NULL_BUDGET_CONDITION: ProposalWhereInput = {
     { budgetAmount: { equals: 0 } },
   ],
 };
+
+const PROGRESS_TABS: ProgressTab[] = [
+  { key: "latest", label: "最新進度" },
+  { key: "unfreeze", label: "解凍進度" },
+];
 
 export function meta() {
   return [
@@ -82,6 +103,8 @@ export const AllBudgets = () => {
   const isDesktop = useMediaQuery("(min-width: 768px)");
   const selectedYear = useSelectedYear();
   const setSelectedYear = useSetSelectedYear();
+  const freezeOnly = useFreezeOnly();
+  const [progressMode, setProgressMode] = useState<ProgressMode>("latest");
 
   useEffect(() => {
     const yearFromParams = searchParams.get("year");
@@ -115,11 +138,22 @@ export const AllBudgets = () => {
     queryFn: () => execute(GET_PROPOSAL_YEARS_QUERY),
     enabled: yearsQueryEnabled,
   });
+  const typedYearsData = yearsData as GetProposalYearsQuery | undefined;
+  const availableBudgetYears = useMemo(
+    () =>
+      (typedYearsData?.budgetYears ?? []).filter(
+        (
+          entry
+        ): entry is NonNullable<
+          NonNullable<GetProposalYearsQuery["budgetYears"]>[number]
+        > => Boolean(entry)
+      ),
+    [typedYearsData]
+  );
 
   const yearOptions: YearOption[] = useMemo(() => {
-    const typedYearsData = yearsData as GetProposalYearsQuery | undefined;
-    if (!typedYearsData?.budgetYears) return [];
-    const years = typedYearsData.budgetYears
+    if (!availableBudgetYears.length) return [];
+    const years = availableBudgetYears
       .map((entry) => entry.year)
       .filter((y): y is number => y != null);
     const uniqueYears = [...new Set(years)].sort((a, b) => b - a);
@@ -127,12 +161,74 @@ export const AllBudgets = () => {
       { value: null, label: "全部年份" },
       ...uniqueYears.map((year) => ({ value: year, label: `${year}年` })),
     ];
-  }, [yearsData]);
+  }, [availableBudgetYears]);
 
   const selectedOption: SingleValue<YearOption> = useMemo(
     () => yearOptions.find((option) => option.value === selectedYear) ?? null,
     [yearOptions, selectedYear]
   );
+
+  const { resolvedYear, resolvedEntry } = useMemo(() => {
+    if (!availableBudgetYears.length) {
+      return { resolvedYear: selectedYear ?? null, resolvedEntry: null };
+    }
+
+    if (selectedYear == null) {
+      const entry = availableBudgetYears[0] ?? null;
+      return {
+        resolvedYear: entry?.year ?? null,
+        resolvedEntry: entry ?? null,
+      };
+    }
+
+    const entry =
+      availableBudgetYears.find((year) => year.year === selectedYear) ?? null;
+    return {
+      resolvedYear: selectedYear,
+      resolvedEntry: entry ?? null,
+    };
+  }, [availableBudgetYears, selectedYear]);
+
+  const latestProgressData = useMemo<ProgressDisplayData>(() => {
+    const description = formatProgressText(
+      resolvedYear ?? null,
+      resolvedEntry?.dataProgress ?? null
+    );
+    const percentage = calculateProgressPercentage(
+      resolvedEntry?.budgetProgress as BudgetProgressStage | null | undefined
+    );
+    const stageLabel = getProgressStageLabel(
+      resolvedEntry?.budgetProgress as BudgetProgressStage | null | undefined
+    );
+
+    return {
+      labels: content.progressLabels,
+      description,
+      percentage,
+      stageLabel,
+    };
+  }, [
+    resolvedYear,
+    resolvedEntry?.budgetProgress,
+    resolvedEntry?.dataProgress,
+  ]);
+
+  const unfreezeProgressData = useMemo<ProgressDisplayData>(() => {
+    const display = getUnfreezeProgressDisplay(
+      resolvedYear ?? null,
+      resolvedEntry?.unfreezeProgress ?? null
+    );
+
+    return {
+      labels: DEFAULT_UNFREEZE_LABELS,
+      description: display.text,
+      percentage: display.percentage,
+      stageLabel: display.label,
+    };
+  }, [resolvedYear, resolvedEntry?.unfreezeProgress]);
+
+  const activeProgressData =
+    progressMode === "latest" ? latestProgressData : unfreezeProgressData;
 
   const handleYearChange = useCallback(
     (option: SingleValue<YearOption>) => {
@@ -215,9 +311,13 @@ export const AllBudgets = () => {
     if (selectedYear) {
       filters.year = { year: { equals: selectedYear } };
     }
+    if (freezeOnly) {
+      // TODO: backend schema目前沒有對proposalTypes的has/contains filter，暫時以freezeAmount>0近似篩出凍結案；待schema支援後改用proposalTypes判斷。
+      filters.freezeAmount = { gt: 0 };
+    }
 
     return filters;
-  }, [departmentId, personId, debouncedSearchedValue, selectedYear]);
+  }, [departmentId, personId, debouncedSearchedValue, selectedYear, freezeOnly]);
 
   // 修改後的 React Query（支援分頁）
   const fetchBudgetAmountSorted = useCallback(async () => {
@@ -325,6 +425,7 @@ export const AllBudgets = () => {
     personId,
     debouncedSearchedValue,
     selectedYear,
+    freezeOnly,
     setPage,
   ]);
 
@@ -366,13 +467,20 @@ export const AllBudgets = () => {
     return data.proposals.map(proposalToBudgetTableData);
   }, [data?.proposals]);
 
+  const pageTitle = resolvedYear
+    ? `${resolvedYear} 年中央政府總預算`
+    : content.title;
+
   if (isLoading) return <AllBudgetsSkeleton isDesktop={isDesktop} />;
   if (isError) return redirect(ERROR_REDIRECT_ROUTE);
 
   return (
     <AllBudgetsView
-      title={content.title}
-      progressLabels={content.progressLabels}
+      title={pageTitle}
+      progressTabs={PROGRESS_TABS}
+      progressMode={progressMode}
+      onProgressModeChange={setProgressMode}
+      progressData={activeProgressData}
       yearOptions={yearOptions}
       selectedYearOption={selectedOption}
       onYearChange={handleYearChange}

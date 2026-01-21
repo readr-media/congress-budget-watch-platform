@@ -11,7 +11,7 @@
     "dev": "react-router dev",
     "start": "vite preview --outDir build/client",
     "typecheck": "react-router typegen && tsc",
-    "codegen": "graphql-codegen --config codegen.ts --concurrency 1",
+    "codegen": "npm_config_concurrency=1 graphql-codegen --config codegen.ts --concurrency 1",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "eslint . --fix",
@@ -68,6 +68,7 @@
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.43.0",
     "vite": "^6.3.3",
+    "vite-plugin-mkcert": "^1.17.9",
     "vite-tsconfig-paths": "^5.1.4"
   }
 }

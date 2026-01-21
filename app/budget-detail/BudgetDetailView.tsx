@@ -19,6 +19,9 @@ interface BudgetDetailViewProps {
   resultText: string;
   parentProposalId?: string | null;
   hasHistoricalProposals: boolean;
+  shouldShowUnfreezeSection: boolean;
+  unfreezeStatusDisplay: string;
+  unfreezeReportUrl: string;
   budgetCategoryDisplay: string;
   projectDescriptionDisplay: string;
   lastYearSettlementDisplay: string;
@@ -42,6 +45,9 @@ const BudgetDetailView = ({
   resultText,
   parentProposalId,
   hasHistoricalProposals,
+  shouldShowUnfreezeSection,
+  unfreezeStatusDisplay,
+  unfreezeReportUrl,
   budgetCategoryDisplay,
   projectDescriptionDisplay,
   lastYearSettlementDisplay,
@@ -113,7 +119,7 @@ const BudgetDetailView = ({
                     <p className="bg-brand-accent w-fit rounded-t-lg border-2 border-black px-2.5 py-1 text-white">
                       提案人（連署）
                     </p>
-                    <p className="flex w-fit border-t pt-4 md:pr-18 lg:pr-32">
+                    <p className="flex w-fit border-t pt-4 md:pr-8 lg:pr-12">
                       {proposerName}
                       <br />（{cosignersText}）
                     </p>
@@ -122,20 +128,51 @@ const BudgetDetailView = ({
                     <p className="bg-brand-accent w-fit rounded-t-lg border-2 border-black px-2.5 py-1 text-white">
                       提案
                     </p>
-                    <p className="flex w-fit border-t pt-4 md:pr-12">
+                    <p className="flex w-fit border-t pt-4 md:pr-8 lg:pr-12">
                       {proposalType}
                     </p>
                   </div>
-                  <div className="grow">
+                  <div className={shouldShowUnfreezeSection ? "" : "grow"}>
                     <p className="bg-brand-accent w-fit rounded-t-lg border-2 border-black px-2.5 py-1 text-white">
                       審議結果
                     </p>
                     {renderResultStatus(
-                      "flex border-t pt-4 pr-12 ",
+                      `flex border-t pt-4 ${shouldShowUnfreezeSection ? "pr-12 lg:pr-16" : "pr-12"}`,
                       "text-brand-primary flex underline",
                       "flex pt-4 border-t"
                     )}
                   </div>
+                  {shouldShowUnfreezeSection && (
+                    <>
+                      <div>
+                        <p className="bg-brand-accent w-fit rounded-t-lg border-2 border-black px-2.5 py-1 text-white">
+                          解凍最新狀態
+                        </p>
+                        <p className="text-brand-primary flex w-fit border-t pt-4 font-bold md:pr-12 lg:pr-16">
+                          {unfreezeStatusDisplay}
+                        </p>
+                      </div>
+                      <div className="grow">
+                        <p className="bg-brand-accent w-fit rounded-t-lg border-2 border-black px-2.5 py-1 text-white">
+                          解凍報告
+                        </p>
+                        <div className="flex border-t pt-4">
+                          {unfreezeReportUrl ? (
+                            <a
+                              href={unfreezeReportUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-brand-primary underline"
+                            >
+                              報告連結
+                            </a>
+                          ) : (
+                            <p className="text-gray-500">暫無報告</p>
+                          )}
+                        </div>
+                      </div>
+                    </>
+                  )}
                 </section>
                 {/* row 2 */}
                 <section className="flex">
@@ -385,9 +422,38 @@ const BudgetDetailView = ({
               <p>{proposal.government?.name || "部會"}</p>
             </div>
           </section>
-          <section>
+
+          {shouldShowUnfreezeSection && (
+            <section className="border-neutral-250 flex flex-col gap-y-3 border-b py-4">
+              <div className="flex items-start gap-x-12">
+                <div className="flex flex-col gap-y-3">
+                  <p className="font-bold">解凍最新狀態</p>
+                  <p className="text-sm font-semibold text-brand-primary">
+                    {unfreezeStatusDisplay}
+                  </p>
+                </div>
+                <div className="flex flex-col gap-y-3">
+                  <p className="font-bold">解凍報告</p>
+                  {unfreezeReportUrl ? (
+                    <a
+                      href={unfreezeReportUrl}
+                      className="text-brand-primary text-sm underline"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      報告連結
+                    </a>
+                  ) : (
+                    <p className="text-gray-500 text-sm">暫無報告</p>
+                  )}
+                </div>
+              </div>
+            </section>
+          )}
+
+          <section className="border-neutral-250 border-b pb-4">
             <p className="mt-3 text-lg font-bold">審議階段</p>
-            <div>
+            <div className="mt-4">
               {timelineData.length > 0 ? (
                 <Timeline items={timelineData} />
               ) : (
@@ -395,32 +461,35 @@ const BudgetDetailView = ({
               )}
             </div>
           </section>
+
           <div className="mt-3 flex flex-col gap-y-3">
             <p className="font-bold">是否併案</p>
             <p>{hasMerged ? "是" : "否"}</p>
           </div>
-          <ul className="timeline timeline-vertical timeline-compact text-neutral-500">
-            {mergedProposalsData.map((merged) => (
-              <li key={merged.id}>
-                <div className="timeline-middle">
-                  {merged.isParent ? (
-                    <div className="bg-brand-primary flex size-5 items-center justify-center rounded-full text-xs text-white">
-                      主
-                    </div>
-                  ) : (
-                    <div className="size-2 rounded-full bg-black" />
-                  )}
-                </div>
-                <NavLink
-                  to={`/budget/${merged.id}`}
-                  className="timeline-end hover:text-brand-primary rounded-xl bg-transparent px-6 text-neutral-500"
-                >
-                  <p>{merged.date}</p>
-                  <p>{merged.proposers}</p>
-                </NavLink>
-              </li>
-            ))}
-          </ul>
+          {hasMerged && mergedProposalsData.length > 0 && (
+            <ul className="timeline timeline-vertical timeline-compact mt-2 text-neutral-500">
+              {mergedProposalsData.map((merged) => (
+                <li key={merged.id}>
+                  <div className="timeline-middle">
+                    {merged.isParent ? (
+                      <div className="bg-brand-primary flex size-5 items-center justify-center rounded-full text-xs text-white">
+                        主
+                      </div>
+                    ) : (
+                      <div className="size-2 rounded-full bg-black" />
+                    )}
+                  </div>
+                  <NavLink
+                    to={`/budget/${merged.id}`}
+                    className="timeline-end hover:text-brand-primary rounded-xl bg-transparent px-6 text-neutral-500"
+                  >
+                    <p>{merged.date}</p>
+                    <p>{merged.proposers}</p>
+                  </NavLink>
+                </li>
+              ))}
+            </ul>
+          )}
           {/* divider */}
           <div className="my-4 h-px w-full bg-gray-300" />
           <div className="flex flex-col gap-y-3">
@@ -447,7 +516,12 @@ const BudgetDetailView = ({
               </section>
             </section>
             {/* fake link */}
-            <a href="#" className="underline" target="_blank">
+            <a
+              href="#"
+              className="underline"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               資料來源
             </a>
           </div>
@@ -516,6 +590,7 @@ const BudgetDetailView = ({
                     href="#"
                     className="text-brand-primary underline"
                     target="_blank"
+                    rel="noopener noreferrer"
                   >
                     預算書連結
                   </a>

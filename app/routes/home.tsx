@@ -14,6 +14,11 @@ import {
 } from "~/utils/progress";
 import type { BudgetProgressStage } from "~/constants/progress-stages";
 import { STATIC_ASSETS_PREFIX } from "~/constants/config";
+import ProgressBadge, {
+  type ProgressBadgeProps,
+} from "~/components/progress-badge";
+import ProgressBadgeMobile from "~/components/progress-badge-mobile";
+import { getUnfreezeProgressDisplay } from "~/utils/unfreeze-progress";
 
 const OG_DESCRIPTION =
   "收錄歷年及最新中央政府預算審議情形，包含立委提案刪減和凍結的緣由和金額，便於搜尋及比較，更能即時追蹤最新審議進度。還可透過視覺化方式瀏覽，一目暸然。除了已數位化的資料，此平台也透過群眾協力（crowdsourcing）辨識提案掃描檔，歡迎至協作區加入合作行列。";
@@ -118,7 +123,7 @@ export default function Home() {
     queryFn: () =>
       execute(GET_LATEST_BUDGET_YEAR_QUERY, {
         skip: 0,
-        take: 1,
+        take: 10, // Fetch more to find 114 for testing
       }),
   });
 
@@ -144,6 +149,105 @@ export default function Home() {
     latestBudgetYear?.year ?? null,
     latestBudgetYear?.dataProgress ?? null
   );
+  const unfreezeProgressDisplay = getUnfreezeProgressDisplay(
+    latestBudgetYear?.year ?? null,
+    latestBudgetYear?.unfreezeProgress ?? null
+  );
+
+  const latestProgressBadge: ProgressBadgeProps = {
+    label: "最新審議進度",
+    description: progressText,
+    percentage: progressPercentage,
+    color: "pink",
+  };
+
+  const unfreezeProgressBadge: ProgressBadgeProps = {
+    label: "解凍進度",
+    description: unfreezeProgressDisplay.text,
+    percentage: unfreezeProgressDisplay.percentage,
+    color: "blue",
+  };
+
+  const progressBadges: ProgressBadgeProps[] = [
+    latestProgressBadge,
+    unfreezeProgressBadge,
+  ];
+
+  const renderStatusBoxes = (
+    boxes: { key: string; text: string; className: string }[]
+  ) => (
+    <div className="max-w-banner -mt-1 flex w-full flex-col gap-3">
+      {boxes.map((box) => (
+        <div
+          key={box.key}
+          className={`flex w-full items-center justify-center rounded-lg p-2 text-center text-sm font-medium ${box.className}`}
+        >
+          {box.text}
+        </div>
+      ))}
+    </div>
+  );
+
+  const loadingBoxes = renderStatusBoxes([
+    {
+      key: "progress-loading",
+      text: "載入審議進度中...",
+      className: "min-h-[60px] bg-gray-300 text-gray-600",
+    },
+    {
+      key: "unfreeze-loading",
+      text: "載入解凍進度中...",
+      className: "min-h-[48px] bg-gray-300 text-gray-600",
+    },
+  ]);
+
+  const errorBoxes = renderStatusBoxes([
+    {
+      key: "progress-error",
+      text: "審議進度載入失敗，請稍後再試",
+      className: "min-h-[60px] bg-red-100 text-red-600",
+    },
+    {
+      key: "unfreeze-error",
+      text: "解凍進度載入失敗，請稍後再試",
+      className: "min-h-[48px] bg-red-100 text-red-600",
+    },
+  ]);
+
+  const emptyBoxes = renderStatusBoxes([
+    {
+      key: "progress-empty",
+      text: "暫無審議進度資料",
+      className: "min-h-[60px] bg-gray-300 text-gray-600",
+    },
+    {
+      key: "unfreeze-empty",
+      text: "暫無解凍進度資料",
+      className: "min-h-[48px] bg-gray-300 text-gray-600",
+    },
+  ]);
+
+  const renderProgressBadges = () => {
+    if (isLoading) return loadingBoxes;
+    if (isError) return errorBoxes;
+    if (!latestBudgetYear) return emptyBoxes;
+    return (
+      <div className="max-w-banner -mt-1 w-full">
+        <div className="hidden flex-col gap-3 md:flex">
+          {progressBadges.map((badge) => (
+            <ProgressBadge key={badge.label} {...badge} />
+          ))}
+        </div>
+        <div className="flex w-full justify-center md:hidden">
+          <ProgressBadgeMobile
+            headerLabel={progressBadges[0].label}
+            headerColor="blue"
+            badges={progressBadges}
+          />
+        </div>
+      </div>
+    );
+  };
 
   const navigationButtons: NavigationButton[] = [
     { label: "歷年預算", href: "/all-budgets" },
@@ -172,34 +276,7 @@ export default function Home() {
               fetchPriority="high"
               className="h-auto w-full max-w-xl"
             />
-            {isLoading ? (
-              <div className="max-w-banner -mt-1 flex min-h-[60px] w-full items-center justify-center rounded-lg bg-gray-300 p-2 text-gray-600">
-                載入審議進度中...
-              </div>
-            ) : isError ? (
-              <div className="max-w-banner -mt-1 flex min-h-[60px] w-full items-center justify-center rounded-lg bg-red-100 p-2 text-red-600">
-                審議進度載入失敗，請稍後再試
-              </div>
-            ) : latestBudgetYear ? (
-              <div className="max-w-banner bg-brand-primary relative -mt-1 flex min-h-[48px] w-full items-center justify-start rounded-lg pl-1 text-white">
-                <div className="border-brand-primary text-brand-primary absolute top-0 left-1/2 flex -translate-x-1/2 -translate-y-5/6 items-center justify-center rounded-lg border-2 bg-white px-1.5 py-2 text-center text-base font-bold shadow-lg md:hidden">
-                  最新審議進度
-                </div>
-                <p className="text-brand-primary mr-2 hidden w-[160px] rounded-lg bg-white px-3.5 py-2 md:flex">
-                  最新審議進度
-                </p>
-                <div className="flex w-full items-center justify-between">
-                  <p className="flex grow justify-center border-r border-white py-2">
-                    {progressText}
-                  </p>
-                  <p className="flex px-2">{progressPercentage}%</p>
-                </div>
-              </div>
-            ) : (
-              <div className="max-w-banner -mt-1 flex min-h-[60px] w-full items-center justify-center rounded-lg bg-gray-300 p-2 text-gray-600">
-                暫無審議進度資料
-              </div>
-            )}
+            {renderProgressBadges()}
           </div>
 
           {/* Description */}
@@ -218,10 +295,9 @@ export default function Home() {
               key={button.label}
               to={button.href}
               className={({ isActive }) =>
-                `border-brand-accent flex min-h-[72px] w-full items-center justify-center rounded-lg border-3 px-6 py-4 text-center text-lg font-medium transition-colors ${
-                  isActive
-                    ? "bg-brand-accent"
-                    : "hover:bg-brand-accent bg-white hover:text-black"
+                `border-brand-accent flex min-h-[72px] w-full items-center justify-center rounded-lg border-3 px-6 py-4 text-center text-lg font-medium transition-colors ${isActive
+                  ? "bg-brand-accent"
+                  : "hover:bg-brand-accent bg-white hover:text-black"
                 } focus:ring-brand-accent text-budget-accent focus:ring-2 focus:ring-offset-2 focus:outline-none`
               }
             >

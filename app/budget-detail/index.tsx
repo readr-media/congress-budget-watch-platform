@@ -11,6 +11,7 @@ import {
   formatNumber,
   getProposalTypeDisplay,
   getResultDisplay,
+  getUnfreezeStatusDisplay,
   meetingsToTimeline,
   hasMergedProposals,
   hasHistoricalProposals,
@@ -39,7 +40,8 @@ const BudgetDetail = () => {
   // Transform data for rendering
   const timelineData = meetingsToTimeline(
     proposal.meetings,
-    proposal.historicalProposals
+    proposal.historicalProposals,
+    proposal.unfreezeHistory
   );
   const mergedProposalsData = formatMergedProposals(
     proposal.mergedProposals,
@@ -64,6 +66,13 @@ const BudgetDetail = () => {
   const parentProposalId =
     proposal.historicalParentProposals?.id ??
     proposal.mergedParentProposals?.id;
+  const unfreezeStatusValue = proposal.unfreezeStatus?.trim();
+  const hasUnfreezeStatus = Boolean(unfreezeStatusValue);
+  const unfreezeStatusDisplay = hasUnfreezeStatus
+    ? getUnfreezeStatusDisplay(unfreezeStatusValue) ?? "未知狀態"
+    : "";
+  const shouldShowUnfreezeSection = hasUnfreezeStatus;
+  const unfreezeReportUrl = proposal.unfreezeReport?.trim() || "";
 
   const budgetCategory = formatBudgetCategory(
     proposal.budget?.majorCategory,
@@ -128,6 +137,9 @@ const BudgetDetail = () => {
       resultText={resultText}
       parentProposalId={parentProposalId}
       hasHistoricalProposals={hasHistoricalProposals(proposal)}
+      shouldShowUnfreezeSection={shouldShowUnfreezeSection}
+      unfreezeStatusDisplay={unfreezeStatusDisplay}
+      unfreezeReportUrl={unfreezeReportUrl}
       budgetCategoryDisplay={budgetCategoryDisplay}
       projectDescriptionDisplay={projectDescriptionDisplay}
       lastYearSettlementDisplay={lastYearSettlementDisplay}

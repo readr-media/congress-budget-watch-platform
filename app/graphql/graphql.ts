@@ -136,6 +136,7 @@ export type BudgetYear = {
   id: Scalars['ID']['output'];
   proposals?: Maybe<Array<Proposal>>;
   proposalsCount?: Maybe<Scalars['Int']['output']>;
+  unfreezeProgress?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
   updatedBy?: Maybe<User>;
   year?: Maybe<Scalars['Int']['output']>;
@@ -161,6 +162,7 @@ export type BudgetYearCreateInput = {
   createdBy?: InputMaybe<UserRelateToOneForCreateInput>;
   dataProgress?: InputMaybe<Scalars['String']['input']>;
   proposals?: InputMaybe<ProposalRelateToManyForCreateInput>;
+  unfreezeProgress?: InputMaybe<Scalars['String']['input']>;
   updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
   updatedBy?: InputMaybe<UserRelateToOneForCreateInput>;
   year?: InputMaybe<Scalars['Int']['input']>;
@@ -171,6 +173,7 @@ export type BudgetYearOrderByInput = {
   createdAt?: InputMaybe<OrderDirection>;
   dataProgress?: InputMaybe<OrderDirection>;
   id?: InputMaybe<OrderDirection>;
+  unfreezeProgress?: InputMaybe<OrderDirection>;
   updatedAt?: InputMaybe<OrderDirection>;
   year?: InputMaybe<OrderDirection>;
 };
@@ -197,6 +200,7 @@ export type BudgetYearUpdateInput = {
   createdBy?: InputMaybe<UserRelateToOneForUpdateInput>;
   dataProgress?: InputMaybe<Scalars['String']['input']>;
   proposals?: InputMaybe<ProposalRelateToManyForUpdateInput>;
+  unfreezeProgress?: InputMaybe<Scalars['String']['input']>;
   updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
   updatedBy?: InputMaybe<UserRelateToOneForUpdateInput>;
   year?: InputMaybe<Scalars['Int']['input']>;
@@ -212,6 +216,7 @@ export type BudgetYearWhereInput = {
   dataProgress?: InputMaybe<StringFilter>;
   id?: InputMaybe<IdFilter>;
   proposals?: InputMaybe<ProposalManyRelationFilter>;
+  unfreezeProgress?: InputMaybe<StringNullableFilter>;
   updatedAt?: InputMaybe<DateTimeNullableFilter>;
   updatedBy?: InputMaybe<UserWhereInput>;
   year?: InputMaybe<IntFilter>;
@@ -2345,7 +2350,7 @@ export type GetLatestBudgetYearQueryVariables = Exact<{
 }>;
 
 
-export type GetLatestBudgetYearQuery = { __typename?: 'Query', budgetYears?: Array<{ __typename?: 'BudgetYear', year?: number | null, budgetProgress?: string | null, dataProgress?: string | null }> | null };
+export type GetLatestBudgetYearQuery = { __typename?: 'Query', budgetYears?: Array<{ __typename?: 'BudgetYear', year?: number | null, budgetProgress?: string | null, dataProgress?: string | null, unfreezeProgress?: string | null }> | null };
 
 export type GetBudgetYearsListQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -2389,12 +2394,12 @@ export type GetProposalByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetProposalByIdQuery = { __typename?: 'Query', proposal?: { __typename?: 'Proposal', id: string, description?: string | null, reason?: string | null, publishStatus?: string | null, result?: string | null, freezeAmount?: number | null, reductionAmount?: number | null, budgetImageUrl?: string | null, proposalTypes?: Array<ProposalProposalTypeType> | null, recognitionAnswer?: string | null, unfreezeStatus?: string | null, react_angry?: number | null, react_disappoint?: number | null, react_good?: number | null, react_whatever?: number | null, historicalParentProposals?: { __typename?: 'Proposal', id: string } | null, mergedParentProposals?: { __typename?: 'Proposal', id: string, proposers?: Array<{ __typename?: 'People', id: string, name?: string | null }> | null } | null, historicalProposals?: Array<{ __typename?: 'Proposal', id: string, meetings?: Array<{ __typename?: 'Meeting', id: string }> | null, proposers?: Array<{ __typename?: 'People', id: string, name?: string | null }> | null }> | null, government?: { __typename?: 'Government', id: string, name?: string | null, category?: string | null, description?: string | null } | null, budget?: { __typename?: 'Budget', id: string, projectName?: string | null, projectDescription?: string | null, budgetAmount?: number | null, budgetUrl?: string | null, lastYearSettlement?: number | null, year?: number | null, type?: string | null, majorCategory?: string | null, mediumCategory?: string | null, minorCategory?: string | null, description?: string | null } | null, proposers?: Array<{ __typename?: 'People', id: string, name?: string | null, type?: string | null, description?: string | null }> | null, coSigners?: Array<{ __typename?: 'People', id: string, name?: string | null, type?: string | null }> | null, meetings?: Array<{ __typename?: 'Meeting', id: string, displayName?: string | null, meetingDate?: any | null, description?: string | null, location?: string | null, meetingRecordUrl?: string | null, type?: string | null, committee?: Array<{ __typename?: 'Committee', displayName?: string | null, name?: string | null, endDate?: any | null, startDate?: any | null }> | null }> | null, mergedProposals?: Array<{ __typename?: 'Proposal', id: string, proposers?: Array<{ __typename?: 'People', id: string, name?: string | null }> | null }> | null } | null };
+export type GetProposalByIdQuery = { __typename?: 'Query', proposal?: { __typename?: 'Proposal', id: string, description?: string | null, reason?: string | null, publishStatus?: string | null, result?: string | null, freezeAmount?: number | null, reductionAmount?: number | null, budgetImageUrl?: string | null, proposalTypes?: Array<ProposalProposalTypeType> | null, recognitionAnswer?: string | null, unfreezeStatus?: string | null, unfreezeReport?: string | null, react_angry?: number | null, react_disappoint?: number | null, react_good?: number | null, react_whatever?: number | null, historicalParentProposals?: { __typename?: 'Proposal', id: string } | null, mergedParentProposals?: { __typename?: 'Proposal', id: string, proposers?: Array<{ __typename?: 'People', id: string, name?: string | null }> | null } | null, historicalProposals?: Array<{ __typename?: 'Proposal', id: string, meetings?: Array<{ __typename?: 'Meeting', id: string }> | null, proposers?: Array<{ __typename?: 'People', id: string, name?: string | null }> | null }> | null, government?: { __typename?: 'Government', id: string, name?: string | null, category?: string | null, description?: string | null } | null, budget?: { __typename?: 'Budget', id: string, projectName?: string | null, projectDescription?: string | null, budgetAmount?: number | null, budgetUrl?: string | null, lastYearSettlement?: number | null, year?: number | null, type?: string | null, majorCategory?: string | null, mediumCategory?: string | null, minorCategory?: string | null, description?: string | null } | null, proposers?: Array<{ __typename?: 'People', id: string, name?: string | null, type?: string | null, description?: string | null }> | null, coSigners?: Array<{ __typename?: 'People', id: string, name?: string | null, type?: string | null }> | null, meetings?: Array<{ __typename?: 'Meeting', id: string, displayName?: string | null, meetingDate?: any | null, description?: string | null, location?: string | null, meetingRecordUrl?: string | null, type?: string | null, committee?: Array<{ __typename?: 'Committee', displayName?: string | null, name?: string | null, endDate?: any | null, startDate?: any | null }> | null }> | null, unfreezeHistory?: Array<{ __typename?: 'Meeting', id: string, displayName?: string | null, meetingDate?: any | null, description?: string | null, location?: string | null, meetingRecordUrl?: string | null, type?: string | null, committee?: Array<{ __typename?: 'Committee', displayName?: string | null, name?: string | null, endDate?: any | null, startDate?: any | null }> | null }> | null, mergedProposals?: Array<{ __typename?: 'Proposal', id: string, proposers?: Array<{ __typename?: 'People', id: string, name?: string | null }> | null }> | null } | null };
 
 export type GetProposalYearsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetProposalYearsQuery = { __typename?: 'Query', budgetYears?: Array<{ __typename?: 'BudgetYear', id: string, year?: number | null }> | null };
+export type GetProposalYearsQuery = { __typename?: 'Query', budgetYears?: Array<{ __typename?: 'BudgetYear', id: string, year?: number | null, budgetProgress?: string | null, dataProgress?: string | null, unfreezeProgress?: string | null }> | null };
 
 export type GetPaginatedProposalsQueryVariables = Exact<{
   skip: Scalars['Int']['input'];
@@ -2404,7 +2409,7 @@ export type GetPaginatedProposalsQueryVariables = Exact<{
 }>;
 
 
-export type GetPaginatedProposalsQuery = { __typename?: 'Query', proposalsCount?: number | null, proposals?: Array<{ __typename?: 'Proposal', id: string, description?: string | null, reason?: string | null, result?: string | null, freezeAmount?: number | null, reductionAmount?: number | null, proposalTypes?: Array<ProposalProposalTypeType> | null, react_angry?: number | null, react_disappoint?: number | null, react_good?: number | null, react_whatever?: number | null, year?: { __typename?: 'BudgetYear', id: string, year?: number | null } | null, meetings?: Array<{ __typename?: 'Meeting', id: string, type?: string | null, committee?: Array<{ __typename?: 'Committee', displayName?: string | null, name?: string | null, endDate?: any | null, startDate?: any | null }> | null }> | null, government?: { __typename?: 'Government', id: string, name?: string | null } | null, budget?: { __typename?: 'Budget', id: string, budgetAmount?: number | null } | null, proposers?: Array<{ __typename?: 'People', id: string, name?: string | null }> | null }> | null };
+export type GetPaginatedProposalsQuery = { __typename?: 'Query', proposalsCount?: number | null, proposals?: Array<{ __typename?: 'Proposal', id: string, description?: string | null, unfreezeStatus?: string | null, reason?: string | null, result?: string | null, freezeAmount?: number | null, reductionAmount?: number | null, proposalTypes?: Array<ProposalProposalTypeType> | null, react_angry?: number | null, react_disappoint?: number | null, react_good?: number | null, react_whatever?: number | null, year?: { __typename?: 'BudgetYear', id: string, year?: number | null } | null, meetings?: Array<{ __typename?: 'Meeting', id: string, type?: string | null, committee?: Array<{ __typename?: 'Committee', displayName?: string | null, name?: string | null, endDate?: any | null, startDate?: any | null }> | null }> | null, government?: { __typename?: 'Government', id: string, name?: string | null } | null, budget?: { __typename?: 'Budget', id: string, budgetAmount?: number | null } | null, proposers?: Array<{ __typename?: 'People', id: string, name?: string | null }> | null }> | null };
 
 export type Update_Proposal_ReactsMutationVariables = Exact<{
   where: ProposalWhereUniqueInput;
@@ -2496,6 +2501,7 @@ export const GetLatestBudgetYearDocument = new TypedDocumentString(`
     year
     budgetProgress
     dataProgress
+    unfreezeProgress
   }
 }
     `) as unknown as TypedDocumentString<GetLatestBudgetYearQuery, GetLatestBudgetYearQueryVariables>;
@@ -2649,6 +2655,7 @@ export const GetProposalByIdDocument = new TypedDocumentString(`
     proposalTypes
     recognitionAnswer
     unfreezeStatus
+    unfreezeReport
     react_angry
     react_disappoint
     react_good
@@ -2713,6 +2720,21 @@ export const GetProposalByIdDocument = new TypedDocumentString(`
         startDate
       }
     }
+    unfreezeHistory {
+      id
+      displayName
+      meetingDate
+      description
+      location
+      meetingRecordUrl
+      type
+      committee {
+        displayName
+        name
+        endDate
+        startDate
+      }
+    }
     mergedProposals {
       id
       proposers {
@@ -2738,6 +2760,9 @@ export const GetProposalYearsDocument = new TypedDocumentString(`
   budgetYears(orderBy: [{year: desc}]) {
     id
     year
+    budgetProgress
+    dataProgress
+    unfreezeProgress
   }
 }
     `) as unknown as TypedDocumentString<GetProposalYearsQuery, GetProposalYearsQueryVariables>;
@@ -2750,6 +2775,7 @@ export const GetPaginatedProposalsDocument = new TypedDocumentString(`
       id
       year
     }
+    unfreezeStatus
     meetings {
       id
       type

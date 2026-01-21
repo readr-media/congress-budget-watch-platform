@@ -11,7 +11,7 @@ type ProgressBarProps = {
 
 const ProgressBar: React.FC<ProgressBarProps> = ({
   isFinished = true,
-  count = 6,
+  count,
   width = 165,
   height = 48,
   gap = 16,
@@ -19,13 +19,19 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
   labels = [],
   isDesktop = false,
 }) => {
+  const effectiveCount =
+    typeof count === "number"
+      ? count
+      : labels && labels.length > 0
+        ? labels.length
+        : 6;
   const progressBoxType = isFinished
     ? `${import.meta.env.BASE_URL}image/progress-box.svg`
     : `${import.meta.env.BASE_URL}image/not-finished-progress-box.svg`;
 
   const baseZIndex = 90;
 
-  const totalHeight = height + (height - gap) * (count - 1);
+  const totalHeight = height + (height - gap) * (effectiveCount - 1);
   if (isDesktop)
     return (
       <div className="text-sm">
@@ -66,7 +72,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
         alt="eye icon"
         className="absolute -top-[14px] -right-[38px] z-99"
       />
-      {Array.from({ length: count }, (_, index) => (
+      {Array.from({ length: effectiveCount }, (_, index) => (
         <div
           key={index}
           className="absolute"

@@ -24,6 +24,17 @@ import {
 } from "~/budget-detail/helpers";
 import type { BudgetTableData } from "~/components/budget-table";
 
+const UNFREEZE_STATUS_LABELS: Record<string, string> = {
+  not_reviewed: "尚未審議",
+  reviewing: "審議中",
+  unfrozen: "已解凍",
+};
+
+const getUnfreezeStatusLabel = (status?: string | null) => {
+  if (!status) return null;
+  return UNFREEZE_STATUS_LABELS[status] ?? status;
+};
+
 function formatLegislator(legislator: People | null): string {
   return legislator?.name || "";
 }
@@ -238,6 +249,8 @@ export function proposalToBudgetTableData(
     status: () => "committeed",
     committeedDate: () => undefined,
     totalReacts: calculateTotalReacts,
+    unfreezeStatusLabel: (p: ProposalInput) =>
+      getUnfreezeStatusLabel((p as Proposal).unfreezeStatus),
     react_angry: flow(prop("react_angry"), defaultTo(0)),
     react_disappoint: flow(prop("react_disappoint"), defaultTo(0)),
     react_good: flow(prop("react_good"), defaultTo(0)),

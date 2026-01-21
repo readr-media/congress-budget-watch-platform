@@ -60,6 +60,7 @@ export const GET_PROPOSAL_BY_ID_QUERY = graphql(`
       proposalTypes
       recognitionAnswer
       unfreezeStatus
+      unfreezeReport
       react_angry
       react_disappoint
       react_good
@@ -124,6 +125,21 @@ export const GET_PROPOSAL_BY_ID_QUERY = graphql(`
           startDate
         }
       }
+      unfreezeHistory {
+        id
+        displayName
+        meetingDate
+        description
+        location
+        meetingRecordUrl
+        type
+        committee {
+          displayName
+          name
+          endDate
+          startDate
+        }
+      }
       mergedProposals {
         id
         proposers {
@@ -150,6 +166,9 @@ export const GET_PROPOSAL_YEARS_QUERY = graphql(`
     budgetYears(orderBy: [{ year: desc }]) {
       id
       year
+      budgetProgress
+      dataProgress
+      unfreezeProgress
     }
   }
 `);
@@ -219,6 +238,7 @@ export const GET_PAGINATED_PROPOSALS_QUERY = graphql(`
         id
         year
       }
+      unfreezeStatus
       meetings {
         id
         type

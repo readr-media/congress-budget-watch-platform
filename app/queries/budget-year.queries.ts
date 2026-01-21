@@ -10,6 +10,7 @@ export const GET_LATEST_BUDGET_YEAR_QUERY = graphql(`
       year
       budgetProgress
       dataProgress
+      unfreezeProgress
     }
   }
 `);

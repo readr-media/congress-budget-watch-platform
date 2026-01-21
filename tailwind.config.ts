@@ -45,6 +45,15 @@ export default {
         3: "3px",
         12: "12px",
       },
+      keyframes: {
+        marquee: {
+          "0%": { transform: "translateX(100%)" },
+          "100%": { transform: "translateX(-100%)" },
+        },
+      },
+      animation: {
+        marquee: "marquee 15s linear infinite",
+      },
     },
   },
 } satisfies Config;

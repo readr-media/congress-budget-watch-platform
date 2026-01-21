@@ -21,6 +21,7 @@ type BudgetSelectorState = {
   departmentFilter: DepartmentFilter;
   peopleFilter: PeopleFilter;
   selectedYear: number | null;
+  freezeOnly: boolean;
 };
 
 type BudgetSelectorActions = {
@@ -35,6 +36,7 @@ type BudgetSelectorActions = {
   setPersonId: (id: string | null) => void;
   clearPeopleFilter: () => void;
   setSelectedYear: (year: number | null) => void;
+  setFreezeOnly: (value: boolean) => void;
 };
 
 type BudgetSelectorStore = {
@@ -53,6 +55,7 @@ const DEFAULT_STATE: BudgetSelectorState = {
   departmentFilter: { category: null, departmentId: null },
   peopleFilter: { personId: null },
   selectedYear: null,
+  freezeOnly: false,
 };
 
 const createInitialState = (
@@ -94,6 +97,7 @@ export const createBudgetSelectStore = (
         resetToDefault: () =>
           set((draft) => {
             draft.state.selectedValue = DEFAULT_STATE.selectedValue;
+            draft.state.freezeOnly = DEFAULT_STATE.freezeOnly;
           }),
         setDepartmentCategory: (category: string | null) =>
           set((draft) => {
@@ -120,6 +124,10 @@ export const createBudgetSelectStore = (
         setSelectedYear: (year: number | null) =>
           set((draft) => {
             draft.state.selectedYear = year;
+          }),
+        setFreezeOnly: (value: boolean) =>
+          set((draft) => {
+            draft.state.freezeOnly = value;
           }),
       },
     }))
@@ -155,6 +163,8 @@ export const useSearchedValue = () =>
 
 export const useSelectedYear = () =>
   useStore(defaultBudgetSelectStore, (s) => s.state.selectedYear);
+export const useFreezeOnly = () =>
+  useStore(defaultBudgetSelectStore, (s) => s.state.freezeOnly);
 
 // Action Hooks
 export const useSetSelectedSort = () =>
@@ -162,3 +172,5 @@ export const useSetSelectedSort = () =>
 
 export const useSetSelectedYear = () =>
   useStore(defaultBudgetSelectStore, (s) => s.actions.setSelectedYear);
+export const useSetFreezeOnly = () =>
+  useStore(defaultBudgetSelectStore, (s) => s.actions.setFreezeOnly);
