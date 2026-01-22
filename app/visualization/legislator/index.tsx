@@ -503,18 +503,18 @@ const VisualizationLegislator = () => {
             className="mt-1 md:mt-0"
           />
           <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2">
-            <VisualizationSelector
-              options={YEAR_OPTIONS}
-              value={selectedYearOption}
-              onChange={(option) => {
-                handleYearChange(option as SelectOption);
-              }}
-              aria-label="選擇年度"
-              inputId="visualization-legislator-year"
-              variant={isDesktop ? "budget-desktop" : undefined}
-              wrapperClassName={isDesktop ? "w-fit" : undefined}
-            />
-          </div>
+          <VisualizationSelector
+            options={YEAR_OPTIONS}
+            value={selectedYearOption}
+            onChange={(option) => {
+              handleYearChange(option as SelectOption);
+            }}
+            aria-label="選擇年度"
+            inputId="visualization-legislator-year"
+            variant={isDesktop ? "year-dropdown" : undefined}
+            wrapperClassName={isDesktop ? "w-[200px]" : undefined}
+          />
+        </div>
         </div>
         <ModeSelector mode={mode} onChange={setMode} />
         <SummaryPanel summary={summaryForPanel} />

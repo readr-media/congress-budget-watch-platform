@@ -52,8 +52,8 @@ export const DesktopControls = ({
           }}
           aria-label="選擇年度"
           inputId="visualization-year-desktop"
-          variant="budget-desktop"
-          wrapperClassName="w-fit"
+          variant="year-dropdown"
+          wrapperClassName="w-[200px]"
         />
       </div>
     </div>
