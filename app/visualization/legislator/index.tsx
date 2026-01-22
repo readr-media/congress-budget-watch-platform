@@ -511,8 +511,8 @@ const VisualizationLegislator = () => {
             }}
             aria-label="選擇年度"
             inputId="visualization-legislator-year"
-            variant={isDesktop ? "year-dropdown" : undefined}
-            wrapperClassName={isDesktop ? "w-[200px]" : undefined}
+            variant="year-dropdown"
+            wrapperClassName="w-[200px]"
           />
         </div>
         </div>

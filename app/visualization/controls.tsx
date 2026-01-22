@@ -1,4 +1,9 @@
-import Select, { type SingleValue } from "react-select";
+import Select, {
+  components,
+  type DropdownIndicatorProps,
+  type SingleValue,
+  type StylesConfig,
+} from "react-select";
 import { VisualizationSelector } from "~/components/visualization-selector";
 import { VisualizationTab, type SelectOption } from "~/types/visualization";
 
@@ -76,6 +81,112 @@ type MobileControlsProps = {
   onDepartmentChange: (option: SelectOption | null) => void;
 };
 
+const MobileDropdownIndicator = (
+  props: DropdownIndicatorProps<SelectOption, false>
+) => (
+  <components.DropdownIndicator {...props}>
+    <div className="flex items-center justify-center">
+      <div
+        className={`flex-none transition-transform duration-200 ${
+          props.selectProps.menuIsOpen ? "rotate-[180deg]" : ""
+        }`}
+      >
+        <div className="relative size-[12px]">
+          <div className="absolute top-[8.33%] right-[12.79%] bottom-1/4 left-[12.79%]">
+            <svg
+              className="block size-full"
+              fill="none"
+              preserveAspectRatio="none"
+              viewBox="0 0 8.93119 8"
+            >
+              <path d="M0.5 2.5L4.4656 6.5L8.4312 2.5H0.5Z" fill="black" />
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </components.DropdownIndicator>
+);
+
+const mobileSelectStyles: StylesConfig<SelectOption, false> = {
+  control: (base) => ({
+    ...base,
+    width: "172px",
+    minHeight: "28px",
+    height: "28px",
+    backgroundColor: "white",
+    border: "2px solid black",
+    borderRadius: "8px",
+    boxShadow: "none",
+    cursor: "pointer",
+    padding: "0 10px",
+    "&:hover": {
+      border: "2px solid black",
+    },
+  }),
+  valueContainer: (base) => ({
+    ...base,
+    padding: "0",
+    height: "28px",
+  }),
+  input: (base) => ({
+    ...base,
+    margin: "0",
+    padding: "0",
+  }),
+  indicatorSeparator: () => ({
+    display: "none",
+  }),
+  indicatorsContainer: (base) => ({
+    ...base,
+    height: "28px",
+  }),
+  dropdownIndicator: (base) => ({
+    ...base,
+    padding: "0",
+    paddingLeft: "10px",
+  }),
+  singleValue: (base) => ({
+    ...base,
+    fontSize: "16px",
+    fontFamily: "'Noto Sans T Chinese:Bold', sans-serif",
+    fontWeight: "bold",
+    color: "black",
+    margin: "0",
+  }),
+  menu: (base) => ({
+    ...base,
+    width: "172px",
+    marginTop: "4px",
+    borderRadius: "8px",
+    border: "2px solid black",
+    boxShadow: "none",
+    overflow: "hidden",
+    padding: "4px 0",
+  }),
+  menuList: (base) => ({
+    ...base,
+    padding: "0",
+    display: "flex",
+    flexDirection: "column",
+    gap: "8px",
+  }),
+  option: (base, state) => ({
+    ...base,
+    fontSize: "18px",
+    fontFamily: "'Noto Sans T Chinese:Medium', sans-serif",
+    fontWeight: "500",
+    textAlign: "center",
+    backgroundColor: "white",
+    color: state.isSelected ? "#3e51ff" : "black",
+    cursor: "pointer",
+    padding: "0",
+    "&:hover": {
+      backgroundColor: "#f5f5f5",
+    },
+  }),
+};
+
 export const MobileControls = ({
   activeTab,
   onTabChange,
@@ -136,13 +247,15 @@ export const MobileControls = ({
           }}
           aria-label="選擇年度"
           inputId="visualization-year-mobile"
+          variant="year-dropdown"
+          wrapperClassName="w-[200px]"
         />
       </div>
       {!isShowingAll &&
         activeTab === "legislator" &&
         (legislatorOptions.length > 0 ? (
           <Select
-            className="w-full"
+            className="flex w-full items-center justify-center"
             value={selectedLegislator}
             options={legislatorOptions}
             onChange={(option) => {
@@ -153,6 +266,8 @@ export const MobileControls = ({
             isSearchable
             aria-label="選擇立委"
             inputId="visualization-legislator"
+            styles={mobileSelectStyles}
+            components={{ DropdownIndicator: MobileDropdownIndicator }}
           />
         ) : (
           <p className="text-center text-sm text-gray-500">目前沒有立委資料</p>
@@ -161,7 +276,7 @@ export const MobileControls = ({
         activeTab === "department" &&
         (departmentOptions.length > 0 ? (
           <Select
-            className="w-full"
+            className="flex w-full items-center justify-center"
             value={selectedDepartment}
             options={departmentOptions}
             onChange={(option) => {
@@ -172,6 +287,8 @@ export const MobileControls = ({
             isSearchable
             aria-label="選擇部會"
             inputId="visualization-department"
+            styles={mobileSelectStyles}
+            components={{ DropdownIndicator: MobileDropdownIndicator }}
           />
         ) : (
           <p className="text-center text-sm text-gray-500">目前沒有部會資料</p>
