@@ -40,7 +40,7 @@ const DataProgressNotice = () => {
           </p>
         </div>
       </div>
-      <div className="md:hidden marquee-container bg-budget-accent py-[6px]">
+      <div className="md:hidden max-w-screen marquee-container bg-budget-accent py-[6px]">
         <p className="animate-marquee px-[10px] text-[14px] font-normal text-black">
           {IN_PROGRESS_MESSAGE}
         </p>
