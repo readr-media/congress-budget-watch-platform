@@ -10,14 +10,16 @@ type UseFetchLegislatorBudgetProps = {
   selectedLegislatorOption: SelectOption | null;
   activeTab: VisualizationTab;
   isShowingAll: boolean;
+  year: number;
 };
 
 const useFetchLegislatorBudget = ({
   selectedLegislatorOption,
   activeTab,
   isShowingAll,
+  year,
 }: UseFetchLegislatorBudgetProps) => {
-  const legislatorBudgetQueryKey = ["budget", "legislators"];
+  const legislatorBudgetQueryKey = ["budget", "legislators", year];
   const fetchLegislatorBudget = async () => {
     const response = await fetch(BUDGET_BY_LEGISLATOR_URL);
     if (!response.ok) {
@@ -40,7 +42,9 @@ const useFetchLegislatorBudget = ({
     enabled: activeTab === "legislator",
   });
   const legislatorSummary = useMemo<SummaryPanelSummary>(() => {
-    const record = legislatorBudgetSummaryData?.[0];
+    const record = legislatorBudgetSummaryData?.find(
+      (entry) => entry.yearInfo.year === year
+    );
     const overall = record?.overall;
 
     const buildSummary = (source?: typeof overall): SummaryPanelSummary => {
@@ -81,6 +85,7 @@ const useFetchLegislatorBudget = ({
     isShowingAll,
     legislatorBudgetSummaryData,
     selectedLegislatorOption,
+    year,
   ]);
   return {
     legislatorBudgetSummaryData,

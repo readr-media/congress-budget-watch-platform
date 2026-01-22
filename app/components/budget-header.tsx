@@ -7,15 +7,7 @@ import Image from "./image";
 import { useOnClickOutside, useToggle } from "usehooks-ts";
 import { execute } from "~/graphql/execute";
 import { GET_BUDGET_YEARS_LIST_QUERY, budgetYearQueryKeys } from "~/queries";
-
-const getLatestBudgetYearValue = (
-  budgetYears?: Array<{ year?: number | null } | null> | null
-) => {
-  const years = (budgetYears ?? [])
-    .map((entry) => entry?.year)
-    .filter((year): year is number => typeof year === "number");
-  return years.length ? years[0] : null;
-};
+import { getLatestBudgetYearValue } from "~/utils/budget";
 
 const BudgetHeader = () => {
   const [isMounted, setIsMounted] = useState(false);

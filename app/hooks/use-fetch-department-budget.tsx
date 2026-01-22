@@ -8,9 +8,11 @@ import { formatAmountWithUnit } from "~/visualization/helpers";
 
 type UseFetchDepartmentBudgetProps = {
   activeTab: VisualizationTab;
+  year: number;
 };
 const useFetchDepartmentBudget = ({
   activeTab,
+  year,
 }: UseFetchDepartmentBudgetProps) => {
   const fetchDepartmentBudget = async () => {
     const response = await fetch(BUDGET_BY_DEPARTMENT_URL);
@@ -24,7 +26,7 @@ const useFetchDepartmentBudget = ({
     }
     return result.data;
   };
-  const departmentBudgetQueryKey = ["budget", "departments"];
+  const departmentBudgetQueryKey = ["budget", "departments", year];
   const {
     data: departmentBudgetSummaryData,
     isLoading: isDepartmentBudgetLoading,
@@ -36,7 +38,10 @@ const useFetchDepartmentBudget = ({
   });
 
   const departmentSummary = useMemo<SummaryPanelSummary>(() => {
-    const overall = departmentBudgetSummaryData?.[0]?.overall;
+    const record = departmentBudgetSummaryData?.find(
+      (entry) => entry.yearInfo.year === year
+    );
+    const overall = record?.overall;
     const reductionAmount = overall?.reductionAmount ?? 0;
     const freezeAmount = overall?.freezeAmount ?? 0;
     return {
@@ -46,7 +51,7 @@ const useFetchDepartmentBudget = ({
       freezeCount: overall?.freezeCount ?? 0,
       mainResolutionCount: overall?.otherCount ?? 0,
     };
-  }, [departmentBudgetSummaryData]);
+  }, [departmentBudgetSummaryData, year]);
 
   return {
     departmentBudgetSummaryData,

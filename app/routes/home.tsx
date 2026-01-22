@@ -4,7 +4,6 @@ import { useQuery } from "@tanstack/react-query";
 import Image from "~/components/image";
 import { execute } from "~/graphql/execute";
 import {
-  GET_BUDGET_YEARS_LIST_QUERY,
   GET_LATEST_BUDGET_YEAR_QUERY,
   budgetYearQueryKeys,
 } from "~/queries";
@@ -104,15 +103,6 @@ type NavigationButton = {
   isExternal?: boolean;
 };
 
-const getLatestBudgetYearValue = (
-  budgetYears?: Array<{ year?: number | null } | null> | null
-) => {
-  const years = (budgetYears ?? [])
-    .map((entry) => entry?.year)
-    .filter((year): year is number => typeof year === "number");
-  return years.length ? years[0] : null;
-};
-
 export default function Home() {
   const {
     data: budgetYearData,
@@ -123,20 +113,12 @@ export default function Home() {
     queryFn: () =>
       execute(GET_LATEST_BUDGET_YEAR_QUERY, {
         skip: 0,
-        take: 10, // Fetch more to find 114 for testing
+        take: 1,
       }),
   });
 
-  const { data: budgetYearsData } = useQuery({
-    queryKey: budgetYearQueryKeys.years(),
-    queryFn: () => execute(GET_BUDGET_YEARS_LIST_QUERY),
-    staleTime: 5 * 60 * 1000,
-  });
-
   const latestBudgetYear = budgetYearData?.budgetYears?.[0] ?? null;
-  const latestBudgetYearValue = getLatestBudgetYearValue(
-    budgetYearsData?.budgetYears ?? null
-  );
+  const latestBudgetYearValue = latestBudgetYear?.year ?? null;
   const latestBudgetLink = latestBudgetYearValue
     ? `/all-budgets?year=${latestBudgetYearValue}`
     : "/all-budgets";

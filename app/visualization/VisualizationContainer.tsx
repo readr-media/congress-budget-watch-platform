@@ -49,6 +49,8 @@ const VisualizationContainer = ({
     legislatorVisualizationData,
     selectedDepartmentCategorizedData,
   } = useVisualizationState();
+  const selectedYearValue = Number.parseInt(selectedYear.value, 10);
+  const resolvedYear = Number.isNaN(selectedYearValue) ? 0 : selectedYearValue;
 
   const {
     legislatorSummary,
@@ -58,6 +60,7 @@ const VisualizationContainer = ({
     selectedLegislatorOption,
     activeTab,
     isShowingAll,
+    year: resolvedYear,
   });
   const {
     departmentSummary,
@@ -65,6 +68,7 @@ const VisualizationContainer = ({
     isDepartmentBudgetError,
   } = useFetchDepartmentBudget({
     activeTab,
+    year: resolvedYear,
   });
 
   const legislatorPadding = useMemo<CirclePackPadding | undefined>(() => {

@@ -37,6 +37,8 @@ import {
 } from "~/types/budget-by-legislator.schema";
 import VisualizationLegislatorSkeleton from "~/components/skeleton/visualization-legislator-skeleton";
 import { useMediaQuery } from "usehooks-ts";
+import { VisualizationSelector } from "~/components/visualization-selector";
+import type { SelectOption } from "~/types/visualization";
 
 type ProposalKind = "proposal" | "proposal-cosign";
 type VisualizationModeType = "amount" | "count";
@@ -250,6 +252,7 @@ const LegislatorHeader = ({
 type TypeToggleProps = {
   selectedType: ProposalKind;
   onChange: (type: ProposalKind) => void;
+  className?: string;
 };
 
 type ModeSelectorProps = {
@@ -257,8 +260,12 @@ type ModeSelectorProps = {
   onChange: (mode: VisualizationModeType) => void;
 };
 
-const ProposalTypeToggle = ({ selectedType, onChange }: TypeToggleProps) => (
-  <div className="mt-6 flex items-center gap-x-4">
+const ProposalTypeToggle = ({
+  selectedType,
+  onChange,
+  className,
+}: TypeToggleProps) => (
+  <div className={`flex items-center gap-x-4 ${className ?? ""}`.trim()}>
     <button
       className={`rounded border-2 border-black px-2.5 ${
         selectedType === "proposal" ? "bg-brand-primary text-white" : ""
@@ -309,7 +316,7 @@ const ModeSelector = ({ mode, onChange }: ModeSelectorProps) => (
 
 const VisualizationLegislator = () => {
   const { id: proposerId } = useParams();
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [selectedType, setSelectedType] = useState<ProposalKind>("proposal");
   const [mode, setMode] = useState<VisualizationModeType>("amount");
   const selectedYearValue = useMemo(() => {
@@ -322,6 +329,21 @@ const VisualizationLegislator = () => {
     const fallback = defaultYear ? parseInt(defaultYear, 10) : 0;
     return Number.isNaN(fallback) ? 0 : fallback;
   }, [searchParams]);
+  const selectedYearOption = useMemo<SelectOption | null>(() => {
+    if (!YEAR_OPTIONS.length) return null;
+    return (
+      YEAR_OPTIONS.find(
+        (option) => option.value === String(selectedYearValue)
+      ) ?? YEAR_OPTIONS[0]
+    );
+  }, [selectedYearValue]);
+  const handleYearChange = useCallback(
+    (option: SelectOption | null) => {
+      if (!option) return;
+      setSearchParams({ year: option.value });
+    },
+    [setSearchParams]
+  );
 
   const whereFilter = useMemo(
     () => buildWhereFilter(selectedType, proposerId, selectedYearValue),
@@ -376,7 +398,7 @@ const VisualizationLegislator = () => {
   const summary = useMemo(() => computeSummaryStats(proposals), [proposals]);
 
   const { data: legislatorBudgetSummaryData } = useQuery({
-    queryKey: ["budget", "legislators", proposerId ?? "all"],
+    queryKey: ["budget", "legislators", proposerId ?? "all", selectedYearValue],
     queryFn: async (): Promise<BudgetByLegislatorPayload> => {
       const response = await fetch(BUDGET_BY_LEGISLATOR_URL);
       if (!response.ok) {
@@ -394,21 +416,24 @@ const VisualizationLegislator = () => {
 
   const budgetSummaryForPanel = useMemo<SummaryPanelSummary | undefined>(() => {
     if (!legislatorBudgetSummaryData) return undefined;
-    const record = legislatorBudgetSummaryData[0];
+    const record = legislatorBudgetSummaryData.find(
+      (entry) => entry.yearInfo.year === selectedYearValue
+    );
     if (!record) return undefined;
 
     const legislatorEntry =
-      record.legislators?.find((legislator) => legislator.peopleId === proposerId) ??
-      record.legislators?.[0];
+      record.legislators?.find(
+        (legislator) => legislator.peopleId === proposerId
+      ) ?? record.legislators?.[0];
 
     const summarySource =
       selectedType === "proposal-cosign"
-        ? legislatorEntry?.allInvolved ??
+        ? (legislatorEntry?.allInvolved ??
           legislatorEntry?.proposerOnly ??
-          record.overall
-        : legislatorEntry?.proposerOnly ??
+          record.overall)
+        : (legislatorEntry?.proposerOnly ??
           legislatorEntry?.allInvolved ??
-          record.overall;
+          record.overall);
 
     if (!summarySource) return undefined;
 
@@ -422,7 +447,12 @@ const VisualizationLegislator = () => {
       freezeCount: summarySource.freezeCount ?? 0,
       mainResolutionCount: summarySource.otherCount ?? 0,
     };
-  }, [legislatorBudgetSummaryData, proposerId, selectedType]);
+  }, [
+    legislatorBudgetSummaryData,
+    proposerId,
+    selectedType,
+    selectedYearValue,
+  ]);
 
   const summaryForPanel = useMemo<SummaryPanelSummary>(
     () =>
@@ -466,10 +496,26 @@ const VisualizationLegislator = () => {
           partyName={person?.party?.name}
           termNumbers={termNumbers}
         />
-        <ProposalTypeToggle
-          selectedType={selectedType}
-          onChange={setSelectedType}
-        />
+        <div className="mt-4 flex flex-col items-center gap-3 md:flex-row md:gap-4">
+          <ProposalTypeToggle
+            selectedType={selectedType}
+            onChange={setSelectedType}
+            className="mt-1 md:mt-0"
+          />
+          <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2">
+            <VisualizationSelector
+              options={YEAR_OPTIONS}
+              value={selectedYearOption}
+              onChange={(option) => {
+                handleYearChange(option as SelectOption);
+              }}
+              aria-label="選擇年度"
+              inputId="visualization-legislator-year"
+              variant={isDesktop ? "budget-desktop" : undefined}
+              wrapperClassName={isDesktop ? "w-fit" : undefined}
+            />
+          </div>
+        </div>
         <ModeSelector mode={mode} onChange={setMode} />
         <SummaryPanel summary={summaryForPanel} />
         <div className="mt-6">
