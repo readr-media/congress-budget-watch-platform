@@ -38,7 +38,7 @@ const TooltipIcon = ({
           <Image src="/icon/icon-explain.svg" alt="說明" className="h-4 w-4" />
         </span>
       </TooltipTrigger>
-      <TooltipContent className="bg-black text-white max-w-40 break-words">
+      <TooltipContent className="max-w-40 bg-black break-words text-white">
         {tooltipContentMap[tooltipContentType]}
       </TooltipContent>
     </Tooltip>
@@ -46,7 +46,7 @@ const TooltipIcon = ({
 };
 
 const SummaryPanel = ({ summary }: SummaryPanelProps) => (
-  <div className="mt-4 flex flex-col items-center justify-center rounded-lg border-2 p-2.5">
+  <div className="mx-auto mt-4 flex max-w-lg flex-col items-center justify-center rounded-lg border-2 p-2.5">
     <p>
       總共刪減
       <span className="text-brand-accent">

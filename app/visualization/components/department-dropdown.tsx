@@ -1,4 +1,6 @@
-import Select, { type SingleValue } from "react-select";
+import { useMemo } from "react";
+import Select, { type SingleValue, type StylesConfig } from "react-select";
+import { useMediaQuery } from "usehooks-ts";
 import type { SelectOption } from "~/types/visualization";
 
 type DepartmentDropdownProps = {
@@ -12,6 +14,63 @@ const DepartmentDropdown = ({
   selectedDepartmentOption,
   onDepartmentChange,
 }: DepartmentDropdownProps) => {
+  const isDesktop = useMediaQuery("(min-width: 768px)");
+  const styles = useMemo<StylesConfig<SelectOption, false>>(
+    () => ({
+      container: (base) => ({
+        ...base,
+        width: "100%",
+      }),
+      control: (base) => ({
+        ...base,
+        backgroundColor: "#fff",
+        borderColor: "#000",
+        borderRadius: 4,
+        borderWidth: 0.5,
+        boxShadow: "none",
+        minHeight: 20,
+        height: 20,
+        ":hover": {
+          borderColor: "#000",
+        },
+      }),
+      valueContainer: (base) => ({
+        ...base,
+        padding: "0 12px",
+      }),
+      singleValue: (base) => ({
+        ...base,
+        fontSize: 15,
+        fontWeight: 500,
+        textAlign: "center",
+        width: "100%",
+      }),
+      placeholder: (base) => ({
+        ...base,
+        fontSize: 15,
+        fontWeight: 500,
+        textAlign: "center",
+        width: "100%",
+      }),
+      indicatorSeparator: () => ({
+        display: "none",
+      }),
+      dropdownIndicator: (base) => ({
+        ...base,
+        color: "#000",
+        padding: "0 8px 0 0",
+        ":hover": {
+          color: "#000",
+        },
+      }),
+      menu: (base) => ({
+        ...base,
+        zIndex: 20,
+      }),
+    }),
+    []
+  );
+
   if (departmentOptions.length === 0)
     return (
       <div className="mt-4 flex w-full justify-center">
@@ -33,6 +92,7 @@ const DepartmentDropdown = ({
         isSearchable
         aria-label="選擇部會"
         inputId="visualization-department-desktop"
+        styles={isDesktop ? styles : undefined}
       />
     </div>
   );
