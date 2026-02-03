@@ -48,9 +48,14 @@ import {
   getUnfreezeProgressDisplay,
 } from "~/utils/unfreeze-progress";
 import {
+  UNFREEZE_PROGRESS_ORDER,
+  type UnfreezeProgressStage,
+} from "~/constants/unfreeze-progress";
+import {
   calculateProgressPercentage,
   formatProgressText,
   getProgressStageLabel,
+  getStageMeta,
 } from "~/utils/progress";
 import type { BudgetProgressStage } from "~/types/progress";
 
@@ -194,6 +199,9 @@ export const AllBudgets = () => {
       resolvedYear ?? null,
       resolvedEntry?.dataProgress ?? null
     );
+    const stageMeta = getStageMeta(
+      resolvedEntry?.budgetProgress as BudgetProgressStage | null | undefined
+    );
     const percentage = calculateProgressPercentage(
       resolvedEntry?.budgetProgress as BudgetProgressStage | null | undefined
     );
@@ -206,6 +214,7 @@ export const AllBudgets = () => {
       description,
       percentage,
       stageLabel,
+      completedCount: stageMeta.isValid ? stageMeta.index + 1 : 0,
     };
   }, [
     resolvedYear,
@@ -218,12 +227,22 @@ export const AllBudgets = () => {
       resolvedYear ?? null,
       resolvedEntry?.unfreezeProgress ?? null
     );
+    const resolvedStage = resolvedEntry?.unfreezeProgress as
+      | UnfreezeProgressStage
+      | null
+      | undefined;
+    const stageIndex =
+      display.isValid && resolvedStage
+        ? UNFREEZE_PROGRESS_ORDER.indexOf(resolvedStage)
+        : -1;
+    const completedCount = stageIndex >= 0 ? stageIndex + 1 : 0;
 
     return {
       labels: DEFAULT_UNFREEZE_LABELS,
       description: display.text,
       percentage: display.percentage,
       stageLabel: display.label,
+      completedCount,
     };
   }, [resolvedYear, resolvedEntry?.unfreezeProgress]);
 

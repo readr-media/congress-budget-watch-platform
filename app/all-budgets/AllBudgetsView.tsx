@@ -22,6 +22,7 @@ export type ProgressDisplayData = {
   description: string;
   percentage: number;
   stageLabel?: string;
+  completedCount?: number;
 };
 
 const customSelectStyles: StylesConfig<YearOption> = {
@@ -190,6 +191,8 @@ const AllBudgetsView = ({
             isDesktop={isDesktop}
             className="w-[165px]"
             labels={progressData.labels}
+            completedCount={progressData.completedCount}
+            variant={progressMode}
           />
           <div className="flex flex-col items-start text-sm text-gray-800">
             <p className="text-brand-primary font-medium">
@@ -248,6 +251,8 @@ const AllBudgetsView = ({
                 <ProgressBar
                   className="w-[165px]"
                   labels={progressData.labels}
+                  completedCount={progressData.completedCount}
+                  variant={progressMode}
                 />
               </div>
               <div className="flex w-full justify-center">
