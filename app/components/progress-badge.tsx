@@ -43,7 +43,7 @@ function ProgressBadge({
 
   return (
     <div
-      className="flex h-[35px] w-full max-w-[449px] items-center gap-0"
+      className="flex h-[35px] w-full items-center gap-0"
       role="status"
       aria-live="polite"
     >
