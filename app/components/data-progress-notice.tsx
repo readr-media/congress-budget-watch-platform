@@ -32,15 +32,15 @@ const DataProgressNotice = () => {
   }
 
   return (
-    <div className="w-full">
-      <div className="md:flex hidden justify-center">
-        <div className="bg-budget-accent w-[488px] rounded-[11px] px-[27px] py-[16px]">
-          <p className="text-[14px] font-medium text-black text-center">
+    <div className="w-full pt-9">
+      <div className="hidden justify-center md:flex">
+        <div className="bg-budget-accent w-[488px] rounded-[11px] px-5 py-4">
+          <p className="text-center text-[14px] font-medium text-black">
             {IN_PROGRESS_MESSAGE}
           </p>
         </div>
       </div>
-      <div className="md:hidden max-w-screen marquee-container bg-budget-accent py-[6px]">
+      <div className="marquee-container bg-budget-accent max-w-screen py-[6px] md:hidden">
         <p className="animate-marquee px-[10px] text-[14px] font-normal text-black">
           {IN_PROGRESS_MESSAGE}
         </p>
