@@ -1,62 +1,60 @@
-## 專案架構
+## Project Structure
 
-### 目錄結構概覽
+### Directory Overview
 
-以下是 `app/` 目錄的主要結構：
+Main structure under `app/`:
 
 ```
 app/
-├── all-budgets/       # 總預算案列表頁面
-├── budget-detail/     # 單一預算案詳細頁面
-├── components/        # 可重用的 React 元件
-├── constants/         # 應用程式的全域常數
-├── graphql/           # GraphQL 客戶端與程式碼生成
-├── hooks/             # 自定義 React Hooks
-├── queries/           # GraphQL 查詢語句
-├── routes/            # 頁面級元件與路由定義
-├── stores/            # Zustand 狀態管理
-├── utils/             # 共用的輔助函式
-└── visualization/     # 資料視覺化元件
+├── all-budgets/       # Budget list page
+├── budget-detail/     # Single budget detail page
+├── components/        # Reusable React components
+├── constants/         # Global application constants
+├── graphql/           # GraphQL client and codegen output
+├── hooks/             # Custom React hooks
+├── queries/           # Hand-written GraphQL operations
+├── routes/            # Page-level components and route definitions
+├── stores/            # Zustand state
+├── utils/             # Shared helpers
+└── visualization/     # Data visualization components
 ```
 
-### 核心概念
+### Core Concepts
 
-1.  **路由中心化 (`routes/`)**
-    - 所有頁面級的元件都存放在 `routes/` 中，例如 `home.tsx`。
-    - 每個路由對應一個檔案，負責組織該頁面所需的元件與資料。
+1. **Centralized Routes (`routes/`)**
+   - All page-level components live in `routes/`, such as `home.tsx`.
+   - Each route is mapped to a file that composes the page UI and data.
 
-2.  **元件化 (`components/`)**
-    - 我們遵循「原子化設計」原則，將 UI 拆分為小而可重用的元件。
-    - 複雜元件（如 `timeline`）或特定用途的元件（如 `skeleton`）會建立自己的子目錄。
+2. **Componentization (`components/`)**
+   - Follow an "atomic" approach: small, reusable UI components.
+   - Complex or specialized components (like `timeline` or `skeleton`) can have their own subdirectories.
 
-3.  **資料驅動 (`graphql/`, `queries/`)**
-    - 本專案使用 GraphQL 進行資料通訊。
-    - `graphql/` 目錄包含由 `graphql-codegen` 自動生成的型別與客戶端設定。
-    - `queries/` 目錄存放所有手動編寫的 GraphQL 查詢、變更與片段，方便管理與重用。
+3. **Data Layer (`graphql/`, `queries/`)**
+   - The project uses GraphQL for data access.
+   - `graphql/` contains `graphql-codegen` output (types and client helpers).
+   - `queries/` contains hand-authored queries, mutations, and fragments for reuse.
 
-4.  **狀態管理 (`stores/`)**
-    - 請參閱下方的「狀態管理 (Zustand)」章節。
+4. **State Management (`stores/`)**
+   - See the "State Management (Zustand)" section below.
 
 ---
 
-## 狀態管理 (Zustand)
+## State Management (Zustand)
 
-本專案使用 [Zustand](https://github.com/pmndrs/zustand) 作為跨元件/全域狀態管理的解決方案。
+This project uses [Zustand](https://github.com/pmndrs/zustand) for shared/global state.
 
-### 核心原則
+### Principles
 
-我們遵循以下原則來確保狀態管理的一致性與可維護性：
+1. **Keep Stores Focused**: Each store owns a single domain (for example, `paginationStore` only manages pagination). Avoid a single, massive store.
+2. **Separate Actions and State**: Keep state and action functions separate inside the store for clarity and performance.
+3. **Export Selector Hooks Only**: Do not export the store instance directly. Export selector hooks (for example, `usePagination()`) to avoid unnecessary re-renders.
 
-1.  **保持 Store 專注**：每個 store 只負責一塊特定的業務領域（例如 `paginationStore` 只管理分頁狀態）。避免建立一個龐大的單一 store。
-2.  **分離 Actions 與 State**：在 store 內部，將更新狀態的函式（actions）與狀態本身（state）分開，以優化效能並提升程式碼清晰度。
-3.  **只導出 Selector Hooks**：永遠不要直接導出整個 store 實例。應該為 store 中的每個 state 片段建立並導出專屬的 selector hook（例如 `usePagination()`），以避免不必要的重新渲染。
+### Example
 
-### 範例
-
-以 `paginationStore.ts` 為例：
+Using `paginationStore.ts`:
 
 ```typescript
-// store 內部結構
+// Store structure
 const usePaginationStore = create((set) => ({
   page: 1,
   actions: {
@@ -64,54 +62,54 @@ const usePaginationStore = create((set) => ({
   },
 }));
 
-// 導出 selector hooks
+// Export selector hooks
 export const usePage = () => usePaginationStore((state) => state.page);
 export const usePaginationActions = () =>
   usePaginationStore((state) => state.actions);
 ```
 
-### 何時使用 Zustand？
+### When to Use Zustand
 
-- 當多個無直接父子關係的元件需要共享狀態時。
-- 當需要跨頁面持久化某些狀態時。
-- 對於僅在單一元件或其子元件中使用的狀態，優先使用 React 內建的 `useState` 或 `useReducer`。
+- When multiple components without a direct parent-child relationship need shared state.
+- When state should persist across pages.
+- For local state used by a single component subtree, prefer React `useState` or `useReducer`.
 
 ---
 
-## 其他重要部分
+## Other Important Areas
 
-### 視覺化 (`visualization/`)
+### Visualization (`visualization/`)
 
-- 此目錄包含所有與 D3.js 或其他圖表庫相關的複雜視覺化元件，例如 `circle-pack-chart.tsx`。
-- 目標是將視覺化邏輯與業務邏輯分離，使其成為可獨立運作的單元。
+- Contains D3.js and other complex visualization components (for example, `circle-pack-chart.tsx`).
+- Goal: keep visualization logic separate from business logic so it can be self-contained.
 
-### 常數管理 (`constants/`)
+### Constants (`constants/`)
 
-- `config.ts`: 環境變數與應用程式級別的設定。
-- `endpoints.ts`: 所有 API 的端點路徑。
-- `legends.ts`: 圖表中使用的圖例定義。
+- `config.ts`: environment variables and app-level settings.
+- `endpoints.ts`: API endpoints.
+- `legends.ts`: chart legend definitions.
 
-### React Query 快取設定
+### React Query Cache Defaults
 
-- 全域預設值在 `app/root.tsx`。
-- `staleTime`: 60 秒
-- `gcTime`: 10 分鐘
+- Global defaults live in `app/root.tsx`.
+- `staleTime`: 60 seconds
+- `gcTime`: 10 minutes
 - `refetchOnWindowFocus`: `false`
 - `retry`: 1
 
-## 已知限制
+## Known Limitations
 
-- `/all-budgets` 的「解凍」篩選暫時以 `freezeAmount > 0` 來近似判斷凍結提案。因 GraphQL schema 尚未提供針對 `proposalTypes` 的 list filter，凍結金額為 0 或尚未設定金額的 freeze 類型提案目前不會出現在篩選結果中。待後端支援後，會改為依 `proposalTypes` 直接比對。
+- The `/all-budgets` "unfreeze" filter currently approximates by `freezeAmount > 0`. The GraphQL schema does not yet support list filtering on `proposalTypes`, so freeze-type proposals with `freezeAmount = 0` or unset are not included. This should switch to `proposalTypes` once the backend supports it.
 
-## 深色模式設定
+## Dark Mode
 
-### 目前狀態：深色模式已暫停
+### Current Status: Paused
 
-深色模式功能目前已被暫停，只使用淺色模式。
+Dark mode is currently disabled. Only light mode is used.
 
-### 如何重新啟用深色模式
+### Re-enabling Dark Mode
 
-如需重新啟用深色模式功能，請在 `app/app.css` 中進行以下修改：
+To re-enable, edit `app/app.css`:
 
 ```css
 html,
@@ -124,13 +122,13 @@ body {
 }
 ```
 
-### 修改記錄
+### Change Log
 
-- **暫停日期**：2025年1月
-- **修改檔案**：`app/app.css`
-- **修改內容**：
-  - 移除 `dark:bg-gray-950` 深色背景類別
-  - 移除 `@media (prefers-color-scheme: dark)` 媒體查詢
-  - 保留基本的 `@apply bg-background` 設定
+- **Paused on**: January 2025
+- **File**: `app/app.css`
+- **Changes**:
+  - Removed `dark:bg-gray-950`
+  - Removed `@media (prefers-color-scheme: dark)`
+  - Kept base `@apply bg-background`
 
 ---
