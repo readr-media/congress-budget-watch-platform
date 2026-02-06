@@ -30,7 +30,7 @@ jobs:
       - name: Install deps
         run: pnpm install
       - name: Build
-        run: pnpm build -- --mode "$BUILD_MODE"
+        run: pnpm build 
       - name: Copy fallback
         run: cp build/client/index.html build/client/404.html
       - name: Write custom domain file
