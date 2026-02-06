@@ -13,11 +13,11 @@ jobs:
           if [ "${GITHUB_REPOSITORY}" = "Citizen-Congress-Watch/congress-budget-watch-platform" ]; then
             echo "REACT_ROUTER_BASENAME=/" >> "$GITHUB_ENV"
             echo "CUSTOM_DOMAIN=watchmoney.ccw.org.tw" >> "$GITHUB_ENV"
-            echo "BUILD_MODE=production" >> "$GITHUB_ENV"
+            echo "VITE_GQL_ENDPOINT=https://ly-budget-gql-prod-702918025200.asia-east1.run.app/api/graphql" >> "$GITHUB_ENV"
           else
             echo "REACT_ROUTER_BASENAME=/congress-budget-watch-platform/" >> "$GITHUB_ENV"
             echo "CUSTOM_DOMAIN=" >> "$GITHUB_ENV"
-            echo "BUILD_MODE=development" >> "$GITHUB_ENV"
+            echo "VITE_GQL_ENDPOINT=https://ly-budget-gql-dev-702918025200.asia-east1.run.app/api/graphql" >> "$GITHUB_ENV"
           fi
       - name: Setup Node.js
         uses: actions/setup-node@v4
