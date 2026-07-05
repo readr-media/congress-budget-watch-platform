@@ -477,10 +477,10 @@ const BudgetsSelector: React.FC<BudgetsSelectorProps> = ({
               )}
             </div>
           ))}
-          <section className="flex flex-col items-center gap-y-2 md:flex-row md:justify-center md:gap-x-2">
+          <section className="md:flex md:items-center">
             <label
               htmlFor="budget-result-selector"
-              className="text-sm font-medium text-gray-700"
+              className="mr-2 md:w-20 md:text-right"
             >
               審議結果：
             </label>
@@ -493,12 +493,24 @@ const BudgetsSelector: React.FC<BudgetsSelectorProps> = ({
               }}
               options={proposalResultFilterOptions}
               components={{ DropdownIndicator }}
-              className="w-full md:w-60"
+              className="w-full md:w-80"
               styles={{
-                control: (styles) => ({ ...styles, border: "2px solid black" }),
+                control: (styles) => ({
+                  ...styles,
+                  minHeight: "28px",
+                  border: "2px solid black",
+                  borderRadius: "2px",
+                  backgroundColor: "white",
+                  boxShadow: "none",
+                }),
                 indicatorSeparator: (styles) => ({
                   ...styles,
                   display: "none",
+                }),
+                valueContainer: (styles) => ({
+                  ...styles,
+                  paddingTop: 0,
+                  paddingBottom: 0,
                 }),
               }}
               placeholder="全部審議結果"
@@ -507,7 +519,10 @@ const BudgetsSelector: React.FC<BudgetsSelectorProps> = ({
             />
           </section>
           <section className="md:flex md:items-center">
-            <label htmlFor="budget-search-input" className="mr-2">
+            <label
+              htmlFor="budget-search-input"
+              className="mr-2 md:w-20 md:text-right"
+            >
               或搜尋：
             </label>
             <input
