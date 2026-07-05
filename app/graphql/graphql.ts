@@ -2367,6 +2367,13 @@ export type GetGovernmentsQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetGovernmentsQuery = { __typename?: 'Query', governments?: Array<{ __typename?: 'Government', id: string, name?: string | null, category?: string | null, description?: string | null }> | null };
 
+export type GetProposalGovernmentsQueryVariables = Exact<{
+  where: ProposalWhereInput;
+}>;
+
+
+export type GetProposalGovernmentsQuery = { __typename?: 'Query', proposals?: Array<{ __typename?: 'Proposal', government?: { __typename?: 'Government', id: string, name?: string | null, category?: string | null, description?: string | null } | null }> | null };
+
 export type GetPeopleListQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -2545,6 +2552,18 @@ export const GetGovernmentsDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<GetGovernmentsQuery, GetGovernmentsQueryVariables>;
+export const GetProposalGovernmentsDocument = new TypedDocumentString(`
+    query GetProposalGovernments($where: ProposalWhereInput!) {
+  proposals(where: $where) {
+    government {
+      id
+      name
+      category
+      description
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<GetProposalGovernmentsQuery, GetProposalGovernmentsQueryVariables>;
 export const GetPeopleListDocument = new TypedDocumentString(`
     query GetPeopleList {
   peopleList(orderBy: [{name: asc}]) {

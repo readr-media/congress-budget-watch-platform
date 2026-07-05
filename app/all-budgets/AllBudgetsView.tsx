@@ -1,13 +1,8 @@
 import { Suspense, lazy, useEffect, useState } from "react";
-import Select, { type SingleValue, type StylesConfig } from "react-select";
 import ProgressBar from "~/components/progress-bar";
 import Image from "~/components/image";
 import type { BudgetTableData } from "~/components/budget-table";
-import {
-  BRAND_ACCENT,
-  SURFACE_BASE,
-  SURFACE_ROSE_SOFT,
-} from "~/constants/colors";
+import { BRAND_ACCENT } from "~/constants/colors";
 
 const BudgetsSelector = lazy(() => import("~/components/budgets-selector"));
 const SortToolbar = lazy(() => import("~/components/sort-toolbar"));
@@ -23,73 +18,6 @@ export type ProgressDisplayData = {
   percentage: number;
   stageLabel?: string;
   completedCount?: number;
-};
-
-const customSelectStyles: StylesConfig<YearOption> = {
-  control: (provided) => ({
-    ...provided,
-    backgroundColor: BRAND_ACCENT,
-    border: "2px solid black",
-    borderBottom: "0",
-    borderRadius: "0.375rem 0.375rem 0 0",
-    boxShadow: "none",
-    cursor: "pointer",
-    minHeight: "38px",
-    height: "38px",
-    "&:hover": {
-      borderColor: "black",
-    },
-  }),
-  valueContainer: (provided) => ({
-    ...provided,
-    height: "38px",
-    padding: "0 8px",
-  }),
-  input: (provided) => ({
-    ...provided,
-    margin: "0px",
-  }),
-  indicatorSeparator: () => ({
-    display: "none",
-  }),
-  dropdownIndicator: (provided) => ({
-    ...provided,
-    color: SURFACE_BASE,
-    padding: "8px",
-    "&:hover": {
-      color: SURFACE_BASE,
-    },
-  }),
-  singleValue: (provided) => ({
-    ...provided,
-    color: SURFACE_BASE,
-    fontWeight: "bold",
-    fontSize: "16px",
-  }),
-  placeholder: (provided) => ({
-    ...provided,
-    color: SURFACE_BASE,
-    fontWeight: "bold",
-    fontSize: "16px",
-  }),
-  menu: (provided) => ({
-    ...provided,
-    backgroundColor: "white",
-    border: "2px solid black",
-    borderRadius: "0",
-    boxShadow: "none",
-  }),
-  option: (provided, state) => ({
-    ...provided,
-    backgroundColor: state.isSelected
-      ? BRAND_ACCENT
-      : state.isFocused
-        ? SURFACE_ROSE_SOFT
-        : "white",
-    color: state.isSelected ? "white" : "black",
-    fontWeight: "bold",
-    cursor: "pointer",
-  }),
 };
 
 const BudgetsSelectorFallback = () => (
@@ -125,8 +53,8 @@ export type AllBudgetsViewProps = {
   onProgressModeChange: (mode: ProgressMode) => void;
   progressData: ProgressDisplayData;
   yearOptions: YearOption[];
-  selectedYearOption: SingleValue<YearOption>;
-  onYearChange: (option: SingleValue<YearOption>) => void;
+  selectedYearOption: YearOption | null;
+  onYearChange: (option: YearOption) => void;
   selectedSort: string;
   onSortChange: (value: string) => void;
   tableData: BudgetTableData[];
@@ -180,6 +108,37 @@ const AllBudgetsView = ({
   const activeTabLabel =
     progressTabs.find((tab) => tab.key === progressMode)?.label ?? "";
 
+  const renderYearTabs = (className = "") => (
+    <div className={`relative ${className}`}>
+      <div
+        className="flex max-w-full items-end gap-2 overflow-x-auto"
+        role="tablist"
+        aria-label="選擇年份"
+      >
+        {yearOptions.map((option) => {
+          const isActive = option.value === selectedYearOption?.value;
+          return (
+            <button
+              key={option.value ?? "all"}
+              type="button"
+              role="tab"
+              aria-selected={isActive}
+              onClick={() => onYearChange(option)}
+              className={`min-h-10 shrink-0 rounded-t-md border-2 border-b-0 border-black px-4 py-2 text-base font-bold transition-colors md:min-w-24 ${
+                isActive
+                  ? "text-white"
+                  : "bg-white text-black hover:bg-[#f7d7dc]"
+              }`}
+              style={isActive ? { backgroundColor: BRAND_ACCENT } : undefined}
+            >
+              {option.label}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+
   return (
     <div className="p-5 md:mx-auto md:max-w-[720px] md:p-0 md:pt-8 lg:max-w-[960px]">
       <p className="mb-3 w-full text-center text-xl font-bold">{title}</p>
@@ -206,13 +165,7 @@ const AllBudgetsView = ({
       </div>
 
       <div className="relative mb-5 hidden items-center justify-start border-b-[2px] border-black md:flex">
-        <Select
-          styles={customSelectStyles}
-          value={selectedYearOption}
-          onChange={(option) => onYearChange(option as SingleValue<YearOption>)}
-          options={yearOptions}
-          placeholder="選擇年份"
-        />
+        {renderYearTabs("max-w-[calc(100%-96px)]")}
         <img
           src={`${import.meta.env.BASE_URL}image/eye.svg`}
           alt="eye icon"
@@ -230,13 +183,7 @@ const AllBudgetsView = ({
       </div>
 
       <div className="mb-5 flex items-center justify-center border-b-[2px] border-black md:hidden">
-        <Select
-          styles={customSelectStyles}
-          value={selectedYearOption}
-          onChange={(option) => onYearChange(option as SingleValue<YearOption>)}
-          options={yearOptions}
-          placeholder="選擇年份"
-        />
+        {renderYearTabs("w-full")}
       </div>
 
       {isDesktop ? null : (
@@ -289,7 +236,7 @@ const AllBudgetsView = ({
 
       <div className="h-0.5 w-full bg-black md:hidden" />
       <Suspense fallback={<BudgetsSelectorFallback />}>
-        <BudgetsSelector />
+        <BudgetsSelector selectedYear={selectedYearOption?.value ?? null} />
       </Suspense>
       <div className="h-0.5 w-full bg-black md:hidden" />
 

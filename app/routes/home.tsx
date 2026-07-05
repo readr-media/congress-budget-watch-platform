@@ -3,10 +3,7 @@ import type { LinksFunction } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 import Image from "~/components/image";
 import { execute } from "~/graphql/execute";
-import {
-  GET_LATEST_BUDGET_YEAR_QUERY,
-  budgetYearQueryKeys,
-} from "~/queries";
+import { GET_LATEST_BUDGET_YEAR_QUERY, budgetYearQueryKeys } from "~/queries";
 import {
   calculateProgressPercentage,
   formatProgressText,
@@ -103,6 +100,15 @@ type NavigationButton = {
   isExternal?: boolean;
 };
 
+type UpdateStatusItem = {
+  date?: string;
+  text: string;
+};
+
+type UpdateStatusData = {
+  updates?: UpdateStatusItem[];
+};
+
 export default function Home() {
   const {
     data: budgetYearData,
@@ -115,6 +121,18 @@ export default function Home() {
         skip: 0,
         take: 1,
       }),
+  });
+  const { data: updateStatusData } = useQuery({
+    queryKey: ["home-update-status"],
+    queryFn: async () => {
+      const response = await fetch(
+        `${import.meta.env.BASE_URL}data/update-status.json`
+      );
+      if (!response.ok) {
+        throw new Error("Failed to load update status");
+      }
+      return (await response.json()) as UpdateStatusData;
+    },
   });
 
   const latestBudgetYear = budgetYearData?.budgetYears?.[0] ?? null;
@@ -154,6 +172,7 @@ export default function Home() {
     latestProgressBadge,
     unfreezeProgressBadge,
   ];
+  const latestUpdateStatus = updateStatusData?.updates?.[0] ?? null;
 
   const renderStatusBoxes = (
     boxes: { key: string; text: string; className: string }[]
@@ -267,6 +286,30 @@ export default function Home() {
           </p>
         </header>
 
+        {latestUpdateStatus && (
+          <section
+            className="mx-auto mb-8 max-w-2xl border-2 border-black bg-white p-4 text-left"
+            aria-labelledby="update-status-title"
+          >
+            <div className="mb-2 flex flex-wrap items-center gap-x-3 gap-y-1">
+              <h2
+                id="update-status-title"
+                className="text-base font-bold text-black"
+              >
+                更新狀況
+              </h2>
+              {latestUpdateStatus.date && (
+                <time className="text-sm text-gray-500">
+                  {latestUpdateStatus.date}
+                </time>
+              )}
+            </div>
+            <p className="text-sm leading-relaxed text-gray-700 md:text-base">
+              {latestUpdateStatus.text}
+            </p>
+          </section>
+        )}
+
         {/* Navigation Buttons */}
         <nav
           className="flex flex-col gap-3 md:grid md:grid-cols-2 md:gap-6 lg:grid-cols-4 lg:gap-4"
@@ -277,9 +320,10 @@ export default function Home() {
               key={button.label}
               to={button.href}
               className={({ isActive }) =>
-                `border-brand-accent flex min-h-[72px] w-full items-center justify-center rounded-lg border-3 px-6 py-4 text-center text-lg font-medium transition-colors ${isActive
-                  ? "bg-brand-accent"
-                  : "hover:bg-brand-accent bg-white hover:text-black"
+                `border-brand-accent flex min-h-[72px] w-full items-center justify-center rounded-lg border-3 px-6 py-4 text-center text-lg font-medium transition-colors ${
+                  isActive
+                    ? "bg-brand-accent"
+                    : "hover:bg-brand-accent bg-white hover:text-black"
                 } focus:ring-brand-accent text-budget-accent focus:ring-2 focus:ring-offset-2 focus:outline-none`
               }
             >
