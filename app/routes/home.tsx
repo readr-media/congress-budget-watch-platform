@@ -347,7 +347,7 @@ export default function Home() {
                 </button>
               </div>
             </div>
-            <p className="text-sm leading-relaxed text-gray-700 md:text-base">
+            <p className="max-h-20 overflow-y-auto pr-2 text-sm leading-relaxed whitespace-pre-wrap text-gray-700 md:max-h-24 md:text-base">
               {currentUpdateStatus.text}
             </p>
             {currentUpdateStatus.author && (
