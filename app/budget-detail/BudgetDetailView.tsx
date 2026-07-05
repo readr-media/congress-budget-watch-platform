@@ -81,6 +81,7 @@ const BudgetDetailView = ({
       );
     return <p className={wrapperClassName}>請至主提案單確認結果</p>;
   };
+  const budgetBookUrl = proposal.budget?.budgetUrl?.trim() ?? "";
 
   if (isDesktop)
     return (
@@ -428,7 +429,7 @@ const BudgetDetailView = ({
               <div className="flex items-start gap-x-12">
                 <div className="flex flex-col gap-y-3">
                   <p className="font-bold">解凍最新狀態</p>
-                  <p className="text-sm font-semibold text-brand-primary">
+                  <p className="text-brand-primary text-sm font-semibold">
                     {unfreezeStatusDisplay}
                   </p>
                 </div>
@@ -444,7 +445,7 @@ const BudgetDetailView = ({
                       報告連結
                     </a>
                   ) : (
-                    <p className="text-gray-500 text-sm">暫無報告</p>
+                    <p className="text-sm text-gray-500">暫無報告</p>
                   )}
                 </div>
               </div>
@@ -586,14 +587,16 @@ const BudgetDetailView = ({
                       />
                     </button>
                   </div>
-                  <a
-                    href="#"
-                    className="text-brand-primary underline"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    預算書連結
-                  </a>
+                  {budgetBookUrl && (
+                    <a
+                      href={budgetBookUrl}
+                      className="text-brand-primary underline"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      預算書連結
+                    </a>
+                  )}
                 </div>
                 <p>{budgetCategoryDisplay}</p>
                 <div className="flex items-center gap-x-2">
