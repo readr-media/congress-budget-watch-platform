@@ -269,7 +269,7 @@ def strip_generated_at(data: dict[str, Any]) -> dict[str, Any]:
 def write_output(output: dict[str, Any]) -> None:
     if OUTPUT_PATH.exists():
         try:
-            existing = json.loads(OUTPUT_PATH.read_text())
+            existing = json.loads(OUTPUT_PATH.read_text(encoding="utf-8"))
         except json.JSONDecodeError:
             existing = None
 
@@ -279,7 +279,10 @@ def write_output(output: dict[str, Any]) -> None:
             return
 
     OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
-    OUTPUT_PATH.write_text(json.dumps(output, ensure_ascii=False, indent=2) + "\n")
+    OUTPUT_PATH.write_text(
+        json.dumps(output, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
     print(f"Wrote {OUTPUT_PATH}")
     print(json.dumps(output["summary"], ensure_ascii=False, indent=2))
 
