@@ -109,6 +109,8 @@ export const AllBudgets = () => {
   const setSelectedYear = useSetSelectedYear();
   const freezeOnly = useFreezeOnly();
   const [progressMode, setProgressMode] = useState<ProgressMode>("latest");
+  const hasAppliedDefaultYear = useRef(false);
+  const previousYearParam = useRef<string | null>(null);
 
   useEffect(() => {
     const yearFromParams = searchParams.get("year");
@@ -154,6 +156,31 @@ export const AllBudgets = () => {
       ),
     [typedYearsData]
   );
+
+  useEffect(() => {
+    const currentYearParam = searchParams.get("year");
+    const lastYearParam = previousYearParam.current;
+    previousYearParam.current = currentYearParam;
+
+    if (lastYearParam !== null && currentYearParam === null) {
+      hasAppliedDefaultYear.current = false;
+    }
+
+    if (hasAppliedDefaultYear.current || !availableBudgetYears.length) {
+      return;
+    }
+
+    hasAppliedDefaultYear.current = true;
+
+    if (currentYearParam) {
+      return;
+    }
+
+    const latestYear = availableBudgetYears[0]?.year;
+    if (latestYear != null) {
+      setSelectedYear(latestYear);
+    }
+  }, [availableBudgetYears, searchParams, setSelectedYear]);
 
   const yearOptions: YearOption[] = useMemo(() => {
     if (!availableBudgetYears.length) return [];

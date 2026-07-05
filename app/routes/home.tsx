@@ -1,6 +1,7 @@
 import { NavLink } from "react-router";
 import type { LinksFunction } from "react-router";
 import { useQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 import Image from "~/components/image";
 import { execute } from "~/graphql/execute";
 import { GET_LATEST_BUDGET_YEAR_QUERY, budgetYearQueryKeys } from "~/queries";
@@ -110,6 +111,7 @@ type UpdateStatusData = {
 };
 
 export default function Home() {
+  const [updateStatusIndex, setUpdateStatusIndex] = useState(0);
   const {
     data: budgetYearData,
     isLoading,
@@ -172,7 +174,19 @@ export default function Home() {
     latestProgressBadge,
     unfreezeProgressBadge,
   ];
-  const latestUpdateStatus = updateStatusData?.updates?.[0] ?? null;
+  const updateStatuses = updateStatusData?.updates ?? [];
+  const currentUpdateStatus = updateStatuses[updateStatusIndex] ?? null;
+  const canShowPreviousUpdate = updateStatusIndex > 0;
+  const canShowNextUpdate = updateStatusIndex < updateStatuses.length - 1;
+
+  useEffect(() => {
+    if (
+      updateStatuses.length > 0 &&
+      updateStatusIndex >= updateStatuses.length
+    ) {
+      setUpdateStatusIndex(0);
+    }
+  }, [updateStatusIndex, updateStatuses.length]);
 
   const renderStatusBoxes = (
     boxes: { key: string; text: string; className: string }[]
@@ -286,26 +300,54 @@ export default function Home() {
           </p>
         </header>
 
-        {latestUpdateStatus && (
+        {currentUpdateStatus && (
           <section
             className="mx-auto mb-8 max-w-2xl border-2 border-black bg-white p-4 text-left"
             aria-labelledby="update-status-title"
           >
-            <div className="mb-2 flex flex-wrap items-center gap-x-3 gap-y-1">
-              <h2
-                id="update-status-title"
-                className="text-base font-bold text-black"
-              >
-                更新狀況
-              </h2>
-              {latestUpdateStatus.date && (
-                <time className="text-sm text-gray-500">
-                  {latestUpdateStatus.date}
-                </time>
-              )}
+            <div className="mb-2 flex items-center justify-between gap-3">
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                <h2
+                  id="update-status-title"
+                  className="text-base font-bold text-black"
+                >
+                  更新狀況
+                </h2>
+                {currentUpdateStatus.date && (
+                  <time className="text-sm text-gray-500">
+                    {currentUpdateStatus.date}
+                  </time>
+                )}
+              </div>
+              <div className="flex shrink-0 items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() =>
+                    setUpdateStatusIndex((current) => Math.max(current - 1, 0))
+                  }
+                  disabled={!canShowPreviousUpdate}
+                  className="flex size-8 items-center justify-center border-2 border-black bg-white text-lg font-bold disabled:cursor-not-allowed disabled:border-gray-300 disabled:text-gray-300"
+                  aria-label="上一則更新"
+                >
+                  ←
+                </button>
+                <button
+                  type="button"
+                  onClick={() =>
+                    setUpdateStatusIndex((current) =>
+                      Math.min(current + 1, updateStatuses.length - 1)
+                    )
+                  }
+                  disabled={!canShowNextUpdate}
+                  className="flex size-8 items-center justify-center border-2 border-black bg-white text-lg font-bold disabled:cursor-not-allowed disabled:border-gray-300 disabled:text-gray-300"
+                  aria-label="下一則更新"
+                >
+                  →
+                </button>
+              </div>
             </div>
             <p className="text-sm leading-relaxed text-gray-700 md:text-base">
-              {latestUpdateStatus.text}
+              {currentUpdateStatus.text}
             </p>
           </section>
         )}
