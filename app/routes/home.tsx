@@ -347,9 +347,16 @@ export default function Home() {
                 </button>
               </div>
             </div>
-            <p className="max-h-20 overflow-y-auto pr-2 text-sm leading-relaxed whitespace-pre-wrap text-gray-700 md:max-h-24 md:text-base">
-              {currentUpdateStatus.text}
-            </p>
+            <div
+              className="h-20 touch-pan-y overflow-y-scroll overscroll-contain pr-2 md:h-24"
+              style={{ WebkitOverflowScrolling: "touch" }}
+              tabIndex={0}
+              aria-label="更新狀況內容"
+            >
+              <p className="text-sm leading-relaxed whitespace-pre-wrap text-gray-700 md:text-base">
+                {currentUpdateStatus.text}
+              </p>
+            </div>
             {currentUpdateStatus.author && (
               <p className="mt-3 text-right text-xs font-medium text-gray-500">
                 By {currentUpdateStatus.author}
