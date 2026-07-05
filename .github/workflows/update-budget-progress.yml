@@ -1,0 +1,41 @@
+name: Update budget review progress
+
+on:
+  workflow_dispatch:
+  schedule:
+    # 05:00 Asia/Taipei
+    - cron: "0 21 * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-budget-review-progress
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install Python deps
+        run: python -m pip install pandas lxml openpyxl
+      - name: Build progress data
+        run: python scripts/prototype-budget-review-progress.py
+      - name: Commit progress data
+        run: |
+          if git diff --quiet -- public/data/budget-review-progress.json; then
+            echo "No progress data changes."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add public/data/budget-review-progress.json
+          git commit -m "chore: update budget review progress data"
+          git push

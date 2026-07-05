@@ -260,6 +260,30 @@ def attach_statuses(
     return agencies
 
 
+def strip_generated_at(data: dict[str, Any]) -> dict[str, Any]:
+    comparable = dict(data)
+    comparable.pop("generatedAt", None)
+    return comparable
+
+
+def write_output(output: dict[str, Any]) -> None:
+    if OUTPUT_PATH.exists():
+        try:
+            existing = json.loads(OUTPUT_PATH.read_text())
+        except json.JSONDecodeError:
+            existing = None
+
+        if isinstance(existing, dict) and strip_generated_at(existing) == strip_generated_at(output):
+            print(f"No data changes for {OUTPUT_PATH}")
+            print(json.dumps(output["summary"], ensure_ascii=False, indent=2))
+            return
+
+    OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
+    OUTPUT_PATH.write_text(json.dumps(output, ensure_ascii=False, indent=2) + "\n")
+    print(f"Wrote {OUTPUT_PATH}")
+    print(json.dumps(output["summary"], ensure_ascii=False, indent=2))
+
+
 def main() -> None:
     agencies = read_agencies()
     meetings = scrape_meetings()
@@ -290,10 +314,7 @@ def main() -> None:
         "agencies": agencies,
     }
 
-    OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
-    OUTPUT_PATH.write_text(json.dumps(output, ensure_ascii=False, indent=2) + "\n")
-    print(f"Wrote {OUTPUT_PATH}")
-    print(json.dumps(summary, ensure_ascii=False, indent=2))
+    write_output(output)
 
 
 if __name__ == "__main__":
