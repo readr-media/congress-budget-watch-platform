@@ -366,7 +366,14 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="mb-4 h-3 overflow-hidden rounded-sm border border-[#d0d7de] bg-[#ebedf0]">
+        <div
+          role="progressbar"
+          aria-valuenow={reviewedPercentage}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-label="預算審議進度比例"
+          className="mb-4 h-3 overflow-hidden rounded-sm border border-[#d0d7de] bg-[#ebedf0]"
+        >
           <div
             className="h-full bg-[#2da44e]"
             style={{ width: `${reviewedPercentage}%` }}
@@ -435,7 +442,6 @@ export default function Home() {
                   return (
                     <span
                       key={agency.id}
-                      title={title}
                       aria-label={title}
                       tabIndex={0}
                       className={`group relative size-3.5 rounded-[3px] border ${REVIEW_PROGRESS_STATUS_STYLES[agency.status]} focus:ring-2 focus:ring-black focus:ring-offset-1 focus:outline-none`}
