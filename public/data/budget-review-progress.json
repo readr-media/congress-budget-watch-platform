@@ -1,0 +1,4137 @@
+{
+  "year": 115,
+  "generatedAt": "2026-07-05T13:06:25.338958+00:00",
+  "sources": {
+    "governmentIndex": "gov_index.xlsx",
+    "meetingSearch": "https://ly-budget.openfun.app/",
+    "uploadedBudgets": "https://ly-budget-gql-prod-702918025200.asia-east1.run.app/api/graphql"
+  },
+  "legend": [
+    {
+      "status": "uploaded",
+      "label": "已上傳",
+      "color": "#2da44e"
+    },
+    {
+      "status": "reviewed",
+      "label": "已審查，待上傳",
+      "color": "#9be9a8"
+    },
+    {
+      "status": "notReviewed",
+      "label": "尚未審查",
+      "color": "#ebedf0"
+    }
+  ],
+  "summary": {
+    "totalAgencies": 239,
+    "reviewedAgencies": 142,
+    "uploadedAgencies": 71,
+    "notReviewedAgencies": 97,
+    "matchedMeetings": 55
+  },
+  "agencies": [
+    {
+      "id": "1-1",
+      "parentCode": "1",
+      "parentName": "總統府主管",
+      "itemCode": "1",
+      "name": "總統府",
+      "status": "uploaded",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 25,
+      "meetings": []
+    },
+    {
+      "id": "1-2",
+      "parentCode": "1",
+      "parentName": "總統府主管",
+      "itemCode": "2",
+      "name": "國家安全會議",
+      "status": "uploaded",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 11,
+      "meetings": []
+    },
+    {
+      "id": "1-3",
+      "parentCode": "1",
+      "parentName": "總統府主管",
+      "itemCode": "3",
+      "name": "國史館",
+      "status": "uploaded",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 15,
+      "meetings": []
+    },
+    {
+      "id": "1-4",
+      "parentCode": "1",
+      "parentName": "總統府主管",
+      "itemCode": "4",
+      "name": "國史館臺灣文獻館",
+      "status": "uploaded",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 7,
+      "meetings": []
+    },
+    {
+      "id": "1-5",
+      "parentCode": "1",
+      "parentName": "總統府主管",
+      "itemCode": "5",
+      "name": "中央研究院",
+      "status": "uploaded",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 93,
+      "meetings": []
+    },
+    {
+      "id": "2-1",
+      "parentCode": "2",
+      "parentName": "行政院主管",
+      "itemCode": "1",
+      "name": "行政院",
+      "status": "uploaded",
+      "reviewedMeetingCount": 9,
+      "latestReviewDate": "2026-07-02",
+      "uploadedProposalCount": 2,
+      "meetings": [
+        {
+          "id": "委員會-11-5-15-18",
+          "date": "2026-07-01",
+          "name": "第11屆第5會期內政委員會第18次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-15-18"
+        },
+        {
+          "id": "委員會-11-5-15-18",
+          "date": "2026-07-02",
+          "name": "第11屆第5會期內政委員會第18次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-15-18"
+        },
+        {
+          "id": "委員會-11-5-22-16",
+          "date": "2026-06-17",
+          "name": "第11屆第5會期教育及文化委員會第16次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-22-16"
+        },
+        {
+          "id": "委員會-11-5-20-16",
+          "date": "2026-06-01",
+          "name": "第11屆第5會期財政委員會第16次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-20-16"
+        },
+        {
+          "id": "委員會-11-5-20-16",
+          "date": "2026-06-03",
+          "name": "第11屆第5會期財政委員會第16次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-20-16"
+        }
+      ]
+    },
+    {
+      "id": "2-2",
+      "parentCode": "2",
+      "parentName": "行政院主管",
+      "itemCode": "2",
+      "name": "主計總處",
+      "status": "uploaded",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-05-06",
+      "uploadedProposalCount": 61,
+      "meetings": [
+        {
+          "id": "委員會-11-5-20-12",
+          "date": "2026-05-06",
+          "name": "第11屆第5會期財政委員會第12次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-20-12"
+        }
+      ]
+    },
+    {
+      "id": "2-3",
+      "parentCode": "2",
+      "parentName": "行政院主管",
+      "itemCode": "3",
+      "name": "人事行政總處",
+      "status": "uploaded",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-05-20",
+      "uploadedProposalCount": 32,
+      "meetings": [
+        {
+          "id": "委員會-11-5-36-14",
+          "date": "2026-05-20",
+          "name": "第11屆第5會期司法及法制委員會第14次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-36-14"
+        }
+      ]
+    },
+    {
+      "id": "2-4",
+      "parentCode": "2",
+      "parentName": "行政院主管",
+      "itemCode": "4",
+      "name": "公務人力發展學院",
+      "status": "uploaded",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 3,
+      "meetings": []
+    },
+    {
+      "id": "2-5",
+      "parentCode": "2",
+      "parentName": "行政院主管",
+      "itemCode": "5",
+      "name": "國立故宮博物院",
+      "status": "reviewed",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-06-17",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-22-16",
+          "date": "2026-06-17",
+          "name": "第11屆第5會期教育及文化委員會第16次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-22-16"
+        }
+      ]
+    },
+    {
+      "id": "2-6",
+      "parentCode": "2",
+      "parentName": "行政院主管",
+      "itemCode": "6",
+      "name": "國家發展委員會",
+      "status": "reviewed",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-05-27",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-19-15",
+          "date": "2026-05-27",
+          "name": "第11屆第5會期經濟委員會第15次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-19-15"
+        }
+      ]
+    },
+    {
+      "id": "2-7",
+      "parentCode": "2",
+      "parentName": "行政院主管",
+      "itemCode": "7",
+      "name": "檔案管理局",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "2-8",
+      "parentCode": "2",
+      "parentName": "行政院主管",
+      "itemCode": "8",
+      "name": "原住民族委員會",
+      "status": "reviewed",
+      "reviewedMeetingCount": 2,
+      "latestReviewDate": "2026-07-02",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-15-18",
+          "date": "2026-07-01",
+          "name": "第11屆第5會期內政委員會第18次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-15-18"
+        },
+        {
+          "id": "委員會-11-5-15-18",
+          "date": "2026-07-02",
+          "name": "第11屆第5會期內政委員會第18次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-15-18"
+        }
+      ]
+    },
+    {
+      "id": "2-9",
+      "parentCode": "2",
+      "parentName": "行政院主管",
+      "itemCode": "9",
+      "name": "原住民族文化發展中心",
+      "status": "reviewed",
+      "reviewedMeetingCount": 2,
+      "latestReviewDate": "2026-07-02",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-15-18",
+          "date": "2026-07-01",
+          "name": "第11屆第5會期內政委員會第18次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-15-18"
+        },
+        {
+          "id": "委員會-11-5-15-18",
+          "date": "2026-07-02",
+          "name": "第11屆第5會期內政委員會第18次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-15-18"
+        }
+      ]
+    },
+    {
+      "id": "2-10",
+      "parentCode": "2",
+      "parentName": "行政院主管",
+      "itemCode": "10",
+      "name": "客家委員會及所屬",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "2-11",
+      "parentCode": "2",
+      "parentName": "行政院主管",
+      "itemCode": "11",
+      "name": "中央選舉委員會及所屬",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "2-12",
+      "parentCode": "2",
+      "parentName": "行政院主管",
+      "itemCode": "12",
+      "name": "核能安全委員會及所屬",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "2-13",
+      "parentCode": "2",
+      "parentName": "行政院主管",
+      "itemCode": "13",
+      "name": "公平交易委員會",
+      "status": "reviewed",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-06-04",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-19-16",
+          "date": "2026-06-04",
+          "name": "第11屆第5會期經濟委員會第16次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-19-16"
+        }
+      ]
+    },
+    {
+      "id": "2-14",
+      "parentCode": "2",
+      "parentName": "行政院主管",
+      "itemCode": "14",
+      "name": "國家通訊傳播委員會",
+      "status": "reviewed",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-06-24",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-23-20",
+          "date": "2026-06-24",
+          "name": "第11屆第5會期交通委員會第20次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-23-20"
+        }
+      ]
+    },
+    {
+      "id": "2-15",
+      "parentCode": "2",
+      "parentName": "行政院主管",
+      "itemCode": "15",
+      "name": "大陸委員會",
+      "status": "reviewed",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-06-29",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-15-18",
+          "date": "2026-06-29",
+          "name": "第11屆第5會期內政委員會第18次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-15-18"
+        }
+      ]
+    },
+    {
+      "id": "2-16",
+      "parentCode": "2",
+      "parentName": "行政院主管",
+      "itemCode": "16",
+      "name": "國家運輸安全調查委員會",
+      "status": "reviewed",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-06-17",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-23-19",
+          "date": "2026-06-17",
+          "name": "第11屆第5會期交通委員會第19次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-23-19"
+        }
+      ]
+    },
+    {
+      "id": "2-17",
+      "parentCode": "2",
+      "parentName": "行政院主管",
+      "itemCode": "17",
+      "name": "不當黨產處理委員會",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "2-18",
+      "parentCode": "2",
+      "parentName": "行政院主管",
+      "itemCode": "18",
+      "name": "公共工程委員會",
+      "status": "uploaded",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-05-20",
+      "uploadedProposalCount": 26,
+      "meetings": [
+        {
+          "id": "委員會-11-5-23-14",
+          "date": "2026-05-20",
+          "name": "第11屆第5會期交通委員會第14次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-23-14"
+        }
+      ]
+    },
+    {
+      "id": "3-1",
+      "parentCode": "3",
+      "parentName": "立法院主管",
+      "itemCode": "1",
+      "name": "立法院",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "4-1",
+      "parentCode": "4",
+      "parentName": "司法院主管",
+      "itemCode": "1",
+      "name": "司法院",
+      "status": "uploaded",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-05-18",
+      "uploadedProposalCount": 45,
+      "meetings": [
+        {
+          "id": "委員會-11-5-36-14",
+          "date": "2026-05-18",
+          "name": "第11屆第5會期司法及法制委員會第14次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-36-14"
+        }
+      ]
+    },
+    {
+      "id": "4-2",
+      "parentCode": "4",
+      "parentName": "司法院主管",
+      "itemCode": "2",
+      "name": "最高法院",
+      "status": "uploaded",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-05-18",
+      "uploadedProposalCount": 15,
+      "meetings": [
+        {
+          "id": "委員會-11-5-36-14",
+          "date": "2026-05-18",
+          "name": "第11屆第5會期司法及法制委員會第14次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-36-14"
+        }
+      ]
+    },
+    {
+      "id": "4-3",
+      "parentCode": "4",
+      "parentName": "司法院主管",
+      "itemCode": "3",
+      "name": "最高行政法院",
+      "status": "uploaded",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-05-18",
+      "uploadedProposalCount": 15,
+      "meetings": [
+        {
+          "id": "委員會-11-5-36-14",
+          "date": "2026-05-18",
+          "name": "第11屆第5會期司法及法制委員會第14次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-36-14"
+        }
+      ]
+    },
+    {
+      "id": "4-4",
+      "parentCode": "4",
+      "parentName": "司法院主管",
+      "itemCode": "4",
+      "name": "臺北高等行政法院",
+      "status": "uploaded",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-05-18",
+      "uploadedProposalCount": 15,
+      "meetings": [
+        {
+          "id": "委員會-11-5-36-14",
+          "date": "2026-05-18",
+          "name": "第11屆第5會期司法及法制委員會第14次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-36-14"
+        }
+      ]
+    },
+    {
+      "id": "4-5",
+      "parentCode": "4",
+      "parentName": "司法院主管",
+      "itemCode": "5",
+      "name": "臺中高等行政法院",
+      "status": "uploaded",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-05-18",
+      "uploadedProposalCount": 15,
+      "meetings": [
+        {
+          "id": "委員會-11-5-36-14",
+          "date": "2026-05-18",
+          "name": "第11屆第5會期司法及法制委員會第14次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-36-14"
+        }
+      ]
+    },
+    {
+      "id": "4-6",
+      "parentCode": "4",
+      "parentName": "司法院主管",
+      "itemCode": "6",
+      "name": "高雄高等行政法院",
+      "status": "uploaded",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-05-18",
+      "uploadedProposalCount": 15,
+      "meetings": [
+        {
+          "id": "委員會-11-5-36-14",
+          "date": "2026-05-18",
+          "name": "第11屆第5會期司法及法制委員會第14次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-36-14"
+        }
+      ]
+    },
+    {
+      "id": "4-7",
+      "parentCode": "4",
+      "parentName": "司法院主管",
+      "itemCode": "7",
+      "name": "懲戒法院",
+      "status": "uploaded",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-05-18",
+      "uploadedProposalCount": 15,
+      "meetings": [
+        {
+          "id": "委員會-11-5-36-14",
+          "date": "2026-05-18",
+          "name": "第11屆第5會期司法及法制委員會第14次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-36-14"
+        }
+      ]
+    },
+    {
+      "id": "4-8",
+      "parentCode": "4",
+      "parentName": "司法院主管",
+      "itemCode": "8",
+      "name": "法官學院",
+      "status": "uploaded",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 1,
+      "meetings": []
+    },
+    {
+      "id": "4-9",
+      "parentCode": "4",
+      "parentName": "司法院主管",
+      "itemCode": "9",
+      "name": "智慧財產及商業法院",
+      "status": "uploaded",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-05-18",
+      "uploadedProposalCount": 15,
+      "meetings": [
+        {
+          "id": "委員會-11-5-36-14",
+          "date": "2026-05-18",
+          "name": "第11屆第5會期司法及法制委員會第14次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-36-14"
+        }
+      ]
+    },
+    {
+      "id": "4-10",
+      "parentCode": "4",
+      "parentName": "司法院主管",
+      "itemCode": "10",
+      "name": "臺灣高等法院",
+      "status": "uploaded",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-05-18",
+      "uploadedProposalCount": 15,
+      "meetings": [
+        {
+          "id": "委員會-11-5-36-14",
+          "date": "2026-05-18",
+          "name": "第11屆第5會期司法及法制委員會第14次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-36-14"
+        }
+      ]
+    },
+    {
+      "id": "4-11",
+      "parentCode": "4",
+      "parentName": "司法院主管",
+      "itemCode": "11",
+      "name": "臺灣高等法院臺中分院",
+      "status": "uploaded",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-05-18",
+      "uploadedProposalCount": 15,
+      "meetings": [
+        {
+          "id": "委員會-11-5-36-14",
+          "date": "2026-05-18",
+          "name": "第11屆第5會期司法及法制委員會第14次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-36-14"
+        }
+      ]
+    },
+    {
+      "id": "4-12",
+      "parentCode": "4",
+      "parentName": "司法院主管",
+      "itemCode": "12",
+      "name": "臺灣高等法院臺南分院",
+      "status": "uploaded",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-05-18",
+      "uploadedProposalCount": 15,
+      "meetings": [
+        {
+          "id": "委員會-11-5-36-14",
+          "date": "2026-05-18",
+          "name": "第11屆第5會期司法及法制委員會第14次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-36-14"
+        }
+      ]
+    },
+    {
+      "id": "4-13",
+      "parentCode": "4",
+      "parentName": "司法院主管",
+      "itemCode": "13",
+      "name": "臺灣高等法院高雄分院",
+      "status": "uploaded",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-05-18",
+      "uploadedProposalCount": 15,
+      "meetings": [
+        {
+          "id": "委員會-11-5-36-14",
+          "date": "2026-05-18",
+          "name": "第11屆第5會期司法及法制委員會第14次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-36-14"
+        }
+      ]
+    },
+    {
+      "id": "4-14",
+      "parentCode": "4",
+      "parentName": "司法院主管",
+      "itemCode": "14",
+      "name": "臺灣高等法院花蓮分院",
+      "status": "uploaded",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-05-18",
+      "uploadedProposalCount": 15,
+      "meetings": [
+        {
+          "id": "委員會-11-5-36-14",
+          "date": "2026-05-18",
+          "name": "第11屆第5會期司法及法制委員會第14次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-36-14"
+        }
+      ]
+    },
+    {
+      "id": "4-15",
+      "parentCode": "4",
+      "parentName": "司法院主管",
+      "itemCode": "15",
+      "name": "臺灣臺北地方法院",
+      "status": "uploaded",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-05-18",
+      "uploadedProposalCount": 15,
+      "meetings": [
+        {
+          "id": "委員會-11-5-36-14",
+          "date": "2026-05-18",
+          "name": "第11屆第5會期司法及法制委員會第14次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-36-14"
+        }
+      ]
+    },
+    {
+      "id": "4-16",
+      "parentCode": "4",
+      "parentName": "司法院主管",
+      "itemCode": "16",
+      "name": "臺灣士林地方法院",
+      "status": "uploaded",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-05-18",
+      "uploadedProposalCount": 15,
+      "meetings": [
+        {
+          "id": "委員會-11-5-36-14",
+          "date": "2026-05-18",
+          "name": "第11屆第5會期司法及法制委員會第14次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-36-14"
+        }
+      ]
+    },
+    {
+      "id": "4-17",
+      "parentCode": "4",
+      "parentName": "司法院主管",
+      "itemCode": "17",
+      "name": "臺灣新北地方法院",
+      "status": "uploaded",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-05-18",
+      "uploadedProposalCount": 15,
+      "meetings": [
+        {
+          "id": "委員會-11-5-36-14",
+          "date": "2026-05-18",
+          "name": "第11屆第5會期司法及法制委員會第14次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-36-14"
+        }
+      ]
+    },
+    {
+      "id": "4-18",
+      "parentCode": "4",
+      "parentName": "司法院主管",
+      "itemCode": "18",
+      "name": "臺灣桃園地方法院",
+      "status": "uploaded",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-05-18",
+      "uploadedProposalCount": 15,
+      "meetings": [
+        {
+          "id": "委員會-11-5-36-14",
+          "date": "2026-05-18",
+          "name": "第11屆第5會期司法及法制委員會第14次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-36-14"
+        }
+      ]
+    },
+    {
+      "id": "4-19",
+      "parentCode": "4",
+      "parentName": "司法院主管",
+      "itemCode": "19",
+      "name": "臺灣新竹地方法院",
+      "status": "uploaded",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-05-18",
+      "uploadedProposalCount": 15,
+      "meetings": [
+        {
+          "id": "委員會-11-5-36-14",
+          "date": "2026-05-18",
+          "name": "第11屆第5會期司法及法制委員會第14次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-36-14"
+        }
+      ]
+    },
+    {
+      "id": "4-20",
+      "parentCode": "4",
+      "parentName": "司法院主管",
+      "itemCode": "20",
+      "name": "臺灣苗栗地方法院",
+      "status": "uploaded",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-05-18",
+      "uploadedProposalCount": 15,
+      "meetings": [
+        {
+          "id": "委員會-11-5-36-14",
+          "date": "2026-05-18",
+          "name": "第11屆第5會期司法及法制委員會第14次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-36-14"
+        }
+      ]
+    },
+    {
+      "id": "4-21",
+      "parentCode": "4",
+      "parentName": "司法院主管",
+      "itemCode": "21",
+      "name": "臺灣臺中地方法院",
+      "status": "uploaded",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-05-18",
+      "uploadedProposalCount": 15,
+      "meetings": [
+        {
+          "id": "委員會-11-5-36-14",
+          "date": "2026-05-18",
+          "name": "第11屆第5會期司法及法制委員會第14次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-36-14"
+        }
+      ]
+    },
+    {
+      "id": "4-22",
+      "parentCode": "4",
+      "parentName": "司法院主管",
+      "itemCode": "22",
+      "name": "臺灣南投地方法院",
+      "status": "uploaded",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-05-18",
+      "uploadedProposalCount": 15,
+      "meetings": [
+        {
+          "id": "委員會-11-5-36-14",
+          "date": "2026-05-18",
+          "name": "第11屆第5會期司法及法制委員會第14次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-36-14"
+        }
+      ]
+    },
+    {
+      "id": "4-23",
+      "parentCode": "4",
+      "parentName": "司法院主管",
+      "itemCode": "23",
+      "name": "臺灣彰化地方法院",
+      "status": "uploaded",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-05-18",
+      "uploadedProposalCount": 15,
+      "meetings": [
+        {
+          "id": "委員會-11-5-36-14",
+          "date": "2026-05-18",
+          "name": "第11屆第5會期司法及法制委員會第14次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-36-14"
+        }
+      ]
+    },
+    {
+      "id": "4-24",
+      "parentCode": "4",
+      "parentName": "司法院主管",
+      "itemCode": "24",
+      "name": "臺灣雲林地方法院",
+      "status": "uploaded",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-05-18",
+      "uploadedProposalCount": 15,
+      "meetings": [
+        {
+          "id": "委員會-11-5-36-14",
+          "date": "2026-05-18",
+          "name": "第11屆第5會期司法及法制委員會第14次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-36-14"
+        }
+      ]
+    },
+    {
+      "id": "4-25",
+      "parentCode": "4",
+      "parentName": "司法院主管",
+      "itemCode": "25",
+      "name": "臺灣嘉義地方法院",
+      "status": "uploaded",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-05-18",
+      "uploadedProposalCount": 15,
+      "meetings": [
+        {
+          "id": "委員會-11-5-36-14",
+          "date": "2026-05-18",
+          "name": "第11屆第5會期司法及法制委員會第14次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-36-14"
+        }
+      ]
+    },
+    {
+      "id": "4-26",
+      "parentCode": "4",
+      "parentName": "司法院主管",
+      "itemCode": "26",
+      "name": "臺灣臺南地方法院",
+      "status": "uploaded",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-05-18",
+      "uploadedProposalCount": 15,
+      "meetings": [
+        {
+          "id": "委員會-11-5-36-14",
+          "date": "2026-05-18",
+          "name": "第11屆第5會期司法及法制委員會第14次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-36-14"
+        }
+      ]
+    },
+    {
+      "id": "4-27",
+      "parentCode": "4",
+      "parentName": "司法院主管",
+      "itemCode": "27",
+      "name": "臺灣橋頭地方法院",
+      "status": "uploaded",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-05-18",
+      "uploadedProposalCount": 15,
+      "meetings": [
+        {
+          "id": "委員會-11-5-36-14",
+          "date": "2026-05-18",
+          "name": "第11屆第5會期司法及法制委員會第14次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-36-14"
+        }
+      ]
+    },
+    {
+      "id": "4-28",
+      "parentCode": "4",
+      "parentName": "司法院主管",
+      "itemCode": "28",
+      "name": "臺灣高雄地方法院",
+      "status": "uploaded",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-05-18",
+      "uploadedProposalCount": 15,
+      "meetings": [
+        {
+          "id": "委員會-11-5-36-14",
+          "date": "2026-05-18",
+          "name": "第11屆第5會期司法及法制委員會第14次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-36-14"
+        }
+      ]
+    },
+    {
+      "id": "4-29",
+      "parentCode": "4",
+      "parentName": "司法院主管",
+      "itemCode": "29",
+      "name": "臺灣屏東地方法院",
+      "status": "uploaded",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-05-18",
+      "uploadedProposalCount": 15,
+      "meetings": [
+        {
+          "id": "委員會-11-5-36-14",
+          "date": "2026-05-18",
+          "name": "第11屆第5會期司法及法制委員會第14次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-36-14"
+        }
+      ]
+    },
+    {
+      "id": "4-30",
+      "parentCode": "4",
+      "parentName": "司法院主管",
+      "itemCode": "30",
+      "name": "臺灣臺東地方法院",
+      "status": "uploaded",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-05-18",
+      "uploadedProposalCount": 15,
+      "meetings": [
+        {
+          "id": "委員會-11-5-36-14",
+          "date": "2026-05-18",
+          "name": "第11屆第5會期司法及法制委員會第14次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-36-14"
+        }
+      ]
+    },
+    {
+      "id": "4-31",
+      "parentCode": "4",
+      "parentName": "司法院主管",
+      "itemCode": "31",
+      "name": "臺灣花蓮地方法院",
+      "status": "uploaded",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-05-18",
+      "uploadedProposalCount": 15,
+      "meetings": [
+        {
+          "id": "委員會-11-5-36-14",
+          "date": "2026-05-18",
+          "name": "第11屆第5會期司法及法制委員會第14次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-36-14"
+        }
+      ]
+    },
+    {
+      "id": "4-32",
+      "parentCode": "4",
+      "parentName": "司法院主管",
+      "itemCode": "32",
+      "name": "臺灣宜蘭地方法院",
+      "status": "uploaded",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-05-18",
+      "uploadedProposalCount": 15,
+      "meetings": [
+        {
+          "id": "委員會-11-5-36-14",
+          "date": "2026-05-18",
+          "name": "第11屆第5會期司法及法制委員會第14次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-36-14"
+        }
+      ]
+    },
+    {
+      "id": "4-33",
+      "parentCode": "4",
+      "parentName": "司法院主管",
+      "itemCode": "33",
+      "name": "臺灣基隆地方法院",
+      "status": "uploaded",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-05-18",
+      "uploadedProposalCount": 15,
+      "meetings": [
+        {
+          "id": "委員會-11-5-36-14",
+          "date": "2026-05-18",
+          "name": "第11屆第5會期司法及法制委員會第14次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-36-14"
+        }
+      ]
+    },
+    {
+      "id": "4-34",
+      "parentCode": "4",
+      "parentName": "司法院主管",
+      "itemCode": "34",
+      "name": "臺灣澎湖地方法院",
+      "status": "uploaded",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-05-18",
+      "uploadedProposalCount": 15,
+      "meetings": [
+        {
+          "id": "委員會-11-5-36-14",
+          "date": "2026-05-18",
+          "name": "第11屆第5會期司法及法制委員會第14次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-36-14"
+        }
+      ]
+    },
+    {
+      "id": "4-35",
+      "parentCode": "4",
+      "parentName": "司法院主管",
+      "itemCode": "35",
+      "name": "臺灣高雄少年及家事法院",
+      "status": "uploaded",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-05-18",
+      "uploadedProposalCount": 15,
+      "meetings": [
+        {
+          "id": "委員會-11-5-36-14",
+          "date": "2026-05-18",
+          "name": "第11屆第5會期司法及法制委員會第14次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-36-14"
+        }
+      ]
+    },
+    {
+      "id": "4-36",
+      "parentCode": "4",
+      "parentName": "司法院主管",
+      "itemCode": "36",
+      "name": "福建高等法院金門分院",
+      "status": "uploaded",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-05-18",
+      "uploadedProposalCount": 15,
+      "meetings": [
+        {
+          "id": "委員會-11-5-36-14",
+          "date": "2026-05-18",
+          "name": "第11屆第5會期司法及法制委員會第14次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-36-14"
+        }
+      ]
+    },
+    {
+      "id": "4-37",
+      "parentCode": "4",
+      "parentName": "司法院主管",
+      "itemCode": "37",
+      "name": "福建金門地方法院",
+      "status": "uploaded",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-05-18",
+      "uploadedProposalCount": 15,
+      "meetings": [
+        {
+          "id": "委員會-11-5-36-14",
+          "date": "2026-05-18",
+          "name": "第11屆第5會期司法及法制委員會第14次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-36-14"
+        }
+      ]
+    },
+    {
+      "id": "4-38",
+      "parentCode": "4",
+      "parentName": "司法院主管",
+      "itemCode": "38",
+      "name": "福建連江地方法院",
+      "status": "uploaded",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-05-18",
+      "uploadedProposalCount": 15,
+      "meetings": [
+        {
+          "id": "委員會-11-5-36-14",
+          "date": "2026-05-18",
+          "name": "第11屆第5會期司法及法制委員會第14次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-36-14"
+        }
+      ]
+    },
+    {
+      "id": "5-1",
+      "parentCode": "5",
+      "parentName": "考試院主管",
+      "itemCode": "1",
+      "name": "考試院",
+      "status": "reviewed",
+      "reviewedMeetingCount": 2,
+      "latestReviewDate": "2026-06-04",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-36-16",
+          "date": "2026-06-03",
+          "name": "第11屆第5會期司法及法制委員會第16次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-36-16"
+        },
+        {
+          "id": "委員會-11-5-36-16",
+          "date": "2026-06-04",
+          "name": "第11屆第5會期司法及法制委員會第16次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-36-16"
+        }
+      ]
+    },
+    {
+      "id": "5-2",
+      "parentCode": "5",
+      "parentName": "考試院主管",
+      "itemCode": "2",
+      "name": "考選部",
+      "status": "reviewed",
+      "reviewedMeetingCount": 2,
+      "latestReviewDate": "2026-06-04",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-36-16",
+          "date": "2026-06-03",
+          "name": "第11屆第5會期司法及法制委員會第16次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-36-16"
+        },
+        {
+          "id": "委員會-11-5-36-16",
+          "date": "2026-06-04",
+          "name": "第11屆第5會期司法及法制委員會第16次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-36-16"
+        }
+      ]
+    },
+    {
+      "id": "5-3",
+      "parentCode": "5",
+      "parentName": "考試院主管",
+      "itemCode": "3",
+      "name": "銓敘部",
+      "status": "reviewed",
+      "reviewedMeetingCount": 2,
+      "latestReviewDate": "2026-06-04",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-36-16",
+          "date": "2026-06-03",
+          "name": "第11屆第5會期司法及法制委員會第16次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-36-16"
+        },
+        {
+          "id": "委員會-11-5-36-16",
+          "date": "2026-06-04",
+          "name": "第11屆第5會期司法及法制委員會第16次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-36-16"
+        }
+      ]
+    },
+    {
+      "id": "5-4",
+      "parentCode": "5",
+      "parentName": "考試院主管",
+      "itemCode": "4",
+      "name": "公務人員保障暨培訓委員會",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "5-5",
+      "parentCode": "5",
+      "parentName": "考試院主管",
+      "itemCode": "5",
+      "name": "國家文官學院及所屬",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "5-6",
+      "parentCode": "5",
+      "parentName": "考試院主管",
+      "itemCode": "6",
+      "name": "公務人員退休撫卹基金管理局",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "6-1",
+      "parentCode": "6",
+      "parentName": "監察院主管",
+      "itemCode": "1",
+      "name": "監察院",
+      "status": "reviewed",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-05-25",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-36-15",
+          "date": "2026-05-25",
+          "name": "第11屆第5會期司法及法制委員會第15次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-36-15"
+        }
+      ]
+    },
+    {
+      "id": "6-2",
+      "parentCode": "6",
+      "parentName": "監察院主管",
+      "itemCode": "2",
+      "name": "審計部",
+      "status": "uploaded",
+      "reviewedMeetingCount": 2,
+      "latestReviewDate": "2026-05-25",
+      "uploadedProposalCount": 30,
+      "meetings": [
+        {
+          "id": "委員會-11-5-36-15",
+          "date": "2026-05-25",
+          "name": "第11屆第5會期司法及法制委員會第15次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-36-15"
+        },
+        {
+          "id": "委員會-11-5-20-12",
+          "date": "2026-05-06",
+          "name": "第11屆第5會期財政委員會第12次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-20-12"
+        }
+      ]
+    },
+    {
+      "id": "6-3",
+      "parentCode": "6",
+      "parentName": "監察院主管",
+      "itemCode": "3",
+      "name": "審計部臺北市審計處",
+      "status": "reviewed",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-05-06",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-20-12",
+          "date": "2026-05-06",
+          "name": "第11屆第5會期財政委員會第12次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-20-12"
+        }
+      ]
+    },
+    {
+      "id": "6-4",
+      "parentCode": "6",
+      "parentName": "監察院主管",
+      "itemCode": "4",
+      "name": "審計部新北市審計處",
+      "status": "reviewed",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-05-06",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-20-12",
+          "date": "2026-05-06",
+          "name": "第11屆第5會期財政委員會第12次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-20-12"
+        }
+      ]
+    },
+    {
+      "id": "6-5",
+      "parentCode": "6",
+      "parentName": "監察院主管",
+      "itemCode": "5",
+      "name": "審計部桃園市審計處",
+      "status": "reviewed",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-05-06",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-20-12",
+          "date": "2026-05-06",
+          "name": "第11屆第5會期財政委員會第12次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-20-12"
+        }
+      ]
+    },
+    {
+      "id": "6-6",
+      "parentCode": "6",
+      "parentName": "監察院主管",
+      "itemCode": "6",
+      "name": "審計部臺中市審計處",
+      "status": "reviewed",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-05-06",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-20-12",
+          "date": "2026-05-06",
+          "name": "第11屆第5會期財政委員會第12次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-20-12"
+        }
+      ]
+    },
+    {
+      "id": "6-7",
+      "parentCode": "6",
+      "parentName": "監察院主管",
+      "itemCode": "7",
+      "name": "審計部臺南市審計處",
+      "status": "reviewed",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-05-06",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-20-12",
+          "date": "2026-05-06",
+          "name": "第11屆第5會期財政委員會第12次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-20-12"
+        }
+      ]
+    },
+    {
+      "id": "6-8",
+      "parentCode": "6",
+      "parentName": "監察院主管",
+      "itemCode": "8",
+      "name": "審計部高雄市審計處",
+      "status": "reviewed",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-05-06",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-20-12",
+          "date": "2026-05-06",
+          "name": "第11屆第5會期財政委員會第12次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-20-12"
+        }
+      ]
+    },
+    {
+      "id": "7-1",
+      "parentCode": "7",
+      "parentName": "內政部主管",
+      "itemCode": "1",
+      "name": "內政部",
+      "status": "reviewed",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-06-29",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-15-18",
+          "date": "2026-06-29",
+          "name": "第11屆第5會期內政委員會第18次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-15-18"
+        }
+      ]
+    },
+    {
+      "id": "7-2",
+      "parentCode": "7",
+      "parentName": "內政部主管",
+      "itemCode": "2",
+      "name": "國土管理署及所屬",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "7-3",
+      "parentCode": "7",
+      "parentName": "內政部主管",
+      "itemCode": "3",
+      "name": "警政署及所屬",
+      "status": "reviewed",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-06-29",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-15-18",
+          "date": "2026-06-29",
+          "name": "第11屆第5會期內政委員會第18次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-15-18"
+        }
+      ]
+    },
+    {
+      "id": "7-4",
+      "parentCode": "7",
+      "parentName": "內政部主管",
+      "itemCode": "4",
+      "name": "中央警察大學",
+      "status": "reviewed",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-06-29",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-15-18",
+          "date": "2026-06-29",
+          "name": "第11屆第5會期內政委員會第18次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-15-18"
+        }
+      ]
+    },
+    {
+      "id": "7-5",
+      "parentCode": "7",
+      "parentName": "內政部主管",
+      "itemCode": "5",
+      "name": "消防署及所屬",
+      "status": "reviewed",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-06-29",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-15-18",
+          "date": "2026-06-29",
+          "name": "第11屆第5會期內政委員會第18次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-15-18"
+        }
+      ]
+    },
+    {
+      "id": "7-6",
+      "parentCode": "7",
+      "parentName": "內政部主管",
+      "itemCode": "6",
+      "name": "國家公園署及所屬",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "7-7",
+      "parentCode": "7",
+      "parentName": "內政部主管",
+      "itemCode": "7",
+      "name": "移民署",
+      "status": "reviewed",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-06-29",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-15-18",
+          "date": "2026-06-29",
+          "name": "第11屆第5會期內政委員會第18次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-15-18"
+        }
+      ]
+    },
+    {
+      "id": "7-8",
+      "parentCode": "7",
+      "parentName": "內政部主管",
+      "itemCode": "8",
+      "name": "建築研究所",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "7-9",
+      "parentCode": "7",
+      "parentName": "內政部主管",
+      "itemCode": "9",
+      "name": "空中勤務總隊",
+      "status": "reviewed",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-06-29",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-15-18",
+          "date": "2026-06-29",
+          "name": "第11屆第5會期內政委員會第18次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-15-18"
+        }
+      ]
+    },
+    {
+      "id": "8-1",
+      "parentCode": "8",
+      "parentName": "外交部主管",
+      "itemCode": "1",
+      "name": "外交部",
+      "status": "reviewed",
+      "reviewedMeetingCount": 2,
+      "latestReviewDate": "2026-06-11",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-35-21",
+          "date": "2026-06-10",
+          "name": "第11屆第5會期外交及國防委員會第21次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-35-21"
+        },
+        {
+          "id": "委員會-11-5-35-21",
+          "date": "2026-06-11",
+          "name": "第11屆第5會期外交及國防委員會第21次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-35-21"
+        }
+      ]
+    },
+    {
+      "id": "8-2",
+      "parentCode": "8",
+      "parentName": "外交部主管",
+      "itemCode": "2",
+      "name": "領事事務局",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "8-3",
+      "parentCode": "8",
+      "parentName": "外交部主管",
+      "itemCode": "3",
+      "name": "外交及國際事務學院",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "9-1",
+      "parentCode": "9",
+      "parentName": "國防部主管",
+      "itemCode": "1",
+      "name": "國防部",
+      "status": "reviewed",
+      "reviewedMeetingCount": 4,
+      "latestReviewDate": "2026-06-18",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-35-22",
+          "date": "2026-06-17",
+          "name": "第11屆第5會期外交及國防委員會第22次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-35-22"
+        },
+        {
+          "id": "委員會-11-5-35-22",
+          "date": "2026-06-18",
+          "name": "第11屆第5會期外交及國防委員會第22次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-35-22"
+        },
+        {
+          "id": "委員會-11-5-35-19",
+          "date": "2026-06-01",
+          "name": "第11屆第5會期外交及國防委員會第19次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-35-19"
+        },
+        {
+          "id": "委員會-11-5-35-17",
+          "date": "2026-05-21",
+          "name": "第11屆第5會期外交及國防委員會第17次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-35-17"
+        }
+      ]
+    },
+    {
+      "id": "9-2",
+      "parentCode": "9",
+      "parentName": "國防部主管",
+      "itemCode": "2",
+      "name": "國防部所屬",
+      "status": "reviewed",
+      "reviewedMeetingCount": 4,
+      "latestReviewDate": "2026-06-18",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-35-22",
+          "date": "2026-06-17",
+          "name": "第11屆第5會期外交及國防委員會第22次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-35-22"
+        },
+        {
+          "id": "委員會-11-5-35-22",
+          "date": "2026-06-18",
+          "name": "第11屆第5會期外交及國防委員會第22次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-35-22"
+        },
+        {
+          "id": "委員會-11-5-35-19",
+          "date": "2026-06-01",
+          "name": "第11屆第5會期外交及國防委員會第19次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-35-19"
+        },
+        {
+          "id": "委員會-11-5-35-17",
+          "date": "2026-05-21",
+          "name": "第11屆第5會期外交及國防委員會第17次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-35-17"
+        }
+      ]
+    },
+    {
+      "id": "10-1",
+      "parentCode": "10",
+      "parentName": "財政部主管",
+      "itemCode": "1",
+      "name": "財政部",
+      "status": "uploaded",
+      "reviewedMeetingCount": 6,
+      "latestReviewDate": "2026-06-18",
+      "uploadedProposalCount": 2,
+      "meetings": [
+        {
+          "id": "委員會-11-5-20-19",
+          "date": "2026-06-17",
+          "name": "第11屆第5會期財政委員會第19次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-20-19"
+        },
+        {
+          "id": "委員會-11-5-20-19",
+          "date": "2026-06-18",
+          "name": "第11屆第5會期財政委員會第19次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-20-19"
+        },
+        {
+          "id": "委員會-11-5-20-17",
+          "date": "2026-06-08",
+          "name": "第11屆第5會期財政委員會第17次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-20-17"
+        },
+        {
+          "id": "委員會-11-5-20-16",
+          "date": "2026-06-01",
+          "name": "第11屆第5會期財政委員會第16次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-20-16"
+        },
+        {
+          "id": "委員會-11-5-20-16",
+          "date": "2026-06-03",
+          "name": "第11屆第5會期財政委員會第16次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-20-16"
+        }
+      ]
+    },
+    {
+      "id": "10-2",
+      "parentCode": "10",
+      "parentName": "財政部主管",
+      "itemCode": "2",
+      "name": "國庫署",
+      "status": "uploaded",
+      "reviewedMeetingCount": 2,
+      "latestReviewDate": "2026-06-08",
+      "uploadedProposalCount": 1,
+      "meetings": [
+        {
+          "id": "委員會-11-5-20-17",
+          "date": "2026-06-08",
+          "name": "第11屆第5會期財政委員會第17次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-20-17"
+        },
+        {
+          "id": "委員會-11-5-20-12",
+          "date": "2026-05-06",
+          "name": "第11屆第5會期財政委員會第12次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-20-12"
+        }
+      ]
+    },
+    {
+      "id": "10-3",
+      "parentCode": "10",
+      "parentName": "財政部主管",
+      "itemCode": "3",
+      "name": "賦稅署",
+      "status": "reviewed",
+      "reviewedMeetingCount": 2,
+      "latestReviewDate": "2026-06-03",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-20-16",
+          "date": "2026-06-01",
+          "name": "第11屆第5會期財政委員會第16次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-20-16"
+        },
+        {
+          "id": "委員會-11-5-20-16",
+          "date": "2026-06-03",
+          "name": "第11屆第5會期財政委員會第16次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-20-16"
+        }
+      ]
+    },
+    {
+      "id": "10-4",
+      "parentCode": "10",
+      "parentName": "財政部主管",
+      "itemCode": "4",
+      "name": "臺北國稅局",
+      "status": "reviewed",
+      "reviewedMeetingCount": 2,
+      "latestReviewDate": "2026-06-03",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-20-16",
+          "date": "2026-06-01",
+          "name": "第11屆第5會期財政委員會第16次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-20-16"
+        },
+        {
+          "id": "委員會-11-5-20-16",
+          "date": "2026-06-03",
+          "name": "第11屆第5會期財政委員會第16次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-20-16"
+        }
+      ]
+    },
+    {
+      "id": "10-5",
+      "parentCode": "10",
+      "parentName": "財政部主管",
+      "itemCode": "5",
+      "name": "高雄國稅局",
+      "status": "reviewed",
+      "reviewedMeetingCount": 2,
+      "latestReviewDate": "2026-06-03",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-20-16",
+          "date": "2026-06-01",
+          "name": "第11屆第5會期財政委員會第16次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-20-16"
+        },
+        {
+          "id": "委員會-11-5-20-16",
+          "date": "2026-06-03",
+          "name": "第11屆第5會期財政委員會第16次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-20-16"
+        }
+      ]
+    },
+    {
+      "id": "10-6",
+      "parentCode": "10",
+      "parentName": "財政部主管",
+      "itemCode": "6",
+      "name": "北區國稅局及所屬",
+      "status": "reviewed",
+      "reviewedMeetingCount": 2,
+      "latestReviewDate": "2026-06-03",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-20-16",
+          "date": "2026-06-01",
+          "name": "第11屆第5會期財政委員會第16次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-20-16"
+        },
+        {
+          "id": "委員會-11-5-20-16",
+          "date": "2026-06-03",
+          "name": "第11屆第5會期財政委員會第16次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-20-16"
+        }
+      ]
+    },
+    {
+      "id": "10-7",
+      "parentCode": "10",
+      "parentName": "財政部主管",
+      "itemCode": "7",
+      "name": "中區國稅局及所屬",
+      "status": "reviewed",
+      "reviewedMeetingCount": 2,
+      "latestReviewDate": "2026-06-03",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-20-16",
+          "date": "2026-06-01",
+          "name": "第11屆第5會期財政委員會第16次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-20-16"
+        },
+        {
+          "id": "委員會-11-5-20-16",
+          "date": "2026-06-03",
+          "name": "第11屆第5會期財政委員會第16次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-20-16"
+        }
+      ]
+    },
+    {
+      "id": "10-8",
+      "parentCode": "10",
+      "parentName": "財政部主管",
+      "itemCode": "8",
+      "name": "南區國稅局及所屬",
+      "status": "reviewed",
+      "reviewedMeetingCount": 2,
+      "latestReviewDate": "2026-06-03",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-20-16",
+          "date": "2026-06-01",
+          "name": "第11屆第5會期財政委員會第16次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-20-16"
+        },
+        {
+          "id": "委員會-11-5-20-16",
+          "date": "2026-06-03",
+          "name": "第11屆第5會期財政委員會第16次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-20-16"
+        }
+      ]
+    },
+    {
+      "id": "10-9",
+      "parentCode": "10",
+      "parentName": "財政部主管",
+      "itemCode": "9",
+      "name": "關務署及所屬",
+      "status": "reviewed",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-06-08",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-20-17",
+          "date": "2026-06-08",
+          "name": "第11屆第5會期財政委員會第17次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-20-17"
+        }
+      ]
+    },
+    {
+      "id": "10-10",
+      "parentCode": "10",
+      "parentName": "財政部主管",
+      "itemCode": "10",
+      "name": "國有財產署及所屬",
+      "status": "reviewed",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-06-08",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-20-17",
+          "date": "2026-06-08",
+          "name": "第11屆第5會期財政委員會第17次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-20-17"
+        }
+      ]
+    },
+    {
+      "id": "10-11",
+      "parentCode": "10",
+      "parentName": "財政部主管",
+      "itemCode": "11",
+      "name": "財政資訊中心",
+      "status": "reviewed",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-06-08",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-20-17",
+          "date": "2026-06-08",
+          "name": "第11屆第5會期財政委員會第17次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-20-17"
+        }
+      ]
+    },
+    {
+      "id": "11-1",
+      "parentCode": "11",
+      "parentName": "教育部主管",
+      "itemCode": "1",
+      "name": "教育部",
+      "status": "uploaded",
+      "reviewedMeetingCount": 2,
+      "latestReviewDate": "2026-05-20",
+      "uploadedProposalCount": 137,
+      "meetings": [
+        {
+          "id": "委員會-11-5-22-10",
+          "date": "2026-05-18",
+          "name": "第11屆第5會期教育及文化委員會第10次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-22-10"
+        },
+        {
+          "id": "委員會-11-5-22-10",
+          "date": "2026-05-20",
+          "name": "第11屆第5會期教育及文化委員會第10次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-22-10"
+        }
+      ]
+    },
+    {
+      "id": "11-2",
+      "parentCode": "11",
+      "parentName": "教育部主管",
+      "itemCode": "2",
+      "name": "國民及學前教育署",
+      "status": "uploaded",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 80,
+      "meetings": []
+    },
+    {
+      "id": "11-3",
+      "parentCode": "11",
+      "parentName": "教育部主管",
+      "itemCode": "3",
+      "name": "青年發展署",
+      "status": "uploaded",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 17,
+      "meetings": []
+    },
+    {
+      "id": "11-4",
+      "parentCode": "11",
+      "parentName": "教育部主管",
+      "itemCode": "4",
+      "name": "國家圖書館",
+      "status": "uploaded",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 3,
+      "meetings": []
+    },
+    {
+      "id": "11-5",
+      "parentCode": "11",
+      "parentName": "教育部主管",
+      "itemCode": "5",
+      "name": "國立公共資訊圖書館",
+      "status": "uploaded",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 2,
+      "meetings": []
+    },
+    {
+      "id": "11-6",
+      "parentCode": "11",
+      "parentName": "教育部主管",
+      "itemCode": "6",
+      "name": "國立教育廣播電臺",
+      "status": "uploaded",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 1,
+      "meetings": []
+    },
+    {
+      "id": "11-7",
+      "parentCode": "11",
+      "parentName": "教育部主管",
+      "itemCode": "7",
+      "name": "國家教育研究院",
+      "status": "uploaded",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 1,
+      "meetings": []
+    },
+    {
+      "id": "12-1",
+      "parentCode": "12",
+      "parentName": "法務部主管",
+      "itemCode": "1",
+      "name": "法務部",
+      "status": "reviewed",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-05-27",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-36-15",
+          "date": "2026-05-27",
+          "name": "第11屆第5會期司法及法制委員會第15次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-36-15"
+        }
+      ]
+    },
+    {
+      "id": "12-2",
+      "parentCode": "12",
+      "parentName": "法務部主管",
+      "itemCode": "2",
+      "name": "司法官學院",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "12-3",
+      "parentCode": "12",
+      "parentName": "法務部主管",
+      "itemCode": "3",
+      "name": "法醫研究所",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "12-4",
+      "parentCode": "12",
+      "parentName": "法務部主管",
+      "itemCode": "4",
+      "name": "廉政署",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "12-5",
+      "parentCode": "12",
+      "parentName": "法務部主管",
+      "itemCode": "5",
+      "name": "矯正署及所屬",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "12-6",
+      "parentCode": "12",
+      "parentName": "法務部主管",
+      "itemCode": "6",
+      "name": "行政執行署及所屬",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "12-7",
+      "parentCode": "12",
+      "parentName": "法務部主管",
+      "itemCode": "7",
+      "name": "最高檢察署",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "12-8",
+      "parentCode": "12",
+      "parentName": "法務部主管",
+      "itemCode": "8",
+      "name": "臺灣高等檢察署",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "12-9",
+      "parentCode": "12",
+      "parentName": "法務部主管",
+      "itemCode": "9",
+      "name": "臺灣高等檢察署臺中檢察分署",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "12-10",
+      "parentCode": "12",
+      "parentName": "法務部主管",
+      "itemCode": "10",
+      "name": "臺灣高等檢察署臺南檢察分署",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "12-11",
+      "parentCode": "12",
+      "parentName": "法務部主管",
+      "itemCode": "11",
+      "name": "臺灣高等檢察署高雄檢察分署",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "12-12",
+      "parentCode": "12",
+      "parentName": "法務部主管",
+      "itemCode": "12",
+      "name": "臺灣高等檢察署花蓮檢察分署",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "12-13",
+      "parentCode": "12",
+      "parentName": "法務部主管",
+      "itemCode": "13",
+      "name": "臺灣高等檢察署智慧財產檢察分署",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "12-14",
+      "parentCode": "12",
+      "parentName": "法務部主管",
+      "itemCode": "14",
+      "name": "臺灣臺北地方檢察署",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "12-15",
+      "parentCode": "12",
+      "parentName": "法務部主管",
+      "itemCode": "15",
+      "name": "臺灣士林地方檢察署",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "12-16",
+      "parentCode": "12",
+      "parentName": "法務部主管",
+      "itemCode": "16",
+      "name": "臺灣新北地方檢察署",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "12-17",
+      "parentCode": "12",
+      "parentName": "法務部主管",
+      "itemCode": "17",
+      "name": "臺灣桃園地方檢察署",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "12-18",
+      "parentCode": "12",
+      "parentName": "法務部主管",
+      "itemCode": "18",
+      "name": "臺灣新竹地方檢察署",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "12-19",
+      "parentCode": "12",
+      "parentName": "法務部主管",
+      "itemCode": "19",
+      "name": "臺灣苗栗地方檢察署",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "12-20",
+      "parentCode": "12",
+      "parentName": "法務部主管",
+      "itemCode": "20",
+      "name": "臺灣臺中地方檢察署",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "12-21",
+      "parentCode": "12",
+      "parentName": "法務部主管",
+      "itemCode": "21",
+      "name": "臺灣南投地方檢察署",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "12-22",
+      "parentCode": "12",
+      "parentName": "法務部主管",
+      "itemCode": "22",
+      "name": "臺灣彰化地方檢察署",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "12-23",
+      "parentCode": "12",
+      "parentName": "法務部主管",
+      "itemCode": "23",
+      "name": "臺灣雲林地方檢察署",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "12-24",
+      "parentCode": "12",
+      "parentName": "法務部主管",
+      "itemCode": "24",
+      "name": "臺灣嘉義地方檢察署",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "12-25",
+      "parentCode": "12",
+      "parentName": "法務部主管",
+      "itemCode": "25",
+      "name": "臺灣臺南地方檢察署",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "12-26",
+      "parentCode": "12",
+      "parentName": "法務部主管",
+      "itemCode": "26",
+      "name": "臺灣橋頭地方檢察署",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "12-27",
+      "parentCode": "12",
+      "parentName": "法務部主管",
+      "itemCode": "27",
+      "name": "臺灣高雄地方檢察署",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "12-28",
+      "parentCode": "12",
+      "parentName": "法務部主管",
+      "itemCode": "28",
+      "name": "臺灣屏東地方檢察署",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "12-29",
+      "parentCode": "12",
+      "parentName": "法務部主管",
+      "itemCode": "29",
+      "name": "臺灣臺東地方檢察署",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "12-30",
+      "parentCode": "12",
+      "parentName": "法務部主管",
+      "itemCode": "30",
+      "name": "臺灣花蓮地方檢察署",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "12-31",
+      "parentCode": "12",
+      "parentName": "法務部主管",
+      "itemCode": "31",
+      "name": "臺灣宜蘭地方檢察署",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "12-32",
+      "parentCode": "12",
+      "parentName": "法務部主管",
+      "itemCode": "32",
+      "name": "臺灣基隆地方檢察署",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "12-33",
+      "parentCode": "12",
+      "parentName": "法務部主管",
+      "itemCode": "33",
+      "name": "臺灣澎湖地方檢察署",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "12-34",
+      "parentCode": "12",
+      "parentName": "法務部主管",
+      "itemCode": "34",
+      "name": "福建高等檢察署金門檢察分署",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "12-35",
+      "parentCode": "12",
+      "parentName": "法務部主管",
+      "itemCode": "35",
+      "name": "福建金門地方檢察署",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "12-36",
+      "parentCode": "12",
+      "parentName": "法務部主管",
+      "itemCode": "36",
+      "name": "福建連江地方檢察署",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "12-37",
+      "parentCode": "12",
+      "parentName": "法務部主管",
+      "itemCode": "37",
+      "name": "調查局",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "13-1",
+      "parentCode": "13",
+      "parentName": "經濟部主管",
+      "itemCode": "1",
+      "name": "經濟部",
+      "status": "reviewed",
+      "reviewedMeetingCount": 3,
+      "latestReviewDate": "2026-07-02",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-19-19",
+          "date": "2026-07-02",
+          "name": "第11屆第5會期經濟委員會第19次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-19-19"
+        },
+        {
+          "id": "委員會-11-5-19-18",
+          "date": "2026-06-18",
+          "name": "第11屆第5會期經濟委員會第18次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-19-18"
+        },
+        {
+          "id": "委員會-11-5-19-17",
+          "date": "2026-06-11",
+          "name": "第11屆第5會期經濟委員會第17次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-19-17"
+        }
+      ]
+    },
+    {
+      "id": "13-2",
+      "parentCode": "13",
+      "parentName": "經濟部主管",
+      "itemCode": "2",
+      "name": "產業發展署",
+      "status": "reviewed",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-07-02",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-19-19",
+          "date": "2026-07-02",
+          "name": "第11屆第5會期經濟委員會第19次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-19-19"
+        }
+      ]
+    },
+    {
+      "id": "13-3",
+      "parentCode": "13",
+      "parentName": "經濟部主管",
+      "itemCode": "3",
+      "name": "國際貿易署",
+      "status": "reviewed",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-06-18",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-19-18",
+          "date": "2026-06-18",
+          "name": "第11屆第5會期經濟委員會第18次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-19-18"
+        }
+      ]
+    },
+    {
+      "id": "13-4",
+      "parentCode": "13",
+      "parentName": "經濟部主管",
+      "itemCode": "4",
+      "name": "標準檢驗局及所屬",
+      "status": "reviewed",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-07-02",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-19-19",
+          "date": "2026-07-02",
+          "name": "第11屆第5會期經濟委員會第19次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-19-19"
+        }
+      ]
+    },
+    {
+      "id": "13-5",
+      "parentCode": "13",
+      "parentName": "經濟部主管",
+      "itemCode": "5",
+      "name": "智慧財產局",
+      "status": "reviewed",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-07-02",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-19-19",
+          "date": "2026-07-02",
+          "name": "第11屆第5會期經濟委員會第19次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-19-19"
+        }
+      ]
+    },
+    {
+      "id": "13-6",
+      "parentCode": "13",
+      "parentName": "經濟部主管",
+      "itemCode": "6",
+      "name": "水利署及所屬",
+      "status": "reviewed",
+      "reviewedMeetingCount": 2,
+      "latestReviewDate": "2026-06-18",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-19-18",
+          "date": "2026-06-18",
+          "name": "第11屆第5會期經濟委員會第18次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-19-18"
+        },
+        {
+          "id": "委員會-11-5-19-15",
+          "date": "2026-05-28",
+          "name": "第11屆第5會期經濟委員會第15次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-19-15"
+        }
+      ]
+    },
+    {
+      "id": "13-7",
+      "parentCode": "13",
+      "parentName": "經濟部主管",
+      "itemCode": "7",
+      "name": "商業發展署",
+      "status": "reviewed",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-07-02",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-19-19",
+          "date": "2026-07-02",
+          "name": "第11屆第5會期經濟委員會第19次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-19-19"
+        }
+      ]
+    },
+    {
+      "id": "13-8",
+      "parentCode": "13",
+      "parentName": "經濟部主管",
+      "itemCode": "8",
+      "name": "中小及新創企業署",
+      "status": "reviewed",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-07-02",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-19-19",
+          "date": "2026-07-02",
+          "name": "第11屆第5會期經濟委員會第19次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-19-19"
+        }
+      ]
+    },
+    {
+      "id": "13-9",
+      "parentCode": "13",
+      "parentName": "經濟部主管",
+      "itemCode": "9",
+      "name": "產業園區管理局及所屬",
+      "status": "reviewed",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-07-02",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-19-19",
+          "date": "2026-07-02",
+          "name": "第11屆第5會期經濟委員會第19次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-19-19"
+        }
+      ]
+    },
+    {
+      "id": "13-10",
+      "parentCode": "13",
+      "parentName": "經濟部主管",
+      "itemCode": "10",
+      "name": "地質調查及礦業管理中心",
+      "status": "reviewed",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-06-18",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-19-18",
+          "date": "2026-06-18",
+          "name": "第11屆第5會期經濟委員會第18次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-19-18"
+        }
+      ]
+    },
+    {
+      "id": "13-11",
+      "parentCode": "13",
+      "parentName": "經濟部主管",
+      "itemCode": "11",
+      "name": "能源署",
+      "status": "reviewed",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-06-18",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-19-18",
+          "date": "2026-06-18",
+          "name": "第11屆第5會期經濟委員會第18次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-19-18"
+        }
+      ]
+    },
+    {
+      "id": "14-1",
+      "parentCode": "14",
+      "parentName": "交通部主管",
+      "itemCode": "1",
+      "name": "交通部",
+      "status": "uploaded",
+      "reviewedMeetingCount": 9,
+      "latestReviewDate": "2026-06-24",
+      "uploadedProposalCount": 58,
+      "meetings": [
+        {
+          "id": "委員會-11-5-23-20",
+          "date": "2026-06-24",
+          "name": "第11屆第5會期交通委員會第20次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-23-20"
+        },
+        {
+          "id": "委員會-11-5-23-19",
+          "date": "2026-06-17",
+          "name": "第11屆第5會期交通委員會第19次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-23-19"
+        },
+        {
+          "id": "委員會-11-5-23-18",
+          "date": "2026-06-10",
+          "name": "第11屆第5會期交通委員會第18次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-23-18"
+        },
+        {
+          "id": "委員會-11-5-23-18",
+          "date": "2026-06-11",
+          "name": "第11屆第5會期交通委員會第18次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-23-18"
+        },
+        {
+          "id": "委員會-11-5-23-15",
+          "date": "2026-05-25",
+          "name": "第11屆第5會期交通委員會第15次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-23-15"
+        }
+      ]
+    },
+    {
+      "id": "14-2",
+      "parentCode": "14",
+      "parentName": "交通部主管",
+      "itemCode": "2",
+      "name": "民用航空局",
+      "status": "reviewed",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-06-17",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-23-19",
+          "date": "2026-06-17",
+          "name": "第11屆第5會期交通委員會第19次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-23-19"
+        }
+      ]
+    },
+    {
+      "id": "14-3",
+      "parentCode": "14",
+      "parentName": "交通部主管",
+      "itemCode": "3",
+      "name": "中央氣象署",
+      "status": "uploaded",
+      "reviewedMeetingCount": 4,
+      "latestReviewDate": "2026-05-28",
+      "uploadedProposalCount": 14,
+      "meetings": [
+        {
+          "id": "委員會-11-5-23-15",
+          "date": "2026-05-25",
+          "name": "第11屆第5會期交通委員會第15次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-23-15"
+        },
+        {
+          "id": "委員會-11-5-23-15",
+          "date": "2026-05-27",
+          "name": "第11屆第5會期交通委員會第15次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-23-15"
+        },
+        {
+          "id": "委員會-11-5-23-15",
+          "date": "2026-05-28",
+          "name": "第11屆第5會期交通委員會第15次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-23-15"
+        },
+        {
+          "id": "委員會-11-5-23-14",
+          "date": "2026-05-20",
+          "name": "第11屆第5會期交通委員會第14次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-23-14"
+        }
+      ]
+    },
+    {
+      "id": "14-4",
+      "parentCode": "14",
+      "parentName": "交通部主管",
+      "itemCode": "4",
+      "name": "觀光署及所屬",
+      "status": "uploaded",
+      "reviewedMeetingCount": 4,
+      "latestReviewDate": "2026-05-28",
+      "uploadedProposalCount": 24,
+      "meetings": [
+        {
+          "id": "委員會-11-5-23-15",
+          "date": "2026-05-25",
+          "name": "第11屆第5會期交通委員會第15次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-23-15"
+        },
+        {
+          "id": "委員會-11-5-23-15",
+          "date": "2026-05-27",
+          "name": "第11屆第5會期交通委員會第15次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-23-15"
+        },
+        {
+          "id": "委員會-11-5-23-15",
+          "date": "2026-05-28",
+          "name": "第11屆第5會期交通委員會第15次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-23-15"
+        },
+        {
+          "id": "委員會-11-5-23-14",
+          "date": "2026-05-20",
+          "name": "第11屆第5會期交通委員會第14次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-23-14"
+        }
+      ]
+    },
+    {
+      "id": "14-5",
+      "parentCode": "14",
+      "parentName": "交通部主管",
+      "itemCode": "5",
+      "name": "運輸研究所",
+      "status": "uploaded",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-05-20",
+      "uploadedProposalCount": 12,
+      "meetings": [
+        {
+          "id": "委員會-11-5-23-14",
+          "date": "2026-05-20",
+          "name": "第11屆第5會期交通委員會第14次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-23-14"
+        }
+      ]
+    },
+    {
+      "id": "14-6",
+      "parentCode": "14",
+      "parentName": "交通部主管",
+      "itemCode": "6",
+      "name": "公路局及所屬",
+      "status": "uploaded",
+      "reviewedMeetingCount": 4,
+      "latestReviewDate": "2026-05-28",
+      "uploadedProposalCount": 36,
+      "meetings": [
+        {
+          "id": "委員會-11-5-23-15",
+          "date": "2026-05-25",
+          "name": "第11屆第5會期交通委員會第15次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-23-15"
+        },
+        {
+          "id": "委員會-11-5-23-15",
+          "date": "2026-05-27",
+          "name": "第11屆第5會期交通委員會第15次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-23-15"
+        },
+        {
+          "id": "委員會-11-5-23-15",
+          "date": "2026-05-28",
+          "name": "第11屆第5會期交通委員會第15次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-23-15"
+        },
+        {
+          "id": "委員會-11-5-23-14",
+          "date": "2026-05-20",
+          "name": "第11屆第5會期交通委員會第14次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-23-14"
+        }
+      ]
+    },
+    {
+      "id": "14-7",
+      "parentCode": "14",
+      "parentName": "交通部主管",
+      "itemCode": "7",
+      "name": "鐵道局及所屬",
+      "status": "reviewed",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-06-24",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-23-20",
+          "date": "2026-06-24",
+          "name": "第11屆第5會期交通委員會第20次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-23-20"
+        }
+      ]
+    },
+    {
+      "id": "14-8",
+      "parentCode": "14",
+      "parentName": "交通部主管",
+      "itemCode": "8",
+      "name": "航港局",
+      "status": "uploaded",
+      "reviewedMeetingCount": 4,
+      "latestReviewDate": "2026-05-28",
+      "uploadedProposalCount": 16,
+      "meetings": [
+        {
+          "id": "委員會-11-5-23-15",
+          "date": "2026-05-25",
+          "name": "第11屆第5會期交通委員會第15次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-23-15"
+        },
+        {
+          "id": "委員會-11-5-23-15",
+          "date": "2026-05-27",
+          "name": "第11屆第5會期交通委員會第15次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-23-15"
+        },
+        {
+          "id": "委員會-11-5-23-15",
+          "date": "2026-05-28",
+          "name": "第11屆第5會期交通委員會第15次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-23-15"
+        },
+        {
+          "id": "委員會-11-5-23-14",
+          "date": "2026-05-20",
+          "name": "第11屆第5會期交通委員會第14次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-23-14"
+        }
+      ]
+    },
+    {
+      "id": "15-1",
+      "parentCode": "15",
+      "parentName": "勞動部主管",
+      "itemCode": "1",
+      "name": "勞動部",
+      "status": "reviewed",
+      "reviewedMeetingCount": 2,
+      "latestReviewDate": "2026-06-04",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-26-13",
+          "date": "2026-06-03",
+          "name": "第11屆第5會期社會福利及衛生環境委員會第13次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-26-13"
+        },
+        {
+          "id": "委員會-11-5-26-13",
+          "date": "2026-06-04",
+          "name": "第11屆第5會期社會福利及衛生環境委員會第13次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-26-13"
+        }
+      ]
+    },
+    {
+      "id": "15-2",
+      "parentCode": "15",
+      "parentName": "勞動部主管",
+      "itemCode": "2",
+      "name": "勞工保險局",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "15-3",
+      "parentCode": "15",
+      "parentName": "勞動部主管",
+      "itemCode": "3",
+      "name": "勞動力發展署及所屬",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "15-4",
+      "parentCode": "15",
+      "parentName": "勞動部主管",
+      "itemCode": "4",
+      "name": "職業安全衛生署",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "15-5",
+      "parentCode": "15",
+      "parentName": "勞動部主管",
+      "itemCode": "5",
+      "name": "勞動基金運用局",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "15-6",
+      "parentCode": "15",
+      "parentName": "勞動部主管",
+      "itemCode": "6",
+      "name": "勞動及職業安全衛生研究所",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "16-1",
+      "parentCode": "16",
+      "parentName": "農業部主管",
+      "itemCode": "1",
+      "name": "農業部",
+      "status": "reviewed",
+      "reviewedMeetingCount": 2,
+      "latestReviewDate": "2026-06-10",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-19-17",
+          "date": "2026-06-10",
+          "name": "第11屆第5會期經濟委員會第17次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-19-17"
+        },
+        {
+          "id": "委員會-11-5-19-15",
+          "date": "2026-05-28",
+          "name": "第11屆第5會期經濟委員會第15次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-19-15"
+        }
+      ]
+    },
+    {
+      "id": "16-2",
+      "parentCode": "16",
+      "parentName": "農業部主管",
+      "itemCode": "2",
+      "name": "林業及自然保育署及所屬",
+      "status": "reviewed",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-05-28",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-19-15",
+          "date": "2026-05-28",
+          "name": "第11屆第5會期經濟委員會第15次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-19-15"
+        }
+      ]
+    },
+    {
+      "id": "16-3",
+      "parentCode": "16",
+      "parentName": "農業部主管",
+      "itemCode": "3",
+      "name": "農村發展及水土保持署及所屬",
+      "status": "reviewed",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-05-28",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-19-15",
+          "date": "2026-05-28",
+          "name": "第11屆第5會期經濟委員會第15次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-19-15"
+        }
+      ]
+    },
+    {
+      "id": "16-4",
+      "parentCode": "16",
+      "parentName": "農業部主管",
+      "itemCode": "4",
+      "name": "農業試驗所及所屬",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "16-5",
+      "parentCode": "16",
+      "parentName": "農業部主管",
+      "itemCode": "5",
+      "name": "林業試驗所",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "16-6",
+      "parentCode": "16",
+      "parentName": "農業部主管",
+      "itemCode": "6",
+      "name": "水產試驗所",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "16-7",
+      "parentCode": "16",
+      "parentName": "農業部主管",
+      "itemCode": "7",
+      "name": "畜產試驗所及所屬",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "16-8",
+      "parentCode": "16",
+      "parentName": "農業部主管",
+      "itemCode": "8",
+      "name": "獸醫研究所",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "16-9",
+      "parentCode": "16",
+      "parentName": "農業部主管",
+      "itemCode": "9",
+      "name": "農業藥物試驗所",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "16-10",
+      "parentCode": "16",
+      "parentName": "農業部主管",
+      "itemCode": "10",
+      "name": "生物多樣性研究所",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "16-11",
+      "parentCode": "16",
+      "parentName": "農業部主管",
+      "itemCode": "11",
+      "name": "茶及飲料作物改良場",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "16-12",
+      "parentCode": "16",
+      "parentName": "農業部主管",
+      "itemCode": "12",
+      "name": "種苗改良繁殖場",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "16-13",
+      "parentCode": "16",
+      "parentName": "農業部主管",
+      "itemCode": "13",
+      "name": "桃園區農業改良場",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "16-14",
+      "parentCode": "16",
+      "parentName": "農業部主管",
+      "itemCode": "14",
+      "name": "苗栗區農業改良場",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "16-15",
+      "parentCode": "16",
+      "parentName": "農業部主管",
+      "itemCode": "15",
+      "name": "臺中區農業改良場",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "16-16",
+      "parentCode": "16",
+      "parentName": "農業部主管",
+      "itemCode": "16",
+      "name": "臺南區農業改良場",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "16-17",
+      "parentCode": "16",
+      "parentName": "農業部主管",
+      "itemCode": "17",
+      "name": "高雄區農業改良場",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "16-18",
+      "parentCode": "16",
+      "parentName": "農業部主管",
+      "itemCode": "18",
+      "name": "花蓮區農業改良場",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "16-19",
+      "parentCode": "16",
+      "parentName": "農業部主管",
+      "itemCode": "19",
+      "name": "臺東區農業改良場",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "16-20",
+      "parentCode": "16",
+      "parentName": "農業部主管",
+      "itemCode": "20",
+      "name": "漁業署及所屬",
+      "status": "reviewed",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-05-28",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-19-15",
+          "date": "2026-05-28",
+          "name": "第11屆第5會期經濟委員會第15次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-19-15"
+        }
+      ]
+    },
+    {
+      "id": "16-21",
+      "parentCode": "16",
+      "parentName": "農業部主管",
+      "itemCode": "21",
+      "name": "動植物防疫檢疫署及所屬",
+      "status": "reviewed",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-05-28",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-19-15",
+          "date": "2026-05-28",
+          "name": "第11屆第5會期經濟委員會第15次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-19-15"
+        }
+      ]
+    },
+    {
+      "id": "16-22",
+      "parentCode": "16",
+      "parentName": "農業部主管",
+      "itemCode": "22",
+      "name": "農業金融署",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "16-23",
+      "parentCode": "16",
+      "parentName": "農業部主管",
+      "itemCode": "23",
+      "name": "農糧署及所屬",
+      "status": "reviewed",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-05-28",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-19-15",
+          "date": "2026-05-28",
+          "name": "第11屆第5會期經濟委員會第15次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-19-15"
+        }
+      ]
+    },
+    {
+      "id": "16-24",
+      "parentCode": "16",
+      "parentName": "農業部主管",
+      "itemCode": "24",
+      "name": "農田水利署",
+      "status": "reviewed",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-05-28",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-19-15",
+          "date": "2026-05-28",
+          "name": "第11屆第5會期經濟委員會第15次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-19-15"
+        }
+      ]
+    },
+    {
+      "id": "16-25",
+      "parentCode": "16",
+      "parentName": "農業部主管",
+      "itemCode": "25",
+      "name": "農業科技園區管理中心",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "17-1",
+      "parentCode": "17",
+      "parentName": "衛生福利部主管",
+      "itemCode": "1",
+      "name": "衛生福利部",
+      "status": "reviewed",
+      "reviewedMeetingCount": 2,
+      "latestReviewDate": "2026-06-18",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-26-15",
+          "date": "2026-06-17",
+          "name": "第11屆第5會期社會福利及衛生環境委員會第15次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-26-15"
+        },
+        {
+          "id": "委員會-11-5-26-15",
+          "date": "2026-06-18",
+          "name": "第11屆第5會期社會福利及衛生環境委員會第15次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-26-15"
+        }
+      ]
+    },
+    {
+      "id": "17-2",
+      "parentCode": "17",
+      "parentName": "衛生福利部主管",
+      "itemCode": "2",
+      "name": "疾病管制署",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "17-3",
+      "parentCode": "17",
+      "parentName": "衛生福利部主管",
+      "itemCode": "3",
+      "name": "食品藥物管理署",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "17-4",
+      "parentCode": "17",
+      "parentName": "衛生福利部主管",
+      "itemCode": "4",
+      "name": "中央健康保險署",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "17-5",
+      "parentCode": "17",
+      "parentName": "衛生福利部主管",
+      "itemCode": "5",
+      "name": "國民健康署",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "17-6",
+      "parentCode": "17",
+      "parentName": "衛生福利部主管",
+      "itemCode": "6",
+      "name": "社會及家庭署",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "17-7",
+      "parentCode": "17",
+      "parentName": "衛生福利部主管",
+      "itemCode": "7",
+      "name": "國家中醫藥研究所",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "18-1",
+      "parentCode": "18",
+      "parentName": "運動部主管",
+      "itemCode": "1",
+      "name": "運動部",
+      "status": "reviewed",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-07-01",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-22-18",
+          "date": "2026-07-01",
+          "name": "第11屆第5會期教育及文化委員會第18次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-22-18"
+        }
+      ]
+    },
+    {
+      "id": "18-2",
+      "parentCode": "18",
+      "parentName": "運動部主管",
+      "itemCode": "2",
+      "name": "全民運動署",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "19-1",
+      "parentCode": "19",
+      "parentName": "環境部主管",
+      "itemCode": "1",
+      "name": "環境部",
+      "status": "uploaded",
+      "reviewedMeetingCount": 2,
+      "latestReviewDate": "2026-05-21",
+      "uploadedProposalCount": 132,
+      "meetings": [
+        {
+          "id": "委員會-11-5-26-11",
+          "date": "2026-05-20",
+          "name": "第11屆第5會期社會福利及衛生環境委員會第11次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-26-11"
+        },
+        {
+          "id": "委員會-11-5-26-11",
+          "date": "2026-05-21",
+          "name": "第11屆第5會期社會福利及衛生環境委員會第11次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-26-11"
+        }
+      ]
+    },
+    {
+      "id": "19-2",
+      "parentCode": "19",
+      "parentName": "環境部主管",
+      "itemCode": "2",
+      "name": "氣候變遷署",
+      "status": "uploaded",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 46,
+      "meetings": []
+    },
+    {
+      "id": "19-3",
+      "parentCode": "19",
+      "parentName": "環境部主管",
+      "itemCode": "3",
+      "name": "資源循環署",
+      "status": "uploaded",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 56,
+      "meetings": []
+    },
+    {
+      "id": "19-4",
+      "parentCode": "19",
+      "parentName": "環境部主管",
+      "itemCode": "4",
+      "name": "化學物質管理署",
+      "status": "uploaded",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 27,
+      "meetings": []
+    },
+    {
+      "id": "19-5",
+      "parentCode": "19",
+      "parentName": "環境部主管",
+      "itemCode": "5",
+      "name": "環境管理署",
+      "status": "uploaded",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 72,
+      "meetings": []
+    },
+    {
+      "id": "19-6",
+      "parentCode": "19",
+      "parentName": "環境部主管",
+      "itemCode": "6",
+      "name": "國家環境研究院",
+      "status": "uploaded",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 18,
+      "meetings": []
+    },
+    {
+      "id": "20-1",
+      "parentCode": "20",
+      "parentName": "文化部主管",
+      "itemCode": "1",
+      "name": "文化部",
+      "status": "reviewed",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-07-02",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-22-18",
+          "date": "2026-07-02",
+          "name": "第11屆第5會期教育及文化委員會第18次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-22-18"
+        }
+      ]
+    },
+    {
+      "id": "20-2",
+      "parentCode": "20",
+      "parentName": "文化部主管",
+      "itemCode": "2",
+      "name": "文化資產局",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "20-3",
+      "parentCode": "20",
+      "parentName": "文化部主管",
+      "itemCode": "3",
+      "name": "影視及流行音樂產業局",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "20-4",
+      "parentCode": "20",
+      "parentName": "文化部主管",
+      "itemCode": "4",
+      "name": "國立傳統藝術中心",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "20-5",
+      "parentCode": "20",
+      "parentName": "文化部主管",
+      "itemCode": "5",
+      "name": "國立臺灣美術館及所屬",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "20-6",
+      "parentCode": "20",
+      "parentName": "文化部主管",
+      "itemCode": "6",
+      "name": "國立臺灣工藝研究發展中心",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "20-7",
+      "parentCode": "20",
+      "parentName": "文化部主管",
+      "itemCode": "7",
+      "name": "國立臺灣博物館",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "20-8",
+      "parentCode": "20",
+      "parentName": "文化部主管",
+      "itemCode": "8",
+      "name": "國立臺灣史前文化博物館",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "20-9",
+      "parentCode": "20",
+      "parentName": "文化部主管",
+      "itemCode": "9",
+      "name": "國家人權博物館",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "20-10",
+      "parentCode": "20",
+      "parentName": "文化部主管",
+      "itemCode": "10",
+      "name": "國立臺灣歷史博物館",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "20-11",
+      "parentCode": "20",
+      "parentName": "文化部主管",
+      "itemCode": "11",
+      "name": "國立臺灣文學館",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "21-1",
+      "parentCode": "21",
+      "parentName": "數位發展部主管",
+      "itemCode": "1",
+      "name": "數位發展部",
+      "status": "reviewed",
+      "reviewedMeetingCount": 4,
+      "latestReviewDate": "2026-07-02",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-23-21",
+          "date": "2026-06-29",
+          "name": "第11屆第5會期交通委員會第21次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-23-21"
+        },
+        {
+          "id": "委員會-11-5-23-21",
+          "date": "2026-07-01",
+          "name": "第11屆第5會期交通委員會第21次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-23-21"
+        },
+        {
+          "id": "委員會-11-5-23-21",
+          "date": "2026-07-02",
+          "name": "第11屆第5會期交通委員會第21次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-23-21"
+        },
+        {
+          "id": "委員會-11-5-23-19",
+          "date": "2026-06-17",
+          "name": "第11屆第5會期交通委員會第19次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-23-19"
+        }
+      ]
+    },
+    {
+      "id": "21-2",
+      "parentCode": "21",
+      "parentName": "數位發展部主管",
+      "itemCode": "2",
+      "name": "資通安全署",
+      "status": "reviewed",
+      "reviewedMeetingCount": 4,
+      "latestReviewDate": "2026-07-02",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-23-21",
+          "date": "2026-06-29",
+          "name": "第11屆第5會期交通委員會第21次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-23-21"
+        },
+        {
+          "id": "委員會-11-5-23-21",
+          "date": "2026-07-01",
+          "name": "第11屆第5會期交通委員會第21次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-23-21"
+        },
+        {
+          "id": "委員會-11-5-23-21",
+          "date": "2026-07-02",
+          "name": "第11屆第5會期交通委員會第21次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-23-21"
+        },
+        {
+          "id": "委員會-11-5-23-19",
+          "date": "2026-06-17",
+          "name": "第11屆第5會期交通委員會第19次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-23-19"
+        }
+      ]
+    },
+    {
+      "id": "21-3",
+      "parentCode": "21",
+      "parentName": "數位發展部主管",
+      "itemCode": "3",
+      "name": "數位產業署",
+      "status": "reviewed",
+      "reviewedMeetingCount": 4,
+      "latestReviewDate": "2026-07-02",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-23-21",
+          "date": "2026-06-29",
+          "name": "第11屆第5會期交通委員會第21次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-23-21"
+        },
+        {
+          "id": "委員會-11-5-23-21",
+          "date": "2026-07-01",
+          "name": "第11屆第5會期交通委員會第21次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-23-21"
+        },
+        {
+          "id": "委員會-11-5-23-21",
+          "date": "2026-07-02",
+          "name": "第11屆第5會期交通委員會第21次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-23-21"
+        },
+        {
+          "id": "委員會-11-5-23-19",
+          "date": "2026-06-17",
+          "name": "第11屆第5會期交通委員會第19次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-23-19"
+        }
+      ]
+    },
+    {
+      "id": "22-1",
+      "parentCode": "22",
+      "parentName": "僑務委員會主管",
+      "itemCode": "1",
+      "name": "僑務委員會",
+      "status": "reviewed",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-06-25",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-35-23",
+          "date": "2026-06-25",
+          "name": "第11屆第5會期外交及國防委員會第23次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-35-23"
+        }
+      ]
+    },
+    {
+      "id": "23-1",
+      "parentCode": "23",
+      "parentName": "國家科學及技術委員會主管",
+      "itemCode": "1",
+      "name": "國家科學及技術委員會",
+      "status": "reviewed",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-06-17",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-22-16",
+          "date": "2026-06-17",
+          "name": "第11屆第5會期教育及文化委員會第16次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-22-16"
+        }
+      ]
+    },
+    {
+      "id": "23-2",
+      "parentCode": "23",
+      "parentName": "國家科學及技術委員會主管",
+      "itemCode": "2",
+      "name": "新竹科學園區管理局",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "23-3",
+      "parentCode": "23",
+      "parentName": "國家科學及技術委員會主管",
+      "itemCode": "3",
+      "name": "中部科學園區管理局",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "23-4",
+      "parentCode": "23",
+      "parentName": "國家科學及技術委員會主管",
+      "itemCode": "4",
+      "name": "南部科學園區管理局",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "24-1",
+      "parentCode": "24",
+      "parentName": "金融監督管理委員會主管",
+      "itemCode": "1",
+      "name": "金融監督管理委員會",
+      "status": "reviewed",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-06-08",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-20-17",
+          "date": "2026-06-08",
+          "name": "第11屆第5會期財政委員會第17次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-20-17"
+        }
+      ]
+    },
+    {
+      "id": "24-2",
+      "parentCode": "24",
+      "parentName": "金融監督管理委員會主管",
+      "itemCode": "2",
+      "name": "銀行局",
+      "status": "reviewed",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-06-08",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-20-17",
+          "date": "2026-06-08",
+          "name": "第11屆第5會期財政委員會第17次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-20-17"
+        }
+      ]
+    },
+    {
+      "id": "24-3",
+      "parentCode": "24",
+      "parentName": "金融監督管理委員會主管",
+      "itemCode": "3",
+      "name": "證券期貨局",
+      "status": "reviewed",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-06-08",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-20-17",
+          "date": "2026-06-08",
+          "name": "第11屆第5會期財政委員會第17次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-20-17"
+        }
+      ]
+    },
+    {
+      "id": "24-4",
+      "parentCode": "24",
+      "parentName": "金融監督管理委員會主管",
+      "itemCode": "4",
+      "name": "保險局",
+      "status": "reviewed",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-06-08",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-20-17",
+          "date": "2026-06-08",
+          "name": "第11屆第5會期財政委員會第17次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-20-17"
+        }
+      ]
+    },
+    {
+      "id": "24-5",
+      "parentCode": "24",
+      "parentName": "金融監督管理委員會主管",
+      "itemCode": "5",
+      "name": "檢查局",
+      "status": "reviewed",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-06-08",
+      "uploadedProposalCount": 0,
+      "meetings": [
+        {
+          "id": "委員會-11-5-20-17",
+          "date": "2026-06-08",
+          "name": "第11屆第5會期財政委員會第17次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-20-17"
+        }
+      ]
+    },
+    {
+      "id": "25-1",
+      "parentCode": "25",
+      "parentName": "海洋委員會主管",
+      "itemCode": "1",
+      "name": "海洋委員會",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "25-2",
+      "parentCode": "25",
+      "parentName": "海洋委員會主管",
+      "itemCode": "2",
+      "name": "海巡署及所屬",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "25-3",
+      "parentCode": "25",
+      "parentName": "海洋委員會主管",
+      "itemCode": "3",
+      "name": "海洋保育署",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "25-4",
+      "parentCode": "25",
+      "parentName": "海洋委員會主管",
+      "itemCode": "4",
+      "name": "國家海洋研究院",
+      "status": "notReviewed",
+      "reviewedMeetingCount": 0,
+      "latestReviewDate": null,
+      "uploadedProposalCount": 0,
+      "meetings": []
+    },
+    {
+      "id": "26-1",
+      "parentCode": "26",
+      "parentName": "國軍退除役官兵輔導委員會主管",
+      "itemCode": "1",
+      "name": "國軍退除役官兵輔導委員會",
+      "status": "uploaded",
+      "reviewedMeetingCount": 1,
+      "latestReviewDate": "2026-05-18",
+      "uploadedProposalCount": 47,
+      "meetings": [
+        {
+          "id": "委員會-11-5-35-17",
+          "date": "2026-05-18",
+          "name": "第11屆第5會期外交及國防委員會第17次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-35-17"
+        }
+      ]
+    }
+  ]
+}
