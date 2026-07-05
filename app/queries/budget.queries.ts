@@ -85,6 +85,19 @@ export const GET_GOVERNMENTS_QUERY = graphql(`
   }
 `);
 
+export const GET_PROPOSAL_GOVERNMENTS_QUERY = graphql(`
+  query GetProposalGovernments($where: ProposalWhereInput!) {
+    proposals(where: $where) {
+      government {
+        id
+        name
+        category
+        description
+      }
+    }
+  }
+`);
+
 /**
  * React Query keys for government-related queries
  */
@@ -93,6 +106,9 @@ export const governmentQueryKeys = {
   lists: () => [...governmentQueryKeys.all, "list"] as const,
   list: (filters?: Record<string, unknown>) =>
     [...governmentQueryKeys.lists(), { filters }] as const,
+  proposalLists: () => [...governmentQueryKeys.all, "proposal-list"] as const,
+  proposalList: (filters?: Record<string, unknown>) =>
+    [...governmentQueryKeys.proposalLists(), { filters }] as const,
 } as const;
 
 /**

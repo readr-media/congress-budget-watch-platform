@@ -1,7 +1,6 @@
 import { useMemo, useEffect, useRef, useState, useCallback } from "react";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { redirect, useSearchParams } from "react-router";
-import type { SingleValue } from "react-select";
 import { ERROR_REDIRECT_ROUTE } from "~/constants/endpoints";
 import { execute } from "~/graphql/execute";
 import {
@@ -168,7 +167,7 @@ export const AllBudgets = () => {
     ];
   }, [availableBudgetYears]);
 
-  const selectedOption: SingleValue<YearOption> = useMemo(
+  const selectedOption: YearOption | null = useMemo(
     () => yearOptions.find((option) => option.value === selectedYear) ?? null,
     [yearOptions, selectedYear]
   );
@@ -250,8 +249,8 @@ export const AllBudgets = () => {
     progressMode === "latest" ? latestProgressData : unfreezeProgressData;
 
   const handleYearChange = useCallback(
-    (option: SingleValue<YearOption>) => {
-      setSelectedYear(option?.value ?? null);
+    (option: YearOption) => {
+      setSelectedYear(option.value);
     },
     [setSelectedYear]
   );
@@ -336,7 +335,13 @@ export const AllBudgets = () => {
     }
 
     return filters;
-  }, [departmentId, personId, debouncedSearchedValue, selectedYear, freezeOnly]);
+  }, [
+    departmentId,
+    personId,
+    debouncedSearchedValue,
+    selectedYear,
+    freezeOnly,
+  ]);
 
   // 修改後的 React Query（支援分頁）
   const fetchBudgetAmountSorted = useCallback(async () => {
