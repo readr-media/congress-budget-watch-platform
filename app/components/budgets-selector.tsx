@@ -12,6 +12,8 @@ import type { ProposalWhereInput } from "~/graphql/graphql";
 import useBudgetSelectStore, {
   useFreezeOnly,
   useSetFreezeOnly,
+  useSelectedResult,
+  useSetSelectedResult,
 } from "~/stores/budget-selector";
 import Select, {
   components,
@@ -53,6 +55,14 @@ const content = {
     },
   ] as BudgetOption[],
 };
+
+const resultOptions: OptionType[] = [
+  { value: "passed", label: "通過" },
+  { value: "rejected", label: "不通過" },
+  { value: "pending", label: "待審議" },
+  { value: "reserved", label: "保留" },
+  { value: "withdrawn", label: "撤案" },
+];
 
 export const DropdownIndicator = (
   props: DropdownIndicatorProps<OptionType>
@@ -382,6 +392,13 @@ const BudgetsSelector: React.FC<BudgetsSelectorProps> = ({
   );
   const freezeOnly = useFreezeOnly();
   const setFreezeOnly = useSetFreezeOnly();
+  const selectedResult = useSelectedResult();
+  const setSelectedResult = useSetSelectedResult();
+  const selectedResultValue = useMemo(
+    () =>
+      resultOptions.find((option) => option.value === selectedResult) ?? null,
+    [selectedResult]
+  );
 
   const handleSelectionChange = (value: string) => {
     setSelectedValue(value);
@@ -465,6 +482,35 @@ const BudgetsSelector: React.FC<BudgetsSelectorProps> = ({
               )}
             </div>
           ))}
+          <section className="flex flex-col items-center gap-y-2 md:flex-row md:justify-center md:gap-x-2">
+            <label
+              htmlFor="budget-result-selector"
+              className="text-sm font-medium text-gray-700"
+            >
+              審議結果：
+            </label>
+            <Select
+              inputId="budget-result-selector"
+              value={selectedResultValue}
+              onChange={(opt) => {
+                const singleValue = opt as SingleValue<OptionType>;
+                setSelectedResult(singleValue?.value ?? null);
+              }}
+              options={resultOptions}
+              components={{ DropdownIndicator }}
+              className="w-full md:w-60"
+              styles={{
+                control: (styles) => ({ ...styles, border: "2px solid black" }),
+                indicatorSeparator: (styles) => ({
+                  ...styles,
+                  display: "none",
+                }),
+              }}
+              placeholder="全部審議結果"
+              isClearable
+              aria-label="選擇審議結果"
+            />
+          </section>
           <section className="md:flex md:items-center">
             <label htmlFor="budget-search-input" className="mr-2">
               或搜尋：

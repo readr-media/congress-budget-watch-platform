@@ -19,6 +19,7 @@ import {
   useSelectedYear,
   useSetSelectedYear,
   useFreezeOnly,
+  useSelectedResult,
 } from "~/stores/budget-selector";
 import { useMediaQuery } from "usehooks-ts";
 import type {
@@ -108,6 +109,7 @@ export const AllBudgets = () => {
   const selectedYear = useSelectedYear();
   const setSelectedYear = useSetSelectedYear();
   const freezeOnly = useFreezeOnly();
+  const selectedResult = useSelectedResult();
   const [progressMode, setProgressMode] = useState<ProgressMode>("latest");
   const hasAppliedDefaultYear = useRef(false);
   const previousYearParam = useRef<string | null>(null);
@@ -360,6 +362,9 @@ export const AllBudgets = () => {
       // TODO: backend schema目前沒有對proposalTypes的has/contains filter，暫時以freezeAmount>0近似篩出凍結案；待schema支援後改用proposalTypes判斷。
       filters.freezeAmount = { gt: 0 };
     }
+    if (selectedResult) {
+      filters.result = { equals: selectedResult };
+    }
 
     return filters;
   }, [
@@ -368,6 +373,7 @@ export const AllBudgets = () => {
     debouncedSearchedValue,
     selectedYear,
     freezeOnly,
+    selectedResult,
   ]);
 
   // 修改後的 React Query（支援分頁）
@@ -477,6 +483,7 @@ export const AllBudgets = () => {
     debouncedSearchedValue,
     selectedYear,
     freezeOnly,
+    selectedResult,
     setPage,
   ]);
 

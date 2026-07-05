@@ -22,6 +22,7 @@ type BudgetSelectorState = {
   peopleFilter: PeopleFilter;
   selectedYear: number | null;
   freezeOnly: boolean;
+  selectedResult: string | null;
 };
 
 type BudgetSelectorActions = {
@@ -37,6 +38,7 @@ type BudgetSelectorActions = {
   clearPeopleFilter: () => void;
   setSelectedYear: (year: number | null) => void;
   setFreezeOnly: (value: boolean) => void;
+  setSelectedResult: (result: string | null) => void;
 };
 
 type BudgetSelectorStore = {
@@ -56,6 +58,7 @@ const DEFAULT_STATE: BudgetSelectorState = {
   peopleFilter: { personId: null },
   selectedYear: null,
   freezeOnly: false,
+  selectedResult: null,
 };
 
 const createInitialState = (
@@ -98,6 +101,7 @@ export const createBudgetSelectStore = (
           set((draft) => {
             draft.state.selectedValue = DEFAULT_STATE.selectedValue;
             draft.state.freezeOnly = DEFAULT_STATE.freezeOnly;
+            draft.state.selectedResult = DEFAULT_STATE.selectedResult;
           }),
         setDepartmentCategory: (category: string | null) =>
           set((draft) => {
@@ -128,6 +132,10 @@ export const createBudgetSelectStore = (
         setFreezeOnly: (value: boolean) =>
           set((draft) => {
             draft.state.freezeOnly = value;
+          }),
+        setSelectedResult: (result: string | null) =>
+          set((draft) => {
+            draft.state.selectedResult = result;
           }),
       },
     }))
@@ -165,6 +173,8 @@ export const useSelectedYear = () =>
   useStore(defaultBudgetSelectStore, (s) => s.state.selectedYear);
 export const useFreezeOnly = () =>
   useStore(defaultBudgetSelectStore, (s) => s.state.freezeOnly);
+export const useSelectedResult = () =>
+  useStore(defaultBudgetSelectStore, (s) => s.state.selectedResult);
 
 // Action Hooks
 export const useSetSelectedSort = () =>
@@ -174,3 +184,5 @@ export const useSetSelectedYear = () =>
   useStore(defaultBudgetSelectStore, (s) => s.actions.setSelectedYear);
 export const useSetFreezeOnly = () =>
   useStore(defaultBudgetSelectStore, (s) => s.actions.setFreezeOnly);
+export const useSetSelectedResult = () =>
+  useStore(defaultBudgetSelectStore, (s) => s.actions.setSelectedResult);
