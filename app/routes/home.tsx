@@ -103,6 +103,7 @@ type NavigationButton = {
 
 type UpdateStatusItem = {
   date?: string;
+  author?: string;
   text: string;
 };
 
@@ -349,6 +350,11 @@ export default function Home() {
             <p className="text-sm leading-relaxed text-gray-700 md:text-base">
               {currentUpdateStatus.text}
             </p>
+            {currentUpdateStatus.author && (
+              <p className="mt-3 text-right text-xs font-medium text-gray-500">
+                By {currentUpdateStatus.author}
+              </p>
+            )}
           </section>
         )}
 
