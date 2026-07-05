@@ -511,7 +511,7 @@ export default function Home() {
 
         {currentUpdateStatus && (
           <section
-            className="mx-auto mb-8 max-w-2xl border-2 border-black bg-white p-4 text-left"
+            className="mx-auto mb-8 max-w-3xl border-2 border-black bg-white p-4 text-left"
             aria-labelledby="update-status-title"
           >
             <div className="mb-2 flex items-center justify-between gap-3">
