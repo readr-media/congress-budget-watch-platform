@@ -35,7 +35,7 @@ import { usePagination, usePaginationActions } from "~/stores/paginationStore";
 import { proposalToBudgetTableData } from "./helpers";
 import useDebounce from "~/hooks/useDebounce";
 import { SEARCH_DEBOUNCE_DELAY } from "~/constants/config";
-import { sortOptions } from "~/constants/options";
+import { EMPTY_PROPOSAL_RESULT_VALUE, sortOptions } from "~/constants/options";
 import { find } from "lodash";
 import AllBudgetsView, {
   type YearOption,
@@ -362,7 +362,9 @@ export const AllBudgets = () => {
       // TODO: backend schema目前沒有對proposalTypes的has/contains filter，暫時以freezeAmount>0近似篩出凍結案；待schema支援後改用proposalTypes判斷。
       filters.freezeAmount = { gt: 0 };
     }
-    if (selectedResult) {
+    if (selectedResult === EMPTY_PROPOSAL_RESULT_VALUE) {
+      filters.result = { equals: null };
+    } else if (selectedResult) {
       filters.result = { equals: selectedResult };
     }
 

@@ -21,6 +21,7 @@ import Select, {
   type SingleValue,
 } from "react-select";
 import Image from "./image";
+import { proposalResultFilterOptions } from "~/constants/options";
 
 type OptionType = {
   value: string;
@@ -55,14 +56,6 @@ const content = {
     },
   ] as BudgetOption[],
 };
-
-const resultOptions: OptionType[] = [
-  { value: "passed", label: "通過" },
-  { value: "rejected", label: "不通過" },
-  { value: "pending", label: "待審議" },
-  { value: "reserved", label: "保留" },
-  { value: "withdrawn", label: "撤案" },
-];
 
 export const DropdownIndicator = (
   props: DropdownIndicatorProps<OptionType>
@@ -396,7 +389,9 @@ const BudgetsSelector: React.FC<BudgetsSelectorProps> = ({
   const setSelectedResult = useSetSelectedResult();
   const selectedResultValue = useMemo(
     () =>
-      resultOptions.find((option) => option.value === selectedResult) ?? null,
+      proposalResultFilterOptions.find(
+        (option) => option.value === selectedResult
+      ) ?? null,
     [selectedResult]
   );
 
@@ -496,7 +491,7 @@ const BudgetsSelector: React.FC<BudgetsSelectorProps> = ({
                 const singleValue = opt as SingleValue<OptionType>;
                 setSelectedResult(singleValue?.value ?? null);
               }}
-              options={resultOptions}
+              options={proposalResultFilterOptions}
               components={{ DropdownIndicator }}
               className="w-full md:w-60"
               styles={{
