@@ -110,6 +110,7 @@ export const AllBudgets = () => {
   const freezeOnly = useFreezeOnly();
   const [progressMode, setProgressMode] = useState<ProgressMode>("latest");
   const hasAppliedDefaultYear = useRef(false);
+  const previousYearParam = useRef<string | null>(null);
 
   useEffect(() => {
     const yearFromParams = searchParams.get("year");
@@ -157,13 +158,21 @@ export const AllBudgets = () => {
   );
 
   useEffect(() => {
+    const currentYearParam = searchParams.get("year");
+    const lastYearParam = previousYearParam.current;
+    previousYearParam.current = currentYearParam;
+
+    if (lastYearParam !== null && currentYearParam === null) {
+      hasAppliedDefaultYear.current = false;
+    }
+
     if (hasAppliedDefaultYear.current || !availableBudgetYears.length) {
       return;
     }
 
     hasAppliedDefaultYear.current = true;
 
-    if (searchParams.get("year")) {
+    if (currentYearParam) {
       return;
     }
 

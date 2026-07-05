@@ -180,7 +180,10 @@ export default function Home() {
   const canShowNextUpdate = updateStatusIndex < updateStatuses.length - 1;
 
   useEffect(() => {
-    if (updateStatusIndex > updateStatuses.length - 1) {
+    if (
+      updateStatuses.length > 0 &&
+      updateStatusIndex >= updateStatuses.length
+    ) {
       setUpdateStatusIndex(0);
     }
   }, [updateStatusIndex, updateStatuses.length]);
