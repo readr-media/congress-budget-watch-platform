@@ -2,9 +2,6 @@ name: Update budget review progress
 
 on:
   workflow_dispatch:
-  schedule:
-    # 05:00 Asia/Taipei
-    - cron: "0 21 * * *"
 
 permissions:
   contents: write
