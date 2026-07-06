@@ -418,6 +418,10 @@ export default function Home() {
           ))}
         </div>
 
+        <p className="mb-4 border-l-4 border-[#d0d7de] pl-3 text-xs leading-relaxed text-gray-600">
+          資料來源：審議進度是以關鍵字抓取立法院議事暨公報資訊網，尤其次級機關可能會被包在同場會議中，僅供參考，實際審議進度請以立法院為主。
+        </p>
+
         <div className="max-h-72 space-y-3 overflow-y-auto pr-2">
           {reviewProgressGroups.map((group) => (
             <div key={group.parentName} className="flex gap-3">
