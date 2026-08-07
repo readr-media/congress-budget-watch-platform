@@ -1,4 +1,4 @@
-import{i as r}from"./gql-CgRhUrVO.js";import{j as d}from"./jsx-runtime-DmS2nb87.js";r(`
+import{i as r}from"./gql-BECeojau.js";import{j as d}from"./jsx-runtime-DmS2nb87.js";r(`
   query GetBudgetsWithGovernment {
     budgets {
       id
@@ -62,6 +62,7 @@ import{i as r}from"./gql-CgRhUrVO.js";import{j as d}from"./jsx-runtime-DmS2nb87.
       result
       freezeAmount
       reductionAmount
+      cost
       budgetImageUrl
       proposalTypes
       recognitionAnswer
@@ -106,6 +107,7 @@ import{i as r}from"./gql-CgRhUrVO.js";import{j as d}from"./jsx-runtime-DmS2nb87.
       result
       freezeAmount
       reductionAmount
+      cost
       budgetImageUrls
       budgetImageUrl
       proposalTypes
@@ -248,6 +250,7 @@ import{i as r}from"./gql-CgRhUrVO.js";import{j as d}from"./jsx-runtime-DmS2nb87.
       result
       freezeAmount
       reductionAmount
+      cost
       proposalTypes
       react_angry
       react_disappoint
