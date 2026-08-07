@@ -1,0 +1,1 @@
+import{j as d,m as j}from"./index-BVZVUWOh.js";import"./chunk-OIYGIGL5-CVJ-uJPG.js";import"./gql-D5ADyGcE.js";import"./visualization.queries-BpxD9Ke5.js";import"./unfreeze-progress-IAKsLqk2.js";import"./proposal-budget-amount-D2BaW2k2.js";import"./index-GX70YLD4.js";import"./lodash-CKVoJl4M.js";import"./helpers-D4Pifz1i.js";export{d as default,j as meta};
