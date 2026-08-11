@@ -1,6 +1,6 @@
 {
   "year": 115,
-  "generatedAt": "2026-07-05T13:06:25.338958+00:00",
+  "generatedAt": "2026-08-11T07:22:12.299936+00:00",
   "sources": {
     "governmentIndex": "gov_index.xlsx",
     "meetingSearch": "https://ly-budget.openfun.app/",
@@ -25,10 +25,10 @@
   ],
   "summary": {
     "totalAgencies": 239,
-    "reviewedAgencies": 142,
-    "uploadedAgencies": 71,
-    "notReviewedAgencies": 97,
-    "matchedMeetings": 55
+    "reviewedAgencies": 198,
+    "uploadedAgencies": 174,
+    "notReviewedAgencies": 41,
+    "matchedMeetings": 57
   },
   "agencies": [
     {
@@ -98,10 +98,16 @@
       "itemCode": "1",
       "name": "行政院",
       "status": "uploaded",
-      "reviewedMeetingCount": 9,
-      "latestReviewDate": "2026-07-02",
+      "reviewedMeetingCount": 10,
+      "latestReviewDate": "2026-07-16",
       "uploadedProposalCount": 2,
       "meetings": [
+        {
+          "id": "委員會-11-5-20-22",
+          "date": "2026-07-16",
+          "name": "第11屆第5會期財政委員會第22次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-20-22"
+        },
         {
           "id": "委員會-11-5-15-18",
           "date": "2026-07-01",
@@ -123,12 +129,6 @@
         {
           "id": "委員會-11-5-20-16",
           "date": "2026-06-01",
-          "name": "第11屆第5會期財政委員會第16次全體委員會議",
-          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-20-16"
-        },
-        {
-          "id": "委員會-11-5-20-16",
-          "date": "2026-06-03",
           "name": "第11屆第5會期財政委員會第16次全體委員會議",
           "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-20-16"
         }
@@ -190,10 +190,10 @@
       "parentName": "行政院主管",
       "itemCode": "5",
       "name": "國立故宮博物院",
-      "status": "reviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 1,
       "latestReviewDate": "2026-06-17",
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 100,
       "meetings": [
         {
           "id": "委員會-11-5-22-16",
@@ -209,10 +209,10 @@
       "parentName": "行政院主管",
       "itemCode": "6",
       "name": "國家發展委員會",
-      "status": "reviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 1,
       "latestReviewDate": "2026-05-27",
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 71,
       "meetings": [
         {
           "id": "委員會-11-5-19-15",
@@ -228,10 +228,10 @@
       "parentName": "行政院主管",
       "itemCode": "7",
       "name": "檔案管理局",
-      "status": "notReviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 0,
       "latestReviewDate": null,
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 9,
       "meetings": []
     },
     {
@@ -326,10 +326,10 @@
       "parentName": "行政院主管",
       "itemCode": "13",
       "name": "公平交易委員會",
-      "status": "reviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 1,
       "latestReviewDate": "2026-06-04",
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 51,
       "meetings": [
         {
           "id": "委員會-11-5-19-16",
@@ -433,10 +433,10 @@
       "parentName": "立法院主管",
       "itemCode": "1",
       "name": "立法院",
-      "status": "notReviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 0,
       "latestReviewDate": null,
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 34,
       "meetings": []
     },
     {
@@ -1271,10 +1271,10 @@
       "parentName": "監察院主管",
       "itemCode": "1",
       "name": "監察院",
-      "status": "reviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 1,
       "latestReviewDate": "2026-05-25",
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 47,
       "meetings": [
         {
           "id": "委員會-11-5-36-15",
@@ -1429,10 +1429,10 @@
       "parentName": "內政部主管",
       "itemCode": "1",
       "name": "內政部",
-      "status": "reviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 1,
       "latestReviewDate": "2026-06-29",
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 101,
       "meetings": [
         {
           "id": "委員會-11-5-15-18",
@@ -1448,10 +1448,10 @@
       "parentName": "內政部主管",
       "itemCode": "2",
       "name": "國土管理署及所屬",
-      "status": "notReviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 0,
       "latestReviewDate": null,
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 68,
       "meetings": []
     },
     {
@@ -1517,10 +1517,10 @@
       "parentName": "內政部主管",
       "itemCode": "6",
       "name": "國家公園署及所屬",
-      "status": "notReviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 0,
       "latestReviewDate": null,
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 19,
       "meetings": []
     },
     {
@@ -1548,10 +1548,10 @@
       "parentName": "內政部主管",
       "itemCode": "8",
       "name": "建築研究所",
-      "status": "notReviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 0,
       "latestReviewDate": null,
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 7,
       "meetings": []
     },
     {
@@ -1579,10 +1579,10 @@
       "parentName": "外交部主管",
       "itemCode": "1",
       "name": "外交部",
-      "status": "reviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 2,
       "latestReviewDate": "2026-06-11",
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 141,
       "meetings": [
         {
           "id": "委員會-11-5-35-21",
@@ -1604,10 +1604,10 @@
       "parentName": "外交部主管",
       "itemCode": "2",
       "name": "領事事務局",
-      "status": "notReviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 0,
       "latestReviewDate": null,
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 8,
       "meetings": []
     },
     {
@@ -1616,10 +1616,10 @@
       "parentName": "外交部主管",
       "itemCode": "3",
       "name": "外交及國際事務學院",
-      "status": "notReviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 0,
       "latestReviewDate": null,
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 7,
       "meetings": []
     },
     {
@@ -1628,10 +1628,10 @@
       "parentName": "國防部主管",
       "itemCode": "1",
       "name": "國防部",
-      "status": "reviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 4,
       "latestReviewDate": "2026-06-18",
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 70,
       "meetings": [
         {
           "id": "委員會-11-5-35-22",
@@ -1665,10 +1665,10 @@
       "parentName": "國防部主管",
       "itemCode": "2",
       "name": "國防部所屬",
-      "status": "reviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 4,
       "latestReviewDate": "2026-06-18",
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 70,
       "meetings": [
         {
           "id": "委員會-11-5-35-22",
@@ -1703,10 +1703,16 @@
       "itemCode": "1",
       "name": "財政部",
       "status": "uploaded",
-      "reviewedMeetingCount": 6,
-      "latestReviewDate": "2026-06-18",
-      "uploadedProposalCount": 2,
+      "reviewedMeetingCount": 7,
+      "latestReviewDate": "2026-07-16",
+      "uploadedProposalCount": 46,
       "meetings": [
+        {
+          "id": "委員會-11-5-20-22",
+          "date": "2026-07-16",
+          "name": "第11屆第5會期財政委員會第22次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-20-22"
+        },
         {
           "id": "委員會-11-5-20-19",
           "date": "2026-06-17",
@@ -1730,12 +1736,6 @@
           "date": "2026-06-01",
           "name": "第11屆第5會期財政委員會第16次全體委員會議",
           "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-20-16"
-        },
-        {
-          "id": "委員會-11-5-20-16",
-          "date": "2026-06-03",
-          "name": "第11屆第5會期財政委員會第16次全體委員會議",
-          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-20-16"
         }
       ]
     },
@@ -1748,7 +1748,7 @@
       "status": "uploaded",
       "reviewedMeetingCount": 2,
       "latestReviewDate": "2026-06-08",
-      "uploadedProposalCount": 1,
+      "uploadedProposalCount": 15,
       "meetings": [
         {
           "id": "委員會-11-5-20-17",
@@ -1770,10 +1770,10 @@
       "parentName": "財政部主管",
       "itemCode": "3",
       "name": "賦稅署",
-      "status": "reviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 2,
       "latestReviewDate": "2026-06-03",
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 44,
       "meetings": [
         {
           "id": "委員會-11-5-20-16",
@@ -1795,10 +1795,10 @@
       "parentName": "財政部主管",
       "itemCode": "4",
       "name": "臺北國稅局",
-      "status": "reviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 2,
       "latestReviewDate": "2026-06-03",
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 2,
       "meetings": [
         {
           "id": "委員會-11-5-20-16",
@@ -1820,10 +1820,10 @@
       "parentName": "財政部主管",
       "itemCode": "5",
       "name": "高雄國稅局",
-      "status": "reviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 2,
       "latestReviewDate": "2026-06-03",
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 4,
       "meetings": [
         {
           "id": "委員會-11-5-20-16",
@@ -1845,10 +1845,10 @@
       "parentName": "財政部主管",
       "itemCode": "6",
       "name": "北區國稅局及所屬",
-      "status": "reviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 2,
       "latestReviewDate": "2026-06-03",
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 7,
       "meetings": [
         {
           "id": "委員會-11-5-20-16",
@@ -1870,10 +1870,10 @@
       "parentName": "財政部主管",
       "itemCode": "7",
       "name": "中區國稅局及所屬",
-      "status": "reviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 2,
       "latestReviewDate": "2026-06-03",
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 4,
       "meetings": [
         {
           "id": "委員會-11-5-20-16",
@@ -1895,10 +1895,10 @@
       "parentName": "財政部主管",
       "itemCode": "8",
       "name": "南區國稅局及所屬",
-      "status": "reviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 2,
       "latestReviewDate": "2026-06-03",
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 3,
       "meetings": [
         {
           "id": "委員會-11-5-20-16",
@@ -1920,10 +1920,10 @@
       "parentName": "財政部主管",
       "itemCode": "9",
       "name": "關務署及所屬",
-      "status": "reviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 1,
       "latestReviewDate": "2026-06-08",
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 24,
       "meetings": [
         {
           "id": "委員會-11-5-20-17",
@@ -1939,10 +1939,10 @@
       "parentName": "財政部主管",
       "itemCode": "10",
       "name": "國有財產署及所屬",
-      "status": "reviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 1,
       "latestReviewDate": "2026-06-08",
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 18,
       "meetings": [
         {
           "id": "委員會-11-5-20-17",
@@ -1958,10 +1958,10 @@
       "parentName": "財政部主管",
       "itemCode": "11",
       "name": "財政資訊中心",
-      "status": "reviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 1,
       "latestReviewDate": "2026-06-08",
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 6,
       "meetings": [
         {
           "id": "委員會-11-5-20-17",
@@ -2074,10 +2074,10 @@
       "parentName": "法務部主管",
       "itemCode": "1",
       "name": "法務部",
-      "status": "reviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 1,
       "latestReviewDate": "2026-05-27",
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 50,
       "meetings": [
         {
           "id": "委員會-11-5-36-15",
@@ -2117,10 +2117,10 @@
       "parentName": "法務部主管",
       "itemCode": "4",
       "name": "廉政署",
-      "status": "notReviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 0,
       "latestReviewDate": null,
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 4,
       "meetings": []
     },
     {
@@ -2129,10 +2129,10 @@
       "parentName": "法務部主管",
       "itemCode": "5",
       "name": "矯正署及所屬",
-      "status": "notReviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 0,
       "latestReviewDate": null,
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 16,
       "meetings": []
     },
     {
@@ -2141,10 +2141,10 @@
       "parentName": "法務部主管",
       "itemCode": "6",
       "name": "行政執行署及所屬",
-      "status": "notReviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 0,
       "latestReviewDate": null,
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 2,
       "meetings": []
     },
     {
@@ -2153,10 +2153,10 @@
       "parentName": "法務部主管",
       "itemCode": "7",
       "name": "最高檢察署",
-      "status": "notReviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 0,
       "latestReviewDate": null,
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 5,
       "meetings": []
     },
     {
@@ -2165,10 +2165,10 @@
       "parentName": "法務部主管",
       "itemCode": "8",
       "name": "臺灣高等檢察署",
-      "status": "notReviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 0,
       "latestReviewDate": null,
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 5,
       "meetings": []
     },
     {
@@ -2177,10 +2177,10 @@
       "parentName": "法務部主管",
       "itemCode": "9",
       "name": "臺灣高等檢察署臺中檢察分署",
-      "status": "notReviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 0,
       "latestReviewDate": null,
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 5,
       "meetings": []
     },
     {
@@ -2189,10 +2189,10 @@
       "parentName": "法務部主管",
       "itemCode": "10",
       "name": "臺灣高等檢察署臺南檢察分署",
-      "status": "notReviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 0,
       "latestReviewDate": null,
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 5,
       "meetings": []
     },
     {
@@ -2201,10 +2201,10 @@
       "parentName": "法務部主管",
       "itemCode": "11",
       "name": "臺灣高等檢察署高雄檢察分署",
-      "status": "notReviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 0,
       "latestReviewDate": null,
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 5,
       "meetings": []
     },
     {
@@ -2213,10 +2213,10 @@
       "parentName": "法務部主管",
       "itemCode": "12",
       "name": "臺灣高等檢察署花蓮檢察分署",
-      "status": "notReviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 0,
       "latestReviewDate": null,
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 5,
       "meetings": []
     },
     {
@@ -2225,10 +2225,10 @@
       "parentName": "法務部主管",
       "itemCode": "13",
       "name": "臺灣高等檢察署智慧財產檢察分署",
-      "status": "notReviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 0,
       "latestReviewDate": null,
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 5,
       "meetings": []
     },
     {
@@ -2237,10 +2237,10 @@
       "parentName": "法務部主管",
       "itemCode": "14",
       "name": "臺灣臺北地方檢察署",
-      "status": "notReviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 0,
       "latestReviewDate": null,
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 5,
       "meetings": []
     },
     {
@@ -2249,10 +2249,10 @@
       "parentName": "法務部主管",
       "itemCode": "15",
       "name": "臺灣士林地方檢察署",
-      "status": "notReviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 0,
       "latestReviewDate": null,
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 5,
       "meetings": []
     },
     {
@@ -2261,10 +2261,10 @@
       "parentName": "法務部主管",
       "itemCode": "16",
       "name": "臺灣新北地方檢察署",
-      "status": "notReviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 0,
       "latestReviewDate": null,
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 5,
       "meetings": []
     },
     {
@@ -2273,10 +2273,10 @@
       "parentName": "法務部主管",
       "itemCode": "17",
       "name": "臺灣桃園地方檢察署",
-      "status": "notReviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 0,
       "latestReviewDate": null,
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 5,
       "meetings": []
     },
     {
@@ -2285,10 +2285,10 @@
       "parentName": "法務部主管",
       "itemCode": "18",
       "name": "臺灣新竹地方檢察署",
-      "status": "notReviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 0,
       "latestReviewDate": null,
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 5,
       "meetings": []
     },
     {
@@ -2297,10 +2297,10 @@
       "parentName": "法務部主管",
       "itemCode": "19",
       "name": "臺灣苗栗地方檢察署",
-      "status": "notReviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 0,
       "latestReviewDate": null,
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 5,
       "meetings": []
     },
     {
@@ -2309,10 +2309,10 @@
       "parentName": "法務部主管",
       "itemCode": "20",
       "name": "臺灣臺中地方檢察署",
-      "status": "notReviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 0,
       "latestReviewDate": null,
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 5,
       "meetings": []
     },
     {
@@ -2321,10 +2321,10 @@
       "parentName": "法務部主管",
       "itemCode": "21",
       "name": "臺灣南投地方檢察署",
-      "status": "notReviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 0,
       "latestReviewDate": null,
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 5,
       "meetings": []
     },
     {
@@ -2333,10 +2333,10 @@
       "parentName": "法務部主管",
       "itemCode": "22",
       "name": "臺灣彰化地方檢察署",
-      "status": "notReviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 0,
       "latestReviewDate": null,
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 5,
       "meetings": []
     },
     {
@@ -2345,10 +2345,10 @@
       "parentName": "法務部主管",
       "itemCode": "23",
       "name": "臺灣雲林地方檢察署",
-      "status": "notReviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 0,
       "latestReviewDate": null,
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 5,
       "meetings": []
     },
     {
@@ -2357,10 +2357,10 @@
       "parentName": "法務部主管",
       "itemCode": "24",
       "name": "臺灣嘉義地方檢察署",
-      "status": "notReviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 0,
       "latestReviewDate": null,
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 5,
       "meetings": []
     },
     {
@@ -2369,10 +2369,10 @@
       "parentName": "法務部主管",
       "itemCode": "25",
       "name": "臺灣臺南地方檢察署",
-      "status": "notReviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 0,
       "latestReviewDate": null,
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 5,
       "meetings": []
     },
     {
@@ -2381,10 +2381,10 @@
       "parentName": "法務部主管",
       "itemCode": "26",
       "name": "臺灣橋頭地方檢察署",
-      "status": "notReviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 0,
       "latestReviewDate": null,
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 5,
       "meetings": []
     },
     {
@@ -2393,10 +2393,10 @@
       "parentName": "法務部主管",
       "itemCode": "27",
       "name": "臺灣高雄地方檢察署",
-      "status": "notReviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 0,
       "latestReviewDate": null,
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 5,
       "meetings": []
     },
     {
@@ -2405,10 +2405,10 @@
       "parentName": "法務部主管",
       "itemCode": "28",
       "name": "臺灣屏東地方檢察署",
-      "status": "notReviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 0,
       "latestReviewDate": null,
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 5,
       "meetings": []
     },
     {
@@ -2417,10 +2417,10 @@
       "parentName": "法務部主管",
       "itemCode": "29",
       "name": "臺灣臺東地方檢察署",
-      "status": "notReviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 0,
       "latestReviewDate": null,
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 5,
       "meetings": []
     },
     {
@@ -2429,10 +2429,10 @@
       "parentName": "法務部主管",
       "itemCode": "30",
       "name": "臺灣花蓮地方檢察署",
-      "status": "notReviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 0,
       "latestReviewDate": null,
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 5,
       "meetings": []
     },
     {
@@ -2441,10 +2441,10 @@
       "parentName": "法務部主管",
       "itemCode": "31",
       "name": "臺灣宜蘭地方檢察署",
-      "status": "notReviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 0,
       "latestReviewDate": null,
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 5,
       "meetings": []
     },
     {
@@ -2453,10 +2453,10 @@
       "parentName": "法務部主管",
       "itemCode": "32",
       "name": "臺灣基隆地方檢察署",
-      "status": "notReviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 0,
       "latestReviewDate": null,
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 5,
       "meetings": []
     },
     {
@@ -2465,10 +2465,10 @@
       "parentName": "法務部主管",
       "itemCode": "33",
       "name": "臺灣澎湖地方檢察署",
-      "status": "notReviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 0,
       "latestReviewDate": null,
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 5,
       "meetings": []
     },
     {
@@ -2477,10 +2477,10 @@
       "parentName": "法務部主管",
       "itemCode": "34",
       "name": "福建高等檢察署金門檢察分署",
-      "status": "notReviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 0,
       "latestReviewDate": null,
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 5,
       "meetings": []
     },
     {
@@ -2489,10 +2489,10 @@
       "parentName": "法務部主管",
       "itemCode": "35",
       "name": "福建金門地方檢察署",
-      "status": "notReviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 0,
       "latestReviewDate": null,
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 5,
       "meetings": []
     },
     {
@@ -2501,10 +2501,10 @@
       "parentName": "法務部主管",
       "itemCode": "36",
       "name": "福建連江地方檢察署",
-      "status": "notReviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 0,
       "latestReviewDate": null,
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 5,
       "meetings": []
     },
     {
@@ -2513,10 +2513,10 @@
       "parentName": "法務部主管",
       "itemCode": "37",
       "name": "調查局",
-      "status": "notReviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 0,
       "latestReviewDate": null,
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 6,
       "meetings": []
     },
     {
@@ -2525,11 +2525,17 @@
       "parentName": "經濟部主管",
       "itemCode": "1",
       "name": "經濟部",
-      "status": "reviewed",
-      "reviewedMeetingCount": 3,
-      "latestReviewDate": "2026-07-02",
-      "uploadedProposalCount": 0,
+      "status": "uploaded",
+      "reviewedMeetingCount": 4,
+      "latestReviewDate": "2026-07-15",
+      "uploadedProposalCount": 106,
       "meetings": [
+        {
+          "id": "委員會-11-5-19-21",
+          "date": "2026-07-15",
+          "name": "第11屆第5會期經濟委員會第21次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-19-21"
+        },
         {
           "id": "委員會-11-5-19-19",
           "date": "2026-07-02",
@@ -2556,10 +2562,10 @@
       "parentName": "經濟部主管",
       "itemCode": "2",
       "name": "產業發展署",
-      "status": "reviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 1,
       "latestReviewDate": "2026-07-02",
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 45,
       "meetings": [
         {
           "id": "委員會-11-5-19-19",
@@ -2575,10 +2581,10 @@
       "parentName": "經濟部主管",
       "itemCode": "3",
       "name": "國際貿易署",
-      "status": "reviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 1,
       "latestReviewDate": "2026-06-18",
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 20,
       "meetings": [
         {
           "id": "委員會-11-5-19-18",
@@ -2594,10 +2600,10 @@
       "parentName": "經濟部主管",
       "itemCode": "4",
       "name": "標準檢驗局及所屬",
-      "status": "reviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 1,
       "latestReviewDate": "2026-07-02",
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 19,
       "meetings": [
         {
           "id": "委員會-11-5-19-19",
@@ -2613,10 +2619,10 @@
       "parentName": "經濟部主管",
       "itemCode": "5",
       "name": "智慧財產局",
-      "status": "reviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 1,
       "latestReviewDate": "2026-07-02",
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 12,
       "meetings": [
         {
           "id": "委員會-11-5-19-19",
@@ -2632,10 +2638,10 @@
       "parentName": "經濟部主管",
       "itemCode": "6",
       "name": "水利署及所屬",
-      "status": "reviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 2,
       "latestReviewDate": "2026-06-18",
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 48,
       "meetings": [
         {
           "id": "委員會-11-5-19-18",
@@ -2657,10 +2663,10 @@
       "parentName": "經濟部主管",
       "itemCode": "7",
       "name": "商業發展署",
-      "status": "reviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 1,
       "latestReviewDate": "2026-07-02",
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 13,
       "meetings": [
         {
           "id": "委員會-11-5-19-19",
@@ -2676,10 +2682,10 @@
       "parentName": "經濟部主管",
       "itemCode": "8",
       "name": "中小及新創企業署",
-      "status": "reviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 1,
       "latestReviewDate": "2026-07-02",
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 22,
       "meetings": [
         {
           "id": "委員會-11-5-19-19",
@@ -2695,10 +2701,10 @@
       "parentName": "經濟部主管",
       "itemCode": "9",
       "name": "產業園區管理局及所屬",
-      "status": "reviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 1,
       "latestReviewDate": "2026-07-02",
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 14,
       "meetings": [
         {
           "id": "委員會-11-5-19-19",
@@ -2714,10 +2720,10 @@
       "parentName": "經濟部主管",
       "itemCode": "10",
       "name": "地質調查及礦業管理中心",
-      "status": "reviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 1,
       "latestReviewDate": "2026-06-18",
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 11,
       "meetings": [
         {
           "id": "委員會-11-5-19-18",
@@ -2733,10 +2739,10 @@
       "parentName": "經濟部主管",
       "itemCode": "11",
       "name": "能源署",
-      "status": "reviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 1,
       "latestReviewDate": "2026-06-18",
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 23,
       "meetings": [
         {
           "id": "委員會-11-5-19-18",
@@ -2795,10 +2801,10 @@
       "parentName": "交通部主管",
       "itemCode": "2",
       "name": "民用航空局",
-      "status": "reviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 1,
       "latestReviewDate": "2026-06-17",
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 31,
       "meetings": [
         {
           "id": "委員會-11-5-23-19",
@@ -3000,10 +3006,10 @@
       "parentName": "勞動部主管",
       "itemCode": "1",
       "name": "勞動部",
-      "status": "reviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 2,
       "latestReviewDate": "2026-06-04",
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 112,
       "meetings": [
         {
           "id": "委員會-11-5-26-13",
@@ -3025,10 +3031,10 @@
       "parentName": "勞動部主管",
       "itemCode": "2",
       "name": "勞工保險局",
-      "status": "notReviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 0,
       "latestReviewDate": null,
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 44,
       "meetings": []
     },
     {
@@ -3037,10 +3043,10 @@
       "parentName": "勞動部主管",
       "itemCode": "3",
       "name": "勞動力發展署及所屬",
-      "status": "notReviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 0,
       "latestReviewDate": null,
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 67,
       "meetings": []
     },
     {
@@ -3049,10 +3055,10 @@
       "parentName": "勞動部主管",
       "itemCode": "4",
       "name": "職業安全衛生署",
-      "status": "notReviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 0,
       "latestReviewDate": null,
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 67,
       "meetings": []
     },
     {
@@ -3061,10 +3067,10 @@
       "parentName": "勞動部主管",
       "itemCode": "5",
       "name": "勞動基金運用局",
-      "status": "notReviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 0,
       "latestReviewDate": null,
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 11,
       "meetings": []
     },
     {
@@ -3073,10 +3079,10 @@
       "parentName": "勞動部主管",
       "itemCode": "6",
       "name": "勞動及職業安全衛生研究所",
-      "status": "notReviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 0,
       "latestReviewDate": null,
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 8,
       "meetings": []
     },
     {
@@ -3085,10 +3091,10 @@
       "parentName": "農業部主管",
       "itemCode": "1",
       "name": "農業部",
-      "status": "reviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 2,
       "latestReviewDate": "2026-06-10",
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 127,
       "meetings": [
         {
           "id": "委員會-11-5-19-17",
@@ -3110,10 +3116,10 @@
       "parentName": "農業部主管",
       "itemCode": "2",
       "name": "林業及自然保育署及所屬",
-      "status": "reviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 1,
       "latestReviewDate": "2026-05-28",
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 30,
       "meetings": [
         {
           "id": "委員會-11-5-19-15",
@@ -3129,10 +3135,10 @@
       "parentName": "農業部主管",
       "itemCode": "3",
       "name": "農村發展及水土保持署及所屬",
-      "status": "reviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 1,
       "latestReviewDate": "2026-05-28",
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 17,
       "meetings": [
         {
           "id": "委員會-11-5-19-15",
@@ -3172,10 +3178,10 @@
       "parentName": "農業部主管",
       "itemCode": "6",
       "name": "水產試驗所",
-      "status": "notReviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 0,
       "latestReviewDate": null,
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 1,
       "meetings": []
     },
     {
@@ -3208,10 +3214,10 @@
       "parentName": "農業部主管",
       "itemCode": "9",
       "name": "農業藥物試驗所",
-      "status": "notReviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 0,
       "latestReviewDate": null,
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 2,
       "meetings": []
     },
     {
@@ -3232,10 +3238,10 @@
       "parentName": "農業部主管",
       "itemCode": "11",
       "name": "茶及飲料作物改良場",
-      "status": "notReviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 0,
       "latestReviewDate": null,
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 1,
       "meetings": []
     },
     {
@@ -3340,10 +3346,10 @@
       "parentName": "農業部主管",
       "itemCode": "20",
       "name": "漁業署及所屬",
-      "status": "reviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 1,
       "latestReviewDate": "2026-05-28",
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 31,
       "meetings": [
         {
           "id": "委員會-11-5-19-15",
@@ -3359,10 +3365,10 @@
       "parentName": "農業部主管",
       "itemCode": "21",
       "name": "動植物防疫檢疫署及所屬",
-      "status": "reviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 1,
       "latestReviewDate": "2026-05-28",
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 26,
       "meetings": [
         {
           "id": "委員會-11-5-19-15",
@@ -3378,10 +3384,10 @@
       "parentName": "農業部主管",
       "itemCode": "22",
       "name": "農業金融署",
-      "status": "notReviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 0,
       "latestReviewDate": null,
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 10,
       "meetings": []
     },
     {
@@ -3390,10 +3396,10 @@
       "parentName": "農業部主管",
       "itemCode": "23",
       "name": "農糧署及所屬",
-      "status": "reviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 1,
       "latestReviewDate": "2026-05-28",
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 22,
       "meetings": [
         {
           "id": "委員會-11-5-19-15",
@@ -3409,10 +3415,10 @@
       "parentName": "農業部主管",
       "itemCode": "24",
       "name": "農田水利署",
-      "status": "reviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 1,
       "latestReviewDate": "2026-05-28",
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 12,
       "meetings": [
         {
           "id": "委員會-11-5-19-15",
@@ -3440,10 +3446,10 @@
       "parentName": "衛生福利部主管",
       "itemCode": "1",
       "name": "衛生福利部",
-      "status": "reviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 2,
       "latestReviewDate": "2026-06-18",
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 256,
       "meetings": [
         {
           "id": "委員會-11-5-26-15",
@@ -3465,10 +3471,10 @@
       "parentName": "衛生福利部主管",
       "itemCode": "2",
       "name": "疾病管制署",
-      "status": "notReviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 0,
       "latestReviewDate": null,
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 20,
       "meetings": []
     },
     {
@@ -3477,10 +3483,10 @@
       "parentName": "衛生福利部主管",
       "itemCode": "3",
       "name": "食品藥物管理署",
-      "status": "notReviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 0,
       "latestReviewDate": null,
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 51,
       "meetings": []
     },
     {
@@ -3489,10 +3495,10 @@
       "parentName": "衛生福利部主管",
       "itemCode": "4",
       "name": "中央健康保險署",
-      "status": "notReviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 0,
       "latestReviewDate": null,
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 41,
       "meetings": []
     },
     {
@@ -3501,10 +3507,10 @@
       "parentName": "衛生福利部主管",
       "itemCode": "5",
       "name": "國民健康署",
-      "status": "notReviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 0,
       "latestReviewDate": null,
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 49,
       "meetings": []
     },
     {
@@ -3513,10 +3519,10 @@
       "parentName": "衛生福利部主管",
       "itemCode": "6",
       "name": "社會及家庭署",
-      "status": "notReviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 0,
       "latestReviewDate": null,
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 57,
       "meetings": []
     },
     {
@@ -3525,10 +3531,10 @@
       "parentName": "衛生福利部主管",
       "itemCode": "7",
       "name": "國家中醫藥研究所",
-      "status": "notReviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 0,
       "latestReviewDate": null,
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 10,
       "meetings": []
     },
     {
@@ -3792,10 +3798,10 @@
       "parentName": "數位發展部主管",
       "itemCode": "1",
       "name": "數位發展部",
-      "status": "reviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 4,
       "latestReviewDate": "2026-07-02",
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 62,
       "meetings": [
         {
           "id": "委員會-11-5-23-21",
@@ -3903,10 +3909,10 @@
       "parentName": "僑務委員會主管",
       "itemCode": "1",
       "name": "僑務委員會",
-      "status": "reviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 1,
       "latestReviewDate": "2026-06-25",
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 49,
       "meetings": [
         {
           "id": "委員會-11-5-35-23",
@@ -3922,10 +3928,10 @@
       "parentName": "國家科學及技術委員會主管",
       "itemCode": "1",
       "name": "國家科學及技術委員會",
-      "status": "reviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 1,
       "latestReviewDate": "2026-06-17",
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 117,
       "meetings": [
         {
           "id": "委員會-11-5-22-16",
@@ -3977,11 +3983,17 @@
       "parentName": "金融監督管理委員會主管",
       "itemCode": "1",
       "name": "金融監督管理委員會",
-      "status": "reviewed",
-      "reviewedMeetingCount": 1,
-      "latestReviewDate": "2026-06-08",
-      "uploadedProposalCount": 0,
+      "status": "uploaded",
+      "reviewedMeetingCount": 2,
+      "latestReviewDate": "2026-07-16",
+      "uploadedProposalCount": 44,
       "meetings": [
+        {
+          "id": "委員會-11-5-20-22",
+          "date": "2026-07-16",
+          "name": "第11屆第5會期財政委員會第22次全體委員會議",
+          "dataUrl": "https://ly-budget.openfun.app/meet.php?id=%E5%A7%94%E5%93%A1%E6%9C%83-11-5-20-22"
+        },
         {
           "id": "委員會-11-5-20-17",
           "date": "2026-06-08",
@@ -3996,10 +4008,10 @@
       "parentName": "金融監督管理委員會主管",
       "itemCode": "2",
       "name": "銀行局",
-      "status": "reviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 1,
       "latestReviewDate": "2026-06-08",
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 20,
       "meetings": [
         {
           "id": "委員會-11-5-20-17",
@@ -4015,10 +4027,10 @@
       "parentName": "金融監督管理委員會主管",
       "itemCode": "3",
       "name": "證券期貨局",
-      "status": "reviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 1,
       "latestReviewDate": "2026-06-08",
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 17,
       "meetings": [
         {
           "id": "委員會-11-5-20-17",
@@ -4034,10 +4046,10 @@
       "parentName": "金融監督管理委員會主管",
       "itemCode": "4",
       "name": "保險局",
-      "status": "reviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 1,
       "latestReviewDate": "2026-06-08",
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 59,
       "meetings": [
         {
           "id": "委員會-11-5-20-17",
@@ -4053,10 +4065,10 @@
       "parentName": "金融監督管理委員會主管",
       "itemCode": "5",
       "name": "檢查局",
-      "status": "reviewed",
+      "status": "uploaded",
       "reviewedMeetingCount": 1,
       "latestReviewDate": "2026-06-08",
-      "uploadedProposalCount": 0,
+      "uploadedProposalCount": 10,
       "meetings": [
         {
           "id": "委員會-11-5-20-17",
