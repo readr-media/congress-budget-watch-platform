@@ -22,6 +22,8 @@ jobs:
           cache: pip
       - name: Install Python deps
         run: python -m pip install pandas lxml openpyxl
+      - name: Test progress data safeguards
+        run: python -m unittest scripts/test_budget_review_progress.py
       - name: Build progress data
         run: python scripts/prototype-budget-review-progress.py
       - name: Commit progress data
